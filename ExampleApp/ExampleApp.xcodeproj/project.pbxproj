@@ -13,8 +13,24 @@
 		2517EC8427E5A7780025E396 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2517EC8227E5A7780025E396 /* Main.storyboard */; };
 		2517EC8627E5A77B0025E396 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2517EC8527E5A77B0025E396 /* Assets.xcassets */; };
 		2517EC8927E5A77B0025E396 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2517EC8727E5A77B0025E396 /* LaunchScreen.storyboard */; };
+		2517EC9527E5CB4E0025E396 /* Credify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2517EC9427E5CB4E0025E396 /* Credify.framework */; };
+		2517EC9627E5CB4E0025E396 /* Credify.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2517EC9427E5CB4E0025E396 /* Credify.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E0032F0D737A08B683FB1C2B /* Pods_ExampleApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A0C61A16700A0D5A64785C1B /* Pods_ExampleApp.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2517EC9727E5CB4E0025E396 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2517EC9627E5CB4E0025E396 /* Credify.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2517EC7927E5A7780025E396 /* ExampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -25,6 +41,7 @@
 		2517EC8527E5A77B0025E396 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2517EC8827E5A77B0025E396 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2517EC8A27E5A77B0025E396 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2517EC9427E5CB4E0025E396 /* Credify.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Credify.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3243C2F06C95209617A66A31 /* Pods-ExampleApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleApp.release.xcconfig"; path = "Target Support Files/Pods-ExampleApp/Pods-ExampleApp.release.xcconfig"; sourceTree = "<group>"; };
 		A0C61A16700A0D5A64785C1B /* Pods_ExampleApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ExampleApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABE6E220F39690324B167375 /* Pods-ExampleApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleApp.debug.xcconfig"; path = "Target Support Files/Pods-ExampleApp/Pods-ExampleApp.debug.xcconfig"; sourceTree = "<group>"; };
@@ -36,6 +53,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E0032F0D737A08B683FB1C2B /* Pods_ExampleApp.framework in Frameworks */,
+				2517EC9527E5CB4E0025E396 /* Credify.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,6 +95,7 @@
 		C238F546C8FCD3277E922E39 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2517EC9427E5CB4E0025E396 /* Credify.framework */,
 				A0C61A16700A0D5A64785C1B /* Pods_ExampleApp.framework */,
 			);
 			name = Frameworks;
@@ -104,6 +123,7 @@
 				2517EC7627E5A7780025E396 /* Frameworks */,
 				2517EC7727E5A7780025E396 /* Resources */,
 				C40A20C42E939649CBC82A20 /* [CP] Embed Pods Frameworks */,
+				2517EC9727E5CB4E0025E396 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

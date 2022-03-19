@@ -97,6 +97,7 @@
 		2517EC5827E5A4520025E396 /* OfferUseCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfferUseCase.swift; sourceTree = "<group>"; };
 		2517EC6E27E5A4730025E396 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Credify/Assets.xcassets; sourceTree = "<group>"; };
 		2517EC9027E5AFC80025E396 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		2517EC9227E5C3BE0025E396 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		461F46F3653A3D0EB68428A7 /* Pods-Credify.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Credify.debug.xcconfig"; path = "Target Support Files/Pods-Credify/Pods-Credify.debug.xcconfig"; sourceTree = "<group>"; };
 		66D61BDBCA8F1E99A5E90707 /* Pods-Credify-CredifyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Credify-CredifyTests.release.xcconfig"; path = "Target Support Files/Pods-Credify-CredifyTests/Pods-Credify-CredifyTests.release.xcconfig"; sourceTree = "<group>"; };
 		BFF408E83C2BFE352C258BE7 /* Pods-Credify.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Credify.release.xcconfig"; path = "Target Support Files/Pods-Credify/Pods-Credify.release.xcconfig"; sourceTree = "<group>"; };
@@ -129,6 +130,7 @@
 		2517EBF127E57CED0025E396 = {
 			isa = PBXGroup;
 			children = (
+				2517EC9227E5C3BE0025E396 /* Package.swift */,
 				2517EC9027E5AFC80025E396 /* README.md */,
 				2517EBFD27E57CED0025E396 /* Credify */,
 				2517EC0927E57CEE0025E396 /* CredifyTests */,
