@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "Credify"
-  spec.version      = "0.1.6"
+  spec.version      = "0.1.7"
   spec.summary      = "serviceX SDK is for marketplaces to integrate Credify serviceX."
   spec.description  = "This is an SDK for Credify serviceX distributed for iOS platform."
   spec.homepage     = "https://github.com/credify-pte-ltd/credify-ios-sdk"
