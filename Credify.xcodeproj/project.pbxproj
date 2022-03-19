@@ -1,0 +1,779 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2517EC0027E57CED0025E396 /* Credify.docc in Sources */ = {isa = PBXBuildFile; fileRef = 2517EBFF27E57CED0025E396 /* Credify.docc */; };
+		2517EC0627E57CEE0025E396 /* Credify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2517EBFB27E57CED0025E396 /* Credify.framework */; };
+		2517EC0B27E57CEE0025E396 /* CredifyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC0A27E57CEE0025E396 /* CredifyTests.swift */; };
+		2517EC0C27E57CEE0025E396 /* Credify.h in Headers */ = {isa = PBXBuildFile; fileRef = 2517EBFE27E57CED0025E396 /* Credify.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2517EC2227E5A3B40025E396 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC1827E5A3B40025E396 /* Constants.swift */; };
+		2517EC2327E5A3B40025E396 /* serviceX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC1927E5A3B40025E396 /* serviceX.swift */; };
+		2517EC3427E5A4360025E396 /* UIFont+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC2C27E5A4360025E396 /* UIFont+Extension.swift */; };
+		2517EC3527E5A4360025E396 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC2D27E5A4360025E396 /* UIColor+Extension.swift */; };
+		2517EC3627E5A4360025E396 /* Encodable+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC2E27E5A4360025E396 /* Encodable+Extension.swift */; };
+		2517EC3727E5A4360025E396 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC2F27E5A4360025E396 /* UIViewController+Extension.swift */; };
+		2517EC3827E5A4360025E396 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC3027E5A4360025E396 /* String+Extension.swift */; };
+		2517EC3927E5A4360025E396 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC3127E5A4360025E396 /* Extension.swift */; };
+		2517EC3A27E5A4360025E396 /* UINavigationBar+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC3227E5A4360025E396 /* UINavigationBar+Extension.swift */; };
+		2517EC3B27E5A4360025E396 /* Dictionary+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC3327E5A4360025E396 /* Dictionary+Extension.swift */; };
+		2517EC5927E5A4520025E396 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC3D27E5A4510025E396 /* AppState.swift */; };
+		2517EC5A27E5A4520025E396 /* CredifyEnvs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC3E27E5A4510025E396 /* CredifyEnvs.swift */; };
+		2517EC5B27E5A4520025E396 /* Entities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC3F27E5A4510025E396 /* Entities.swift */; };
+		2517EC5C27E5A4520025E396 /* CredifyUserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC4027E5A4510025E396 /* CredifyUserModel.swift */; };
+		2517EC5D27E5A4520025E396 /* CredifyError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC4127E5A4510025E396 /* CredifyError.swift */; };
+		2517EC5E27E5A4520025E396 /* serviceXConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC4227E5A4510025E396 /* serviceXConfig.swift */; };
+		2517EC5F27E5A4520025E396 /* WebPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC4427E5A4520025E396 /* WebPresenter.swift */; };
+		2517EC6027E5A4520025E396 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC4527E5A4520025E396 /* WebViewController.swift */; };
+		2517EC6127E5A4520025E396 /* RobotoSlab-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2517EC4827E5A4520025E396 /* RobotoSlab-Medium.ttf */; };
+		2517EC6227E5A4520025E396 /* RobotoSlab-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2517EC4927E5A4520025E396 /* RobotoSlab-Thin.ttf */; };
+		2517EC6327E5A4520025E396 /* RobotoSlab-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2517EC4A27E5A4520025E396 /* RobotoSlab-Black.ttf */; };
+		2517EC6427E5A4520025E396 /* RobotoSlab-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2517EC4B27E5A4520025E396 /* RobotoSlab-Bold.ttf */; };
+		2517EC6527E5A4520025E396 /* RobotoSlab-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2517EC4C27E5A4520025E396 /* RobotoSlab-Light.ttf */; };
+		2517EC6627E5A4520025E396 /* RobotoSlab-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2517EC4D27E5A4520025E396 /* RobotoSlab-Regular.ttf */; };
+		2517EC6727E5A4520025E396 /* Oswald-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2517EC4F27E5A4520025E396 /* Oswald-Regular.ttf */; };
+		2517EC6827E5A4520025E396 /* ThemeFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC5127E5A4520025E396 /* ThemeFont.swift */; };
+		2517EC6927E5A4520025E396 /* ThemeColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC5227E5A4520025E396 /* ThemeColor.swift */; };
+		2517EC6A27E5A4520025E396 /* serviceXTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC5327E5A4520025E396 /* serviceXTheme.swift */; };
+		2517EC6B27E5A4520025E396 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC5527E5A4520025E396 /* APIClient.swift */; };
+		2517EC6C27E5A4520025E396 /* Requests+Responses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC5627E5A4520025E396 /* Requests+Responses.swift */; };
+		2517EC6D27E5A4520025E396 /* OfferUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC5827E5A4520025E396 /* OfferUseCase.swift */; };
+		2517EC6F27E5A4730025E396 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2517EC6E27E5A4730025E396 /* Assets.xcassets */; };
+		DB85CE1B990000350661FBD5 /* Pods_Credify_CredifyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D89DA42E91785C838AB2CC6F /* Pods_Credify_CredifyTests.framework */; };
+		E0C17D0D9B8627E0F7DBC0A5 /* Pods_Credify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7A244039A269E07690C793C /* Pods_Credify.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2517EC0727E57CEE0025E396 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2517EBF227E57CED0025E396 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2517EBFA27E57CED0025E396;
+			remoteInfo = Credify;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		2517EBFB27E57CED0025E396 /* Credify.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Credify.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2517EBFE27E57CED0025E396 /* Credify.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Credify.h; sourceTree = "<group>"; };
+		2517EBFF27E57CED0025E396 /* Credify.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Credify.docc; sourceTree = "<group>"; };
+		2517EC0527E57CEE0025E396 /* CredifyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CredifyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2517EC0A27E57CEE0025E396 /* CredifyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CredifyTests.swift; sourceTree = "<group>"; };
+		2517EC1827E5A3B40025E396 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = Credify/Constants.swift; sourceTree = "<group>"; };
+		2517EC1927E5A3B40025E396 /* serviceX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = serviceX.swift; path = Credify/serviceX.swift; sourceTree = "<group>"; };
+		2517EC2C27E5A4360025E396 /* UIFont+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFont+Extension.swift"; sourceTree = "<group>"; };
+		2517EC2D27E5A4360025E396 /* UIColor+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
+		2517EC2E27E5A4360025E396 /* Encodable+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Encodable+Extension.swift"; sourceTree = "<group>"; };
+		2517EC2F27E5A4360025E396 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
+		2517EC3027E5A4360025E396 /* String+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
+		2517EC3127E5A4360025E396 /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		2517EC3227E5A4360025E396 /* UINavigationBar+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UINavigationBar+Extension.swift"; sourceTree = "<group>"; };
+		2517EC3327E5A4360025E396 /* Dictionary+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Extension.swift"; sourceTree = "<group>"; };
+		2517EC3D27E5A4510025E396 /* AppState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		2517EC3E27E5A4510025E396 /* CredifyEnvs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CredifyEnvs.swift; sourceTree = "<group>"; };
+		2517EC3F27E5A4510025E396 /* Entities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entities.swift; sourceTree = "<group>"; };
+		2517EC4027E5A4510025E396 /* CredifyUserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CredifyUserModel.swift; sourceTree = "<group>"; };
+		2517EC4127E5A4510025E396 /* CredifyError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CredifyError.swift; sourceTree = "<group>"; };
+		2517EC4227E5A4510025E396 /* serviceXConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = serviceXConfig.swift; sourceTree = "<group>"; };
+		2517EC4427E5A4520025E396 /* WebPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebPresenter.swift; sourceTree = "<group>"; };
+		2517EC4527E5A4520025E396 /* WebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
+		2517EC4827E5A4520025E396 /* RobotoSlab-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RobotoSlab-Medium.ttf"; sourceTree = "<group>"; };
+		2517EC4927E5A4520025E396 /* RobotoSlab-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RobotoSlab-Thin.ttf"; sourceTree = "<group>"; };
+		2517EC4A27E5A4520025E396 /* RobotoSlab-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RobotoSlab-Black.ttf"; sourceTree = "<group>"; };
+		2517EC4B27E5A4520025E396 /* RobotoSlab-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RobotoSlab-Bold.ttf"; sourceTree = "<group>"; };
+		2517EC4C27E5A4520025E396 /* RobotoSlab-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RobotoSlab-Light.ttf"; sourceTree = "<group>"; };
+		2517EC4D27E5A4520025E396 /* RobotoSlab-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RobotoSlab-Regular.ttf"; sourceTree = "<group>"; };
+		2517EC4F27E5A4520025E396 /* Oswald-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Oswald-Regular.ttf"; sourceTree = "<group>"; };
+		2517EC5127E5A4520025E396 /* ThemeFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeFont.swift; sourceTree = "<group>"; };
+		2517EC5227E5A4520025E396 /* ThemeColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeColor.swift; sourceTree = "<group>"; };
+		2517EC5327E5A4520025E396 /* serviceXTheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = serviceXTheme.swift; sourceTree = "<group>"; };
+		2517EC5527E5A4520025E396 /* APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		2517EC5627E5A4520025E396 /* Requests+Responses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Requests+Responses.swift"; sourceTree = "<group>"; };
+		2517EC5827E5A4520025E396 /* OfferUseCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfferUseCase.swift; sourceTree = "<group>"; };
+		2517EC6E27E5A4730025E396 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Credify/Assets.xcassets; sourceTree = "<group>"; };
+		461F46F3653A3D0EB68428A7 /* Pods-Credify.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Credify.debug.xcconfig"; path = "Target Support Files/Pods-Credify/Pods-Credify.debug.xcconfig"; sourceTree = "<group>"; };
+		66D61BDBCA8F1E99A5E90707 /* Pods-Credify-CredifyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Credify-CredifyTests.release.xcconfig"; path = "Target Support Files/Pods-Credify-CredifyTests/Pods-Credify-CredifyTests.release.xcconfig"; sourceTree = "<group>"; };
+		BFF408E83C2BFE352C258BE7 /* Pods-Credify.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Credify.release.xcconfig"; path = "Target Support Files/Pods-Credify/Pods-Credify.release.xcconfig"; sourceTree = "<group>"; };
+		C7A244039A269E07690C793C /* Pods_Credify.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Credify.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D89DA42E91785C838AB2CC6F /* Pods_Credify_CredifyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Credify_CredifyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EAE2E90792E6563322DB1C3E /* Pods-Credify-CredifyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Credify-CredifyTests.debug.xcconfig"; path = "Target Support Files/Pods-Credify-CredifyTests/Pods-Credify-CredifyTests.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2517EBF827E57CED0025E396 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E0C17D0D9B8627E0F7DBC0A5 /* Pods_Credify.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2517EC0227E57CEE0025E396 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2517EC0627E57CEE0025E396 /* Credify.framework in Frameworks */,
+				DB85CE1B990000350661FBD5 /* Pods_Credify_CredifyTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2517EBF127E57CED0025E396 = {
+			isa = PBXGroup;
+			children = (
+				2517EBFD27E57CED0025E396 /* Credify */,
+				2517EC0927E57CEE0025E396 /* CredifyTests */,
+				2517EBFC27E57CED0025E396 /* Products */,
+				276E74C6F22EC683011F5E6A /* Pods */,
+				9A06133A2EF12D2EC8354BD0 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		2517EBFC27E57CED0025E396 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2517EBFB27E57CED0025E396 /* Credify.framework */,
+				2517EC0527E57CEE0025E396 /* CredifyTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2517EBFD27E57CED0025E396 /* Credify */ = {
+			isa = PBXGroup;
+			children = (
+				2517EC6E27E5A4730025E396 /* Assets.xcassets */,
+				2517EC4627E5A4520025E396 /* Fonts */,
+				2517EC5427E5A4520025E396 /* Network */,
+				2517EC3C27E5A4510025E396 /* Objects */,
+				2517EC5027E5A4520025E396 /* Theme */,
+				2517EC5727E5A4520025E396 /* UseCases */,
+				2517EC4327E5A4520025E396 /* WebView */,
+				2517EC2B27E5A4360025E396 /* Extensions */,
+				2517EC1827E5A3B40025E396 /* Constants.swift */,
+				2517EC1927E5A3B40025E396 /* serviceX.swift */,
+				2517EBFE27E57CED0025E396 /* Credify.h */,
+				2517EBFF27E57CED0025E396 /* Credify.docc */,
+			);
+			path = Credify;
+			sourceTree = "<group>";
+		};
+		2517EC0927E57CEE0025E396 /* CredifyTests */ = {
+			isa = PBXGroup;
+			children = (
+				2517EC0A27E57CEE0025E396 /* CredifyTests.swift */,
+			);
+			path = CredifyTests;
+			sourceTree = "<group>";
+		};
+		2517EC2B27E5A4360025E396 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				2517EC2C27E5A4360025E396 /* UIFont+Extension.swift */,
+				2517EC2D27E5A4360025E396 /* UIColor+Extension.swift */,
+				2517EC2E27E5A4360025E396 /* Encodable+Extension.swift */,
+				2517EC2F27E5A4360025E396 /* UIViewController+Extension.swift */,
+				2517EC3027E5A4360025E396 /* String+Extension.swift */,
+				2517EC3127E5A4360025E396 /* Extension.swift */,
+				2517EC3227E5A4360025E396 /* UINavigationBar+Extension.swift */,
+				2517EC3327E5A4360025E396 /* Dictionary+Extension.swift */,
+			);
+			name = Extensions;
+			path = Credify/Extensions;
+			sourceTree = "<group>";
+		};
+		2517EC3C27E5A4510025E396 /* Objects */ = {
+			isa = PBXGroup;
+			children = (
+				2517EC3D27E5A4510025E396 /* AppState.swift */,
+				2517EC3E27E5A4510025E396 /* CredifyEnvs.swift */,
+				2517EC3F27E5A4510025E396 /* Entities.swift */,
+				2517EC4027E5A4510025E396 /* CredifyUserModel.swift */,
+				2517EC4127E5A4510025E396 /* CredifyError.swift */,
+				2517EC4227E5A4510025E396 /* serviceXConfig.swift */,
+			);
+			name = Objects;
+			path = Credify/Objects;
+			sourceTree = "<group>";
+		};
+		2517EC4327E5A4520025E396 /* WebView */ = {
+			isa = PBXGroup;
+			children = (
+				2517EC4427E5A4520025E396 /* WebPresenter.swift */,
+				2517EC4527E5A4520025E396 /* WebViewController.swift */,
+			);
+			name = WebView;
+			path = Credify/WebView;
+			sourceTree = "<group>";
+		};
+		2517EC4627E5A4520025E396 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				2517EC4727E5A4520025E396 /* RobotoSlab */,
+				2517EC4E27E5A4520025E396 /* Oswald */,
+			);
+			name = Fonts;
+			path = Credify/Fonts;
+			sourceTree = "<group>";
+		};
+		2517EC4727E5A4520025E396 /* RobotoSlab */ = {
+			isa = PBXGroup;
+			children = (
+				2517EC4827E5A4520025E396 /* RobotoSlab-Medium.ttf */,
+				2517EC4927E5A4520025E396 /* RobotoSlab-Thin.ttf */,
+				2517EC4A27E5A4520025E396 /* RobotoSlab-Black.ttf */,
+				2517EC4B27E5A4520025E396 /* RobotoSlab-Bold.ttf */,
+				2517EC4C27E5A4520025E396 /* RobotoSlab-Light.ttf */,
+				2517EC4D27E5A4520025E396 /* RobotoSlab-Regular.ttf */,
+			);
+			path = RobotoSlab;
+			sourceTree = "<group>";
+		};
+		2517EC4E27E5A4520025E396 /* Oswald */ = {
+			isa = PBXGroup;
+			children = (
+				2517EC4F27E5A4520025E396 /* Oswald-Regular.ttf */,
+			);
+			path = Oswald;
+			sourceTree = "<group>";
+		};
+		2517EC5027E5A4520025E396 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				2517EC5127E5A4520025E396 /* ThemeFont.swift */,
+				2517EC5227E5A4520025E396 /* ThemeColor.swift */,
+				2517EC5327E5A4520025E396 /* serviceXTheme.swift */,
+			);
+			name = Theme;
+			path = Credify/Theme;
+			sourceTree = "<group>";
+		};
+		2517EC5427E5A4520025E396 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				2517EC5527E5A4520025E396 /* APIClient.swift */,
+				2517EC5627E5A4520025E396 /* Requests+Responses.swift */,
+			);
+			name = Network;
+			path = Credify/Network;
+			sourceTree = "<group>";
+		};
+		2517EC5727E5A4520025E396 /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				2517EC5827E5A4520025E396 /* OfferUseCase.swift */,
+			);
+			name = UseCases;
+			path = Credify/UseCases;
+			sourceTree = "<group>";
+		};
+		276E74C6F22EC683011F5E6A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				461F46F3653A3D0EB68428A7 /* Pods-Credify.debug.xcconfig */,
+				BFF408E83C2BFE352C258BE7 /* Pods-Credify.release.xcconfig */,
+				EAE2E90792E6563322DB1C3E /* Pods-Credify-CredifyTests.debug.xcconfig */,
+				66D61BDBCA8F1E99A5E90707 /* Pods-Credify-CredifyTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		9A06133A2EF12D2EC8354BD0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C7A244039A269E07690C793C /* Pods_Credify.framework */,
+				D89DA42E91785C838AB2CC6F /* Pods_Credify_CredifyTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		2517EBF627E57CED0025E396 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2517EC0C27E57CEE0025E396 /* Credify.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		2517EBFA27E57CED0025E396 /* Credify */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2517EC0F27E57CEE0025E396 /* Build configuration list for PBXNativeTarget "Credify" */;
+			buildPhases = (
+				350E121D48F03E2E7BD457A8 /* [CP] Check Pods Manifest.lock */,
+				2517EBF627E57CED0025E396 /* Headers */,
+				2517EBF727E57CED0025E396 /* Sources */,
+				2517EBF827E57CED0025E396 /* Frameworks */,
+				2517EBF927E57CED0025E396 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Credify;
+			productName = Credify;
+			productReference = 2517EBFB27E57CED0025E396 /* Credify.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		2517EC0427E57CEE0025E396 /* CredifyTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2517EC1227E57CEE0025E396 /* Build configuration list for PBXNativeTarget "CredifyTests" */;
+			buildPhases = (
+				81CD0A380D24C25092F4B80B /* [CP] Check Pods Manifest.lock */,
+				2517EC0127E57CEE0025E396 /* Sources */,
+				2517EC0227E57CEE0025E396 /* Frameworks */,
+				2517EC0327E57CEE0025E396 /* Resources */,
+				599E72329F18CDA50EE25325 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2517EC0827E57CEE0025E396 /* PBXTargetDependency */,
+			);
+			name = CredifyTests;
+			productName = CredifyTests;
+			productReference = 2517EC0527E57CEE0025E396 /* CredifyTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2517EBF227E57CED0025E396 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1320;
+				LastUpgradeCheck = 1320;
+				TargetAttributes = {
+					2517EBFA27E57CED0025E396 = {
+						CreatedOnToolsVersion = 13.2.1;
+					};
+					2517EC0427E57CEE0025E396 = {
+						CreatedOnToolsVersion = 13.2.1;
+					};
+				};
+			};
+			buildConfigurationList = 2517EBF527E57CED0025E396 /* Build configuration list for PBXProject "Credify" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2517EBF127E57CED0025E396;
+			productRefGroup = 2517EBFC27E57CED0025E396 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2517EBFA27E57CED0025E396 /* Credify */,
+				2517EC0427E57CEE0025E396 /* CredifyTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2517EBF927E57CED0025E396 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2517EC6227E5A4520025E396 /* RobotoSlab-Thin.ttf in Resources */,
+				2517EC6727E5A4520025E396 /* Oswald-Regular.ttf in Resources */,
+				2517EC6627E5A4520025E396 /* RobotoSlab-Regular.ttf in Resources */,
+				2517EC6327E5A4520025E396 /* RobotoSlab-Black.ttf in Resources */,
+				2517EC6527E5A4520025E396 /* RobotoSlab-Light.ttf in Resources */,
+				2517EC6127E5A4520025E396 /* RobotoSlab-Medium.ttf in Resources */,
+				2517EC6F27E5A4730025E396 /* Assets.xcassets in Resources */,
+				2517EC6427E5A4520025E396 /* RobotoSlab-Bold.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2517EC0327E57CEE0025E396 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		350E121D48F03E2E7BD457A8 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Credify-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		599E72329F18CDA50EE25325 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Credify-CredifyTests/Pods-Credify-CredifyTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Credify-CredifyTests/Pods-Credify-CredifyTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Credify-CredifyTests/Pods-Credify-CredifyTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		81CD0A380D24C25092F4B80B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Credify-CredifyTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2517EBF727E57CED0025E396 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2517EC6027E5A4520025E396 /* WebViewController.swift in Sources */,
+				2517EC3927E5A4360025E396 /* Extension.swift in Sources */,
+				2517EC3827E5A4360025E396 /* String+Extension.swift in Sources */,
+				2517EC2327E5A3B40025E396 /* serviceX.swift in Sources */,
+				2517EC6D27E5A4520025E396 /* OfferUseCase.swift in Sources */,
+				2517EC5927E5A4520025E396 /* AppState.swift in Sources */,
+				2517EC6927E5A4520025E396 /* ThemeColor.swift in Sources */,
+				2517EC5B27E5A4520025E396 /* Entities.swift in Sources */,
+				2517EC5C27E5A4520025E396 /* CredifyUserModel.swift in Sources */,
+				2517EC6A27E5A4520025E396 /* serviceXTheme.swift in Sources */,
+				2517EC3A27E5A4360025E396 /* UINavigationBar+Extension.swift in Sources */,
+				2517EC5A27E5A4520025E396 /* CredifyEnvs.swift in Sources */,
+				2517EC0027E57CED0025E396 /* Credify.docc in Sources */,
+				2517EC6C27E5A4520025E396 /* Requests+Responses.swift in Sources */,
+				2517EC3B27E5A4360025E396 /* Dictionary+Extension.swift in Sources */,
+				2517EC5E27E5A4520025E396 /* serviceXConfig.swift in Sources */,
+				2517EC3427E5A4360025E396 /* UIFont+Extension.swift in Sources */,
+				2517EC2227E5A3B40025E396 /* Constants.swift in Sources */,
+				2517EC3727E5A4360025E396 /* UIViewController+Extension.swift in Sources */,
+				2517EC5D27E5A4520025E396 /* CredifyError.swift in Sources */,
+				2517EC6827E5A4520025E396 /* ThemeFont.swift in Sources */,
+				2517EC5F27E5A4520025E396 /* WebPresenter.swift in Sources */,
+				2517EC3527E5A4360025E396 /* UIColor+Extension.swift in Sources */,
+				2517EC6B27E5A4520025E396 /* APIClient.swift in Sources */,
+				2517EC3627E5A4360025E396 /* Encodable+Extension.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2517EC0127E57CEE0025E396 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2517EC0B27E57CEE0025E396 /* CredifyTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2517EC0827E57CEE0025E396 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2517EBFA27E57CED0025E396 /* Credify */;
+			targetProxy = 2517EC0727E57CEE0025E396 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		2517EC0D27E57CEE0025E396 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		2517EC0E27E57CEE0025E396 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		2517EC1027E57CEE0025E396 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 461F46F3653A3D0EB68428A7 /* Pods-Credify.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 34C29C245L;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "one.credify.credify-sdk";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2517EC1127E57CEE0025E396 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BFF408E83C2BFE352C258BE7 /* Pods-Credify.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 34C29C245L;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "one.credify.credify-sdk";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		2517EC1327E57CEE0025E396 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = EAE2E90792E6563322DB1C3E /* Pods-Credify-CredifyTests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 34C29C245L;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = one.credify.CredifyTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2517EC1427E57CEE0025E396 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 66D61BDBCA8F1E99A5E90707 /* Pods-Credify-CredifyTests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 34C29C245L;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = one.credify.CredifyTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2517EBF527E57CED0025E396 /* Build configuration list for PBXProject "Credify" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2517EC0D27E57CEE0025E396 /* Debug */,
+				2517EC0E27E57CEE0025E396 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2517EC0F27E57CEE0025E396 /* Build configuration list for PBXNativeTarget "Credify" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2517EC1027E57CEE0025E396 /* Debug */,
+				2517EC1127E57CEE0025E396 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2517EC1227E57CEE0025E396 /* Build configuration list for PBXNativeTarget "CredifyTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2517EC1327E57CEE0025E396 /* Debug */,
+				2517EC1427E57CEE0025E396 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2517EBF227E57CED0025E396 /* Project object */;
+}
