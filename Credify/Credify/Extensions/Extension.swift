@@ -38,7 +38,7 @@ extension Bundle {
         #if SWIFT_PACKAGE
         return Bundle.module
         #else
-        return Bundle(identifier: "one.credify.credify-sdk", with: "") ?? Bundle(identifier: "org.cocoapods.Credify") ?? .main
+        return Bundle(identifier: "one.credify.credify-sdk") ?? Bundle(identifier: "org.cocoapods.Credify") ?? .main
         #endif
     }
 }
