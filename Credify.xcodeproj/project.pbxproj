@@ -46,6 +46,8 @@
 		2517EC9127E5AFC80025E396 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 2517EC9027E5AFC80025E396 /* README.md */; };
 		DB85CE1B990000350661FBD5 /* Pods_Credify_CredifyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D89DA42E91785C838AB2CC6F /* Pods_Credify_CredifyTests.framework */; };
 		E0C17D0D9B8627E0F7DBC0A5 /* Pods_Credify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7A244039A269E07690C793C /* Pods_Credify.framework */; };
+		F83B400427E89DF200A01A2E /* PostMessageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83B400327E89DF200A01A2E /* PostMessageUtils.swift */; };
+		F83B400627E89E7300A01A2E /* PostMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83B400527E89E7300A01A2E /* PostMessageModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,6 +106,8 @@
 		C7A244039A269E07690C793C /* Pods_Credify.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Credify.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D89DA42E91785C838AB2CC6F /* Pods_Credify_CredifyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Credify_CredifyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAE2E90792E6563322DB1C3E /* Pods-Credify-CredifyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Credify-CredifyTests.debug.xcconfig"; path = "Target Support Files/Pods-Credify-CredifyTests/Pods-Credify-CredifyTests.debug.xcconfig"; sourceTree = "<group>"; };
+		F83B400327E89DF200A01A2E /* PostMessageUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostMessageUtils.swift; sourceTree = "<group>"; };
+		F83B400527E89E7300A01A2E /* PostMessageModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostMessageModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,6 +156,7 @@
 		2517EBFD27E57CED0025E396 /* Credify */ = {
 			isa = PBXGroup;
 			children = (
+				F83B400227E89DF200A01A2E /* Utils */,
 				2517EC6E27E5A4730025E396 /* Assets.xcassets */,
 				2517EC4627E5A4520025E396 /* Fonts */,
 				2517EC5427E5A4520025E396 /* Network */,
@@ -195,6 +200,7 @@
 		2517EC3C27E5A4510025E396 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
+				F83B400527E89E7300A01A2E /* PostMessageModel.swift */,
 				2517EC3D27E5A4510025E396 /* AppState.swift */,
 				2517EC3E27E5A4510025E396 /* CredifyEnvs.swift */,
 				2517EC3F27E5A4510025E396 /* Entities.swift */,
@@ -295,6 +301,15 @@
 				D89DA42E91785C838AB2CC6F /* Pods_Credify_CredifyTests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F83B400227E89DF200A01A2E /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				F83B400327E89DF200A01A2E /* PostMessageUtils.swift */,
+			);
+			name = Utils;
+			path = Credify/Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -490,11 +505,13 @@
 				2517EC5927E5A4520025E396 /* AppState.swift in Sources */,
 				2517EC6927E5A4520025E396 /* ThemeColor.swift in Sources */,
 				2517EC5B27E5A4520025E396 /* Entities.swift in Sources */,
+				F83B400627E89E7300A01A2E /* PostMessageModel.swift in Sources */,
 				2517EC5C27E5A4520025E396 /* CredifyUserModel.swift in Sources */,
 				2517EC6A27E5A4520025E396 /* serviceXTheme.swift in Sources */,
 				2517EC3A27E5A4360025E396 /* UINavigationBar+Extension.swift in Sources */,
 				2517EC5A27E5A4520025E396 /* CredifyEnvs.swift in Sources */,
 				2517EC0027E57CED0025E396 /* Credify.docc in Sources */,
+				F83B400427E89DF200A01A2E /* PostMessageUtils.swift in Sources */,
 				2517EC6C27E5A4520025E396 /* Requests+Responses.swift in Sources */,
 				2517EC3B27E5A4360025E396 /* Dictionary+Extension.swift in Sources */,
 				2517EC5E27E5A4520025E396 /* serviceXConfig.swift in Sources */,

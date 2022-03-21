@@ -43,7 +43,29 @@ extension Dictionary {
         }
     }
     
+    var jsonBase64: String {
+        let invalidJson = "Not a valid JSON"
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: self)
+            return jsonData.base64EncodedString()
+        } catch {
+            return invalidJson
+        }
+    }
+    
     func jsonPresentation() {
         print(json)
+    }
+    
+    static func fromBase64(base64: String) -> Dictionary<String, Any>? {
+        guard let data = Data(base64Encoded: base64) else {
+            return nil
+        }
+        
+        do {
+            return try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: Any]
+        } catch {
+            return nil
+        }
     }
 }

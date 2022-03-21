@@ -29,16 +29,9 @@ enum PassportContext {
     }
 }
 
-enum MessageHandler: String {
-    case initialLoadCompleted
-    case createUserCompleted
-    case startRedemption
-    case offerTransactionStatusChanged
-    case actionClose
-}
-
 protocol WebPresenterProtocol {
-    var handlers: [MessageHandler] { get }
+    var sendHandlers: [SendMessageHandler] { get }
+    var receiveHandlers: [ReceiveMessageHandler] { get }
     func shouldClose(messageName: String) -> Bool
     func handleMessage(_: WKWebView, name: String, body: [String: Any]?)
     func hanldeCompletionHandler()
@@ -53,18 +46,26 @@ class WebPresenter: WebPresenterProtocol {
     
     private var offerTransactionStatus: RedemptionResult = .canceled
     
-    var handlers: [MessageHandler] {
+    var sendHandlers: [SendMessageHandler] {
+        return [
+            .actionLogin,
+            .pushClaimCompleted,
+            .startRedemption,
+        ]
+    }
+    
+    var receiveHandlers: [ReceiveMessageHandler] {
         return [
             .initialLoadCompleted,
             .createUserCompleted,
-            .startRedemption,
             .offerTransactionStatusChanged,
             .actionClose,
         ]
     }
     
+    
     func shouldClose(messageName: String) -> Bool {
-        guard let type = MessageHandler(rawValue: messageName) else {
+        guard let type = ReceiveMessageHandler(rawValue: messageName) else {
             return false
         }
         if case .actionClose = type {
@@ -74,7 +75,7 @@ class WebPresenter: WebPresenterProtocol {
     }
     
     func handleMessage(_ webView: WKWebView, name: String, body: [String: Any]?) {
-        guard let type = MessageHandler(rawValue: name) else {
+        guard let type = ReceiveMessageHandler(rawValue: name) else {
             return
         }
         
@@ -83,15 +84,16 @@ class WebPresenter: WebPresenterProtocol {
             // TODO: This is not called. We need to have communication from passport web app
             print(context)
             if case let .mypage(user) = context {
-                let data: [String: String] = [
-                    "action": "ACTION_LOGIN",
-                    "phone_number": user.phoneNumber,
-                    "country_code": user.countryCode,
-                    "full_name": user.localizedName
-                ]
-                print(data.json)
-                let js = "(function() { window.postMessage('\(data.json)','*'); })();"
-                webView.evaluateJavaScript(js)
+                doPostMessage(
+                    webView,
+                    type: ACTION_TYPE,
+                    action: SendMessageHandler.actionLogin.rawValue,
+                    payload: [
+                        "phoneNumber": user.phoneNumber,
+                        "countryCode": user.countryCode,
+                        "fullName": user.localizedName
+                    ]
+                )
             }
             if case let .offer(offer, user) = context {
                 guard let offerJsonData = try? offer.jsonData(), let userJsonData = try? user.jsonData() else {
@@ -103,67 +105,37 @@ class WebPresenter: WebPresenterProtocol {
                 guard let offerDict = offerJson as? [String: Any], let userDict = userJson as? [String: Any] else {
                     return
                 }
-                let data: [String: Any] = [
-                    "type": "CREDIFY-WEB-SDK",
-                    "action": "startRedemption",
-                    "payload": [
+                
+                doPostMessage(
+                    webView,
+                    type: ACTION_TYPE,
+                    action: SendMessageHandler.startRedemption.rawValue,
+                    payload: [
                         "offer": offerDict.keysToCamelCase(),
                         "profile": userDict
                     ]
-                ]
-                
-                // The payload will break line instead of "\n"  when using the postMessage
-                // That's why the web app cannot parse json data
-                
-                // In valid json without replacing. It's just example, not full json data
-                // === Example json:===
-                /*
-                   "description":"BẢO HIỂM NHÀ 365 Cam kết luôn đồng hành, mang đến cho bạn sự an tâm trước các rủi ro về ngôi nhà, mái ấm yêu thương của gia đình bạn.
-                                   
-                                   
-                    Phí bảo hiểm hiểm cạnh tranh
-                    Thủ tục đăng ký nhanh chóng, đơn giản"
-                 */
-
-                // I found this way to fix it, if we have a better way I will update it later.
-                let json = data.json.replacingOccurrences(of: "\\n", with: "<br>")
-                let js = "(function() { window.postMessage('\(json)','*'); })();"
-                
-                webView.evaluateJavaScript(js)
+                )
             }
             // TODO: other context
-        case .startRedemption:
-            break
         case .createUserCompleted:
             guard let dict = body else { return }
-            guard let payload = dict["payload"] as? [String: Any], let credifyId = payload["credifyId"] as? String else {
+            guard let payload = PostMessageUtils.parsePayload(dict: dict), let credifyId = payload["credifyId"] as? String else {
+                self.postPushedClaimMessage(webView, isSuccess: false)
                 return
             }
             guard let task = AppState.shared.pushClaimTokensTask else {
+                self.postPushedClaimMessage(webView, isSuccess: false)
                 return
             }
             
             AppState.shared.credifyId = credifyId
 
             task(credifyId) { result in
-                if result {
-                    let data: [String: Any] = [
-                        "type": "CREDIFY-WEB-SDK",
-                        "action": "pushClaimCompleted",
-                        "payload": [
-                            "isSuccess": true
-                        ]
-                    ]
-                    let js = "(function() { window.postMessage('\(data.json)','*'); })();"
-                    webView.evaluateJavaScript(js)
-                } else {
-                    print("Push claim token failed")
-                }
-                
+                self.postPushedClaimMessage(webView, isSuccess: result)
             }
         case .offerTransactionStatusChanged:
             guard let dict = body else { return }
-            guard let payload = dict["payload"] as? [String: Any], let status = payload["status"] as? String else {
+            guard let payload = PostMessageUtils.parsePayload(dict: dict), let status = payload["status"] as? String else {
                 return
             }
             guard let onboardingStatus = OnboardingStatus(rawValue: status) else { return }
@@ -195,5 +167,33 @@ class WebPresenter: WebPresenterProtocol {
         case .serviceInstance:
             break
         }
+    }
+    
+    private func postPushedClaimMessage(_ webView: WKWebView, isSuccess: Bool) {
+        self.doPostMessage(
+            webView,
+            type: ACTION_TYPE,
+            action: SendMessageHandler.pushClaimCompleted.rawValue,
+            payload: [
+                "isSuccess": isSuccess
+            ]
+        )
+    }
+    
+    private func doPostMessage(
+        _ webView: WKWebView,
+        type: String,
+        action: String,
+        payload: [String: Any]
+    ) {
+        let data: [String: Any] = [
+            "type": type,
+            "action": action,
+            "payloadType": PayloadType.base64.rawValue,
+            "payload": payload.jsonBase64
+        ]
+        
+        let js = "(function() { window.postMessage('\(data.json)','*'); })();"
+        webView.evaluateJavaScript(js)
     }
 }
