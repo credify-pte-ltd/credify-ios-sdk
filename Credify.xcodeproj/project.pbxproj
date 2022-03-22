@@ -48,6 +48,7 @@
 		E0C17D0D9B8627E0F7DBC0A5 /* Pods_Credify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7A244039A269E07690C793C /* Pods_Credify.framework */; };
 		F83B400427E89DF200A01A2E /* PostMessageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83B400327E89DF200A01A2E /* PostMessageUtils.swift */; };
 		F83B400627E89E7300A01A2E /* PostMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83B400527E89E7300A01A2E /* PostMessageModel.swift */; };
+		F8AED25127E984780095DB6C /* PostMessageUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8AED25027E984780095DB6C /* PostMessageUtilsTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,6 +109,7 @@
 		EAE2E90792E6563322DB1C3E /* Pods-Credify-CredifyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Credify-CredifyTests.debug.xcconfig"; path = "Target Support Files/Pods-Credify-CredifyTests/Pods-Credify-CredifyTests.debug.xcconfig"; sourceTree = "<group>"; };
 		F83B400327E89DF200A01A2E /* PostMessageUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostMessageUtils.swift; sourceTree = "<group>"; };
 		F83B400527E89E7300A01A2E /* PostMessageModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostMessageModel.swift; sourceTree = "<group>"; };
+		F8AED25027E984780095DB6C /* PostMessageUtilsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostMessageUtilsTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,6 +178,7 @@
 		2517EC0927E57CEE0025E396 /* CredifyTests */ = {
 			isa = PBXGroup;
 			children = (
+				F8AED24F27E9845E0095DB6C /* Utils */,
 				2517EC0A27E57CEE0025E396 /* CredifyTests.swift */,
 			);
 			path = CredifyTests;
@@ -310,6 +313,14 @@
 			);
 			name = Utils;
 			path = Credify/Utils;
+			sourceTree = "<group>";
+		};
+		F8AED24F27E9845E0095DB6C /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				F8AED25027E984780095DB6C /* PostMessageUtilsTest.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -532,6 +543,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2517EC0B27E57CEE0025E396 /* CredifyTests.swift in Sources */,
+				F8AED25127E984780095DB6C /* PostMessageUtilsTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

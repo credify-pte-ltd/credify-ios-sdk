@@ -29,10 +29,6 @@ class WebViewController: UIViewController {
 
         let configuration = WKWebViewConfiguration()
         let userController = WKUserContentController()
-            
-        presenter.sendHandlers.forEach { handler in
-            userController.add(self, name: handler.rawValue)
-        }
         
         presenter.receiveHandlers.forEach { handler in
             userController.add(self, name: handler.rawValue)
@@ -194,7 +190,6 @@ extension WebViewController: WKUIDelegate {
 extension WebViewController: WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        // NOTE: this is not working well
         presenter.handleMessage(webView, name: ReceiveMessageHandler.initialLoadCompleted.rawValue, body: nil)
     }
 }

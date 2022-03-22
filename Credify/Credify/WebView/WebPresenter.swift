@@ -30,7 +30,6 @@ enum PassportContext {
 }
 
 protocol WebPresenterProtocol {
-    var sendHandlers: [SendMessageHandler] { get }
     var receiveHandlers: [ReceiveMessageHandler] { get }
     func shouldClose(messageName: String) -> Bool
     func handleMessage(_: WKWebView, name: String, body: [String: Any]?)
@@ -45,14 +44,6 @@ class WebPresenter: WebPresenterProtocol {
     }
     
     private var offerTransactionStatus: RedemptionResult = .canceled
-    
-    var sendHandlers: [SendMessageHandler] {
-        return [
-            .actionLogin,
-            .pushClaimCompleted,
-            .startRedemption,
-        ]
-    }
     
     var receiveHandlers: [ReceiveMessageHandler] {
         return [
