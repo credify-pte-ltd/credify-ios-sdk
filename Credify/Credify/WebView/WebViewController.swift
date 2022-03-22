@@ -63,6 +63,7 @@ class WebViewController: UIViewController {
         webView.addObserver(self, forKeyPath: #keyPath(WKWebView.title), options: .new, context: nil)
         webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
         webView.addObserver(self, forKeyPath: #keyPath(WKWebView.url), options: .new, context: nil)
+        webView.customUserAgent = AppState.shared.config?.userAgent
         
         webView.navigationDelegate = self
     }

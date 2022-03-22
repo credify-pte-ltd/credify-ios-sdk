@@ -22,6 +22,7 @@ class APIClient {
         let method = request.method
         let encoding = request.encoding
         let parameters = request.parameters
+        let userAgent = AppState.shared.config?.userAgent ?? "unknown"
 
         if token.isEmpty {
             guard let orgApiKey = AppState.shared.config?.apiKey else {
@@ -32,7 +33,8 @@ class APIClient {
             let r = ClientAuthenticationRequest(apiKey: orgApiKey)
             let tokenRequestUrl = "\(r.baseUrl)/\(r.path)"
             let tokenRequestHeaders: HTTPHeaders = [
-                "X-API-KEY": orgApiKey
+                "X-API-KEY": orgApiKey,
+                "User-Agent": userAgent,
             ]
             AF.request(tokenRequestUrl, method: .post, parameters: nil, headers: tokenRequestHeaders)
                 .validate(statusCode: 200..<300)
@@ -46,7 +48,8 @@ class APIClient {
                             self.token = result.data.accessToken
                             
                             let headers: HTTPHeaders = [
-                                "Authorization": "Bearer \(self.token)"
+                                "Authorization": "Bearer \(self.token)",
+                                "User-Agent": userAgent,
                             ]
                             
                             AF.request(requestUrl, method: method, parameters: parameters, encoding: encoding, headers: headers)
@@ -80,7 +83,8 @@ class APIClient {
                 }
         } else {
             let headers: HTTPHeaders = [
-                "Authorization": "Bearer \(token)"
+                "Authorization": "Bearer \(token)",
+                "User-Agent": userAgent,
             ]
             AF.request(requestUrl, method: method, parameters: parameters, encoding: encoding, headers: headers)
                 .validate(statusCode: 200..<300)
