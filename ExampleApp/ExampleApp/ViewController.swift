@@ -28,7 +28,7 @@ class ViewController: UIViewController {
         let config = serviceXConfig(apiKey: API_KEY, env: .dev, appName: APP_NAME)
         serviceX.configure(config)
         
-        user = CredifyUserModel(id: "123", firstName: "Sh", lastName: "Test", email: "vu.nguyen@gmail.com", credifyId: nil, countryCode: "84", phoneNumber: "0381239876")
+        user = CredifyUserModel(id: "123", firstName: "Sh", lastName: "Test", email: "vu.nguyen@gmail.com", credifyId: nil, countryCode: "+84", phoneNumber: "381239812")
         
         loadOffers()
     }
@@ -37,10 +37,11 @@ class ViewController: UIViewController {
     func loadOffers() {
         offer.getOffers(user: user, productTypes: []) { [weak self] result in
             switch result {
-            case .success(let offers):
-                self?.offerList = offers
+            case .success(let offersListInfo):
+                self?.offerList = offersListInfo.offers
+                self?.user.credifyId = offersListInfo.credifyId
                 self?.button.isEnabled = true
-                print(offers)
+                print(offersListInfo)
             case .failure(let error):
                 print(error)
             }

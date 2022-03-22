@@ -35,47 +35,67 @@ extension UIColor {
 extension UIColor: ExtensionCompatible {}
 
 extension Extension where Base: UIColor {
-    static var backgroundDark: UIColor {
-        return UIColor.fromHex("#FFFFFF")
+    static var backgroundDark: String {
+        return "#FFFFFF"
     }
     
-    static var backgroundLight: UIColor {
-        return UIColor.fromHex("#FFFFFF")
+    static var backgroundLight: String {
+        return "#FFFFFF"
     }
     
-    static var primary: UIColor {
-        return UIColor.fromHex("#AB2185")
+    static var primary: String {
+        return "#1382F8"
     }
     
-    static var primaryDarker: UIColor {
-        return UIColor.fromHex("#5A24B3")
+    static var primaryDarker: String {
+        return "#17A6EF"
     }
     
-    static var text: UIColor {
-        return UIColor.fromHex("#333333")
+    static var text: String {
+        return "#333333"
     }
     
-    static var error: UIColor {
-        return UIColor.fromHex("#FF3838")
+    static var error: String {
+        return "#FF3838"
     }
     
-    static var primaryText: UIColor {
-        return UIColor.fromHex("#333333")
+    static var primaryText: String {
+        return "#333333"
     }
     
-    static var secondaryText: UIColor {
-        return UIColor.fromHex("#999999")
+    static var secondaryText: String {
+        return "#999999"
     }
     
-    static var buttonText: UIColor {
-        return UIColor.fromHex("#FFFFFF")
+    static var buttonText: String {
+        return "#FFFFFF"
     }
     
-    static var secondaryActive: UIColor {
-        return UIColor.fromHex("#9147D7")
+    static var secondaryActive: String {
+        return "#1483F7"
     }
     
-    static var backgroundComponent: UIColor {
-        return UIColor.fromHex("#F0E9F9")
+    static var secondaryDisable: String {
+        return "#E0E0E0"
+    }
+    
+    static var backgroundComponent: String {
+        return "#F0E9F9"
+    }
+    
+    static var primaryButtonTextColor: String {
+        return "#FFFFFF"
+    }
+    
+    static var primaryButtonBrandyStart: String {
+        return "#02D15D"
+    }
+    
+    static var primaryButtonBrandyEnd: String {
+        return "#01B779"
+    }
+    
+    static var primaryIconColor: String {
+        return "#FFFFFF"
     }
 }

@@ -70,7 +70,7 @@ public struct serviceX {
         ///   - user: User object
         ///   - productTypes: Products list
         ///   - completion: Completion handler. You can access to offers list in this handler.
-        public func getOffers(user: CredifyUserModel? = nil, productTypes: [String] = [], completion: @escaping ((Result<[OfferData], CredifyError>) -> Void)) {
+        public func getOffers(user: CredifyUserModel? = nil, productTypes: [String] = [], completion: @escaping ((Result<OfferListInfo, CredifyError>) -> Void)) {
             return useCase.getOffers(phoneNumber: user?.phoneNumber, countryCode: user?.countryCode, internalId: user?.id ?? "", credifyId: user?.credifyId, productTypes: productTypes, completion: completion)
         }
         
@@ -91,7 +91,7 @@ public struct serviceX {
             AppState.shared.pushClaimTokensTask = pushClaimTokensTask
             AppState.shared.redemptionResult = completionHandler
             if (userProfile.credifyId ?? "").isEmpty {
-                u.credifyId = AppState.shared.credifyId ?? offer.credifyId
+                u.credifyId = AppState.shared.credifyId
             }
             
             let context = PassportContext.offer(offer: offer, user: u)
@@ -116,7 +116,7 @@ public struct serviceX {
         /// - Parameters:
         ///   - user: User object
         ///   - completion: Completion handler. You can access to BNPL offers list in this handler.
-        public func getOffers(user: CredifyUserModel? = nil, completion: @escaping ((Result<[OfferData], CredifyError>) -> Void)) {
+        public func getOffers(user: CredifyUserModel? = nil, completion: @escaping ((Result<OfferListInfo, CredifyError>) -> Void)) {
             // TODO: handle non-offer case
             
             useCase.getOffers(phoneNumber: user?.phoneNumber, countryCode: user?.countryCode, internalId: user?.id ?? "", credifyId: user?.credifyId, productTypes: ["bnpl"], completion: completion)
@@ -140,7 +140,7 @@ public struct serviceX {
             AppState.shared.pushClaimTokensTask = pushClaimTokensTask
             AppState.shared.redemptionResult = completionHandler
             if (AppState.shared.credifyId ?? "").isEmpty {
-                AppState.shared.credifyId = userProfile.credifyId ?? offer.credifyId
+                AppState.shared.credifyId = userProfile.credifyId       
             }
             
             let context = PassportContext.bnpl(offer: offer, user: userProfile, orderId: orderId)

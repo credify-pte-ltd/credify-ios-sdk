@@ -97,13 +97,25 @@ class WebPresenter: WebPresenterProtocol {
                     return
                 }
                 
+                // Theme
+                var themeDict: [String: Any]? = nil
+                let themeData: Data? = try? AppState.shared.config?.theme.jsonData()
+                if themeData != nil {
+                    let themeJson = try? JSONSerialization.jsonObject(with: themeData!, options: [])
+                    themeDict = themeJson as? [String: Any]
+                }
+                
                 doPostMessage(
                     webView,
                     type: ACTION_TYPE,
                     action: SendMessageHandler.startRedemption.rawValue,
-                    payload: [
+                    payload: themeDict != nil ? [
                         "offer": offerDict.keysToCamelCase(),
-                        "profile": userDict
+                        "profile": userDict,
+                        "theme": themeDict!
+                    ] : [
+                        "offer": offerDict.keysToCamelCase(),
+                        "profile": userDict,
                     ]
                 )
             }

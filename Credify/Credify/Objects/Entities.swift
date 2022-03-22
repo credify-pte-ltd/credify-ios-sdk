@@ -12,8 +12,6 @@ public struct OfferData: Codable {
     public let code: String
     public var campaign: OfferCampaign
     public let evaluationResult: EvaluationResult?
-    // NOTE: when getting list offer from consumer, credifyId maybe nil if user haven't account from Credify yet. After creating credify account from provider, we will have credifyId and we will assign it.
-    public var credifyId: String?
     public let providerId: String?
     // NOTE: we need provider for show logo in initial offer screen
     public let provider: Organization?
@@ -22,14 +20,12 @@ public struct OfferData: Codable {
                 code: String,
                 campaign: OfferCampaign,
                 evaluationResult: EvaluationResult?,
-                credifyId: String?,
                 providerId: String?,
                 provider: Organization) {
         self.id = id
         self.code = code
         self.campaign = campaign
         self.evaluationResult = evaluationResult
-        self.credifyId = credifyId
         self.providerId = providerId
         self.provider = provider
     }
@@ -39,12 +35,22 @@ public struct OfferData: Codable {
         case code
         case campaign
         case evaluationResult = "evaluation_result"
-        case credifyId = "credify_id"
         case providerId = "provider_id"
         case provider = "provider"
     }
 }
 
+public struct OfferListInfo : Codable {
+    public let offers: [OfferData]
+    
+    // NOTE: when getting list offer from consumer, credifyId maybe nil if user haven't account from Credify yet. After creating credify account from provider, we will have credifyId and we will assign it.
+    public let credifyId: String?
+    
+    private enum CodingKeys: String, CodingKey {
+        case offers
+        case credifyId = "credify_id"
+    }
+}
 
 public struct EvaluationResult: Codable {
     public let rank: Int
