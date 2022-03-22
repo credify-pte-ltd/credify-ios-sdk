@@ -69,7 +69,13 @@ class ViewController: UIViewController {
         }
     }
     @IBAction func clickButton(_ sender: Any) {
-        startOffer(offerList[1])
+        let offers = offerList.filter { offer in
+            !offer.campaign.useReferral
+        }
+        
+        if !offers.isEmpty {
+            startOffer(offers[0])
+        }
     }
     
 }
