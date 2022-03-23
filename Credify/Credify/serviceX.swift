@@ -123,12 +123,12 @@ public struct serviceX {
             }
             
             // Show error
-            let alert = UIAlertController(title: "Error".localized(tableName: tableName), message: errorMessage, preferredStyle: .alert)
-            let action = UIAlertAction(title: "OK".localized(tableName: tableName), style: .default) { alertAction in
-                // Do nothing
-            }
-            alert.addAction(action)
-            from.present(alert, animated: true)
+            UIUtils.alert(
+                from: from,
+                title: "Error".localized(tableName: tableName),
+                errorMessage: errorMessage,
+                actionText: "OK".localized(tableName: tableName)
+            )
         }
     }
     

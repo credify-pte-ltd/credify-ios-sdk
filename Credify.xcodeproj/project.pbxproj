@@ -49,6 +49,7 @@
 		F83B400427E89DF200A01A2E /* PostMessageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83B400327E89DF200A01A2E /* PostMessageUtils.swift */; };
 		F83B400627E89E7300A01A2E /* PostMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83B400527E89E7300A01A2E /* PostMessageModel.swift */; };
 		F84828B227EADC9200ED1E12 /* serviceX.strings in Resources */ = {isa = PBXBuildFile; fileRef = F84828B027EADC9200ED1E12 /* serviceX.strings */; };
+		F84828B827EAE8BC00ED1E12 /* UIUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F84828B727EAE8BC00ED1E12 /* UIUtils.swift */; };
 		F8AED25127E984780095DB6C /* PostMessageUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8AED25027E984780095DB6C /* PostMessageUtilsTest.swift */; };
 /* End PBXBuildFile section */
 
@@ -113,6 +114,7 @@
 		F84828B127EADC9200ED1E12 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Credify/en.lproj/serviceX.strings; sourceTree = "<group>"; };
 		F84828B327EADCA200ED1E12 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = Credify/ja.lproj/serviceX.strings; sourceTree = "<group>"; };
 		F84828B427EADCB300ED1E12 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = Credify/vi.lproj/serviceX.strings; sourceTree = "<group>"; };
+		F84828B727EAE8BC00ED1E12 /* UIUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIUtils.swift; sourceTree = "<group>"; };
 		F8AED25027E984780095DB6C /* PostMessageUtilsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostMessageUtilsTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -315,6 +317,7 @@
 			isa = PBXGroup;
 			children = (
 				F83B400327E89DF200A01A2E /* PostMessageUtils.swift */,
+				F84828B727EAE8BC00ED1E12 /* UIUtils.swift */,
 			);
 			name = Utils;
 			path = Credify/Utils;
@@ -519,6 +522,7 @@
 				2517EC6027E5A4520025E396 /* WebViewController.swift in Sources */,
 				2517EC3927E5A4360025E396 /* Extension.swift in Sources */,
 				2517EC3827E5A4360025E396 /* String+Extension.swift in Sources */,
+				F84828B827EAE8BC00ED1E12 /* UIUtils.swift in Sources */,
 				2517EC2327E5A3B40025E396 /* serviceX.swift in Sources */,
 				2517EC6D27E5A4520025E396 /* OfferUseCase.swift in Sources */,
 				2517EC5927E5A4520025E396 /* AppState.swift in Sources */,
