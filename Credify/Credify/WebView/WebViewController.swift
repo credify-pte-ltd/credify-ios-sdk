@@ -91,12 +91,11 @@ class WebViewController: UIViewController {
             return
         }
         
-        if #available(iOS 11.0, *) {
-            navBar.setGradientBackground(colors: [UIColor(named: "gradientLeft", in: Bundle.serviceX, compatibleWith: nil)!, UIColor(named: "gradientRight", in: Bundle.serviceX, compatibleWith: nil)!], startPoint: .topLeft, endPoint: .bottomRight)
-        } else {
-            // Fallback on earlier versions
-            navBar.setGradientBackground(colors: [UIColor.black, UIColor.purple], startPoint: .topLeft, endPoint: .bottomRight)
-        }
+        let theme = AppState.shared.config?.theme
+        let themeColor = theme?.color
+        let startColor = themeColor?.primaryBrandyStart ?? ThemeColor.default.primaryBrandyStart
+        let endColor = themeColor?.primaryBrandyEnd ?? ThemeColor.default.primaryBrandyEnd
+        navBar.setGradientBackground(colors: [UIColor.fromHex(startColor), UIColor.fromHex(endColor)], startPoint: .topLeft, endPoint: .bottomRight)
         
         // TODO I will update it later
         let titleFont: UIFont? = nil //AppState.shared.config?.theme.font.primaryPageTitle
@@ -111,7 +110,7 @@ class WebViewController: UIViewController {
             ]
         }
         
-        navBar.tintColor = .white
+        navBar.tintColor = UIColor.fromHex(themeColor?.primaryIconColor ?? "#FFFFFF")
         if #available(iOS 13.0, *) {
             navigationItem.leftBarButtonItem = UIBarButtonItem(
                 image: UIImage(named: "ic_back", in: Bundle.serviceX, with: nil),

@@ -70,7 +70,7 @@ public struct serviceX {
         ///   - user: User object
         ///   - productTypes: Products list
         ///   - completion: Completion handler. You can access to offers list in this handler.
-        public func getOffers(user: CredifyUserModel? = nil, productTypes: [String] = [], completion: @escaping ((Result<[OfferData], CredifyError>) -> Void)) {
+        public func getOffers(user: CredifyUserModel? = nil, productTypes: [String] = [], completion: @escaping ((Result<OfferListInfo, CredifyError>) -> Void)) {
             return useCase.getOffers(phoneNumber: user?.phoneNumber, countryCode: user?.countryCode, internalId: user?.id ?? "", credifyId: user?.credifyId, productTypes: productTypes, completion: completion)
         }
         
@@ -87,22 +87,50 @@ public struct serviceX {
                                    userProfile: CredifyUserModel,
                                    pushClaimTokensTask: @escaping ((String, ((Bool) -> Void)?) -> Void),
                                    completionHandler: @escaping (RedemptionResult) -> Void) {
-            var u = userProfile
-            AppState.shared.pushClaimTokensTask = pushClaimTokensTask
-            AppState.shared.redemptionResult = completionHandler
-            if (userProfile.credifyId ?? "").isEmpty {
-                u.credifyId = AppState.shared.credifyId ?? offer.credifyId
+            let tableName = "serviceX"
+            var errorMessage = ""
+            
+            // Market user id
+            if userProfile.id.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                errorMessage.append(String(format:"FieldIsRequired".localized(tableName: tableName), "\'User Id\'"))
+                errorMessage.append(" ")
             }
             
-            let context = PassportContext.offer(offer: offer, user: u)
-            let vc = WebViewController.instantiate(context: context)
-            let navigationController = UINavigationController(rootViewController: vc)
-            navigationController.modalPresentationStyle = .overFullScreen
-            navigationController.interactivePopGestureRecognizer?.isEnabled = false // disable navigation bar swipe back
-            from.present(navigationController, animated: true)
+            // Phone number
+            let countryCode = userProfile.countryCode.trimmingCharacters(in: .whitespacesAndNewlines)
+            let phoneNumber = userProfile.phoneNumber.trimmingCharacters(in: .whitespacesAndNewlines)
+            if countryCode.isEmpty || phoneNumber.isEmpty || phoneNumber.count < 8 || phoneNumber.count > 12 {
+                errorMessage.append(String(format:"FieldIsInvalid".localized(tableName: tableName), "\'Phone number\'"))
+                errorMessage.append(" ")
+            }
+            
+            // All are valid
+            if errorMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                var u = userProfile
+                AppState.shared.pushClaimTokensTask = pushClaimTokensTask
+                AppState.shared.redemptionResult = completionHandler
+                if (userProfile.credifyId ?? "").isEmpty {
+                    u.credifyId = AppState.shared.credifyId
+                }
+                
+                let context = PassportContext.offer(offer: offer, user: u)
+                let vc = WebViewController.instantiate(context: context)
+                let navigationController = UINavigationController(rootViewController: vc)
+                navigationController.modalPresentationStyle = .overFullScreen
+                navigationController.interactivePopGestureRecognizer?.isEnabled = false // disable navigation bar swipe back
+                from.present(navigationController, animated: true)
+                return
+            }
+            
+            // Show error
+            UIUtils.alert(
+                from: from,
+                title: "Error".localized(tableName: tableName),
+                errorMessage: errorMessage,
+                actionText: "OK".localized(tableName: tableName)
+            )
         }
     }
-    
     
     /// BNPL features
     /// `serviceX.BNPL()`
@@ -116,7 +144,7 @@ public struct serviceX {
         /// - Parameters:
         ///   - user: User object
         ///   - completion: Completion handler. You can access to BNPL offers list in this handler.
-        public func getOffers(user: CredifyUserModel? = nil, completion: @escaping ((Result<[OfferData], CredifyError>) -> Void)) {
+        public func getOffers(user: CredifyUserModel? = nil, completion: @escaping ((Result<OfferListInfo, CredifyError>) -> Void)) {
             // TODO: handle non-offer case
             
             useCase.getOffers(phoneNumber: user?.phoneNumber, countryCode: user?.countryCode, internalId: user?.id ?? "", credifyId: user?.credifyId, productTypes: ["bnpl"], completion: completion)
@@ -126,8 +154,8 @@ public struct serviceX {
         /// This kicks off BNPL flow
         /// - Parameters:
         ///   - from: ViewController that renders a new view from
-        ///   - offer: <#offer description#>
-        ///   - userProfile: <#userProfile description#>
+        ///   - offer: The offer that the user want to redeem
+        ///   - userProfile: User's information
         ///   - orderId: Order ID. This is to be created by your backend before starting this process.
         ///   - pushClaimTokensTask: A task that calls your push claim token API. This SDK needs to receive success status of this task.
         ///   - completionHandler: Completion handler. You can get notified about the result of the BNPL flow.
@@ -140,7 +168,7 @@ public struct serviceX {
             AppState.shared.pushClaimTokensTask = pushClaimTokensTask
             AppState.shared.redemptionResult = completionHandler
             if (AppState.shared.credifyId ?? "").isEmpty {
-                AppState.shared.credifyId = userProfile.credifyId ?? offer.credifyId
+                AppState.shared.credifyId = userProfile.credifyId
             }
             
             let context = PassportContext.bnpl(offer: offer, user: userProfile, orderId: orderId)

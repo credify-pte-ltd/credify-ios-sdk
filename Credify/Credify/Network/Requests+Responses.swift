@@ -83,9 +83,11 @@ struct OfferListRestResponse: ResponseProtocol {
     
     struct OfferListResponse: Codable {
         let offers: [OfferData]
+        let credifyId: String?
         
         private enum CodingKeys: String, CodingKey {
             case offers
+            case credifyId = "credify_id"
         }
     }
 }

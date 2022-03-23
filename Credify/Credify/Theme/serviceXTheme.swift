@@ -8,48 +8,46 @@
 import Foundation
 import UIKit
 
-public struct serviceXTheme {
+public struct serviceXTheme : Codable {
     public let color: ThemeColor
-//    public let font: ThemeFont
-//    public let icon: ThemeIcon
-    
+    public let font: ThemeFont
     public let inputFieldRadius: Double
     public let pageHeaderRadius: Double
     public let modalRadius: Double
     public let buttonRadius: Double
+    public let boxShadow: String
     
-    public let shadowHeight: CGFloat
-    public let shadowColor: UIColor?
-    
+    /// - Parameters:
+    ///   - color: Custom color
+    ///   - font: Custom font
+    ///   - inputFieldRadius: Input field radius
+    ///   - pageHeaderRadius: Page's header radius
+    ///   - modelRadius: Model radius
+    ///   - buttonRadius: Button radius
+    ///   - boxShadow: Shadow for a component. Ex: "0px 4px 30px rgba(0, 0, 0, 0.1)". For more information, visit here: https://www.w3schools.com/cssref/css3_pr_box-shadow.asp
     public init(color: ThemeColor = ThemeColor.default,
-//                font: ThemeFont = ThemeFont.default,
-//                icon: ThemeIcon = ThemeIcon.default,
+                font: ThemeFont = ThemeFont.default,
                 inputFieldRadius: Double = serviceXTheme.default.inputFieldRadius,
                 pageHeaderRadius: Double = serviceXTheme.default.pageHeaderRadius,
-                modalRadius: Double = serviceXTheme.default.modalRadius,
+                modelRadius: Double = serviceXTheme.default.modalRadius,
                 buttonRadius: Double = serviceXTheme.default.buttonRadius,
-                shadowHeight: CGFloat = serviceXTheme.default.shadowHeight,
-                shadowColor: UIColor? = serviceXTheme.default.shadowColor) {
+                boxShadow: String = serviceXTheme.default.boxShadow) {
         self.color = color
-//        self.font = font
-//        self.icon = icon
+        self.font = font
         self.inputFieldRadius = inputFieldRadius
         self.pageHeaderRadius = pageHeaderRadius
-        self.modalRadius = modalRadius
+        self.modalRadius = modelRadius
         self.buttonRadius = buttonRadius
-        self.shadowHeight = shadowHeight
-        self.shadowColor = shadowColor
+        self.boxShadow = boxShadow
     }
     
     public static var `default`: serviceXTheme {
         return serviceXTheme(color: ThemeColor.default,
-//                             font: ThemeFont.default,
-//                             icon: ThemeIcon.default,
+                             font: ThemeFont.default,
                              inputFieldRadius: 5.0,
                              pageHeaderRadius: 30.0,
-                             modalRadius: 10.0,
+                             modelRadius: 10.0,
                              buttonRadius: 50.0,
-                             shadowHeight: 0.0,
-                             shadowColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0.1))
+                             boxShadow: "0px 4px 30px rgba(0, 0, 0, 0.1)")
     }
 }
