@@ -47,12 +47,20 @@ class WebViewController: UIViewController {
             statusBarHeight = window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
         }
         let navAndStatusBarHeight = (navigationController?.navigationBar.frame.height ?? 0) + statusBarHeight
+        
+        // 21840: UI issue - Long text and cut off button
+        let webViewHeight: CGFloat
+        if #available(iOS 11.0, *) {
+            webViewHeight = view.safeAreaLayoutGuide.layoutFrame.height - navAndStatusBarHeight - (window?.safeAreaInsets.bottom ?? 0.0)
+        } else {
+            webViewHeight = view.frame.height - navAndStatusBarHeight
+        }
         webView = WKWebView(
             frame: CGRect(
                 x: 0,
                 y: navAndStatusBarHeight,
                 width: view.frame.width,
-                height: view.frame.height - navAndStatusBarHeight
+                height: webViewHeight
             ),
             configuration: configuration
         )
