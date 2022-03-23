@@ -1,0 +1,11 @@
+/* 
+  serviceX.strings
+  Credify
+
+  Created by Gioan Le on 23/03/2022.
+  
+*/
+"FieldIsRequired" = "%@ is required.";
+"FieldIsInvalid" = "%@ is invalid.";
+"OK" = "OK";
+"Error" = "Error";

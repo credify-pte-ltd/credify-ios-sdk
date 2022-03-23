@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-/// This is for custom font
+/// Font customization
 public struct ThemeFont : Codable {
     public let primaryFontFamily: String
     public let secondaryFontFamily: String

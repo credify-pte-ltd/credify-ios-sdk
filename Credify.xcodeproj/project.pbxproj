@@ -48,6 +48,7 @@
 		E0C17D0D9B8627E0F7DBC0A5 /* Pods_Credify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7A244039A269E07690C793C /* Pods_Credify.framework */; };
 		F83B400427E89DF200A01A2E /* PostMessageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83B400327E89DF200A01A2E /* PostMessageUtils.swift */; };
 		F83B400627E89E7300A01A2E /* PostMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83B400527E89E7300A01A2E /* PostMessageModel.swift */; };
+		F84828B227EADC9200ED1E12 /* serviceX.strings in Resources */ = {isa = PBXBuildFile; fileRef = F84828B027EADC9200ED1E12 /* serviceX.strings */; };
 		F8AED25127E984780095DB6C /* PostMessageUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8AED25027E984780095DB6C /* PostMessageUtilsTest.swift */; };
 /* End PBXBuildFile section */
 
@@ -109,6 +110,9 @@
 		EAE2E90792E6563322DB1C3E /* Pods-Credify-CredifyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Credify-CredifyTests.debug.xcconfig"; path = "Target Support Files/Pods-Credify-CredifyTests/Pods-Credify-CredifyTests.debug.xcconfig"; sourceTree = "<group>"; };
 		F83B400327E89DF200A01A2E /* PostMessageUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostMessageUtils.swift; sourceTree = "<group>"; };
 		F83B400527E89E7300A01A2E /* PostMessageModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostMessageModel.swift; sourceTree = "<group>"; };
+		F84828B127EADC9200ED1E12 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Credify/en.lproj/serviceX.strings; sourceTree = "<group>"; };
+		F84828B327EADCA200ED1E12 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = Credify/ja.lproj/serviceX.strings; sourceTree = "<group>"; };
+		F84828B427EADCB300ED1E12 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = Credify/vi.lproj/serviceX.strings; sourceTree = "<group>"; };
 		F8AED25027E984780095DB6C /* PostMessageUtilsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostMessageUtilsTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -169,6 +173,7 @@
 				2517EC2B27E5A4360025E396 /* Extensions */,
 				2517EC1827E5A3B40025E396 /* Constants.swift */,
 				2517EC1927E5A3B40025E396 /* serviceX.swift */,
+				F84828B027EADC9200ED1E12 /* serviceX.strings */,
 				2517EBFE27E57CED0025E396 /* Credify.h */,
 				2517EBFF27E57CED0025E396 /* Credify.docc */,
 			);
@@ -401,6 +406,8 @@
 			knownRegions = (
 				en,
 				Base,
+				ja,
+				vi,
 			);
 			mainGroup = 2517EBF127E57CED0025E396;
 			productRefGroup = 2517EBFC27E57CED0025E396 /* Products */;
@@ -427,6 +434,7 @@
 				2517EC9127E5AFC80025E396 /* README.md in Resources */,
 				2517EC6F27E5A4730025E396 /* Assets.xcassets in Resources */,
 				2517EC6427E5A4520025E396 /* RobotoSlab-Bold.ttf in Resources */,
+				F84828B227EADC9200ED1E12 /* serviceX.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -556,6 +564,19 @@
 			targetProxy = 2517EC0727E57CEE0025E396 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		F84828B027EADC9200ED1E12 /* serviceX.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F84828B127EADC9200ED1E12 /* en */,
+				F84828B327EADCA200ED1E12 /* ja */,
+				F84828B427EADCB300ED1E12 /* vi */,
+			);
+			name = serviceX.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		2517EC0D27E57CEE0025E396 /* Debug */ = {

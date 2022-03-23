@@ -8,12 +8,12 @@
 import Foundation
 import UIKit
 
-public struct serviceXTheme : Encodable {
+public struct serviceXTheme : Codable {
     public let color: ThemeColor
     public let font: ThemeFont
     public let inputFieldRadius: Double
     public let pageHeaderRadius: Double
-    public let modelRadius: Double
+    public let modalRadius: Double
     public let buttonRadius: Double
     public let boxShadow: String
     
@@ -29,20 +29,16 @@ public struct serviceXTheme : Encodable {
                 font: ThemeFont = ThemeFont.default,
                 inputFieldRadius: Double = serviceXTheme.default.inputFieldRadius,
                 pageHeaderRadius: Double = serviceXTheme.default.pageHeaderRadius,
-                modelRadius: Double = serviceXTheme.default.modelRadius,
+                modelRadius: Double = serviceXTheme.default.modalRadius,
                 buttonRadius: Double = serviceXTheme.default.buttonRadius,
                 boxShadow: String = serviceXTheme.default.boxShadow) {
         self.color = color
         self.font = font
         self.inputFieldRadius = inputFieldRadius
         self.pageHeaderRadius = pageHeaderRadius
-        self.modelRadius = modelRadius
+        self.modalRadius = modelRadius
         self.buttonRadius = buttonRadius
         self.boxShadow = boxShadow
-    }
-    
-    private enum CodingKeys: String, CodingKey {
-        case color, font, inputFieldRadius, pageHeaderRadius, modelRadius, buttonRadius, boxShadow
     }
     
     public static var `default`: serviceXTheme {

@@ -8,12 +8,12 @@
 import UIKit
 
 
-/// This is for custom the colors
+/// Theme customization
 public struct ThemeColor : Codable {
-    /// Page’s header bacground
+    /// Page’s header background
     public let primaryBrandyStart: String
     
-    /// Page’s header bacground
+    /// Page’s header background
     public let primaryBrandyEnd: String
     
     /// Primary text
@@ -22,7 +22,7 @@ public struct ThemeColor : Codable {
     /// Links / Border-color / Emphasized content / Check box / Radio button / Title
     public let secondaryActive: String
     
-    // For disable component color
+    // For disabled component color
     public let secondaryDisable: String
     
     /// Secondary text
@@ -37,10 +37,10 @@ public struct ThemeColor : Codable {
     /// Buttons text color
     public let primaryButtonTextColor: String
     
-    /// Buttons bacground
+    /// Buttons background
     public let primaryButtonBrandyStart: String
     
-    /// Buttons bacground
+    /// Buttons background
     public let primaryButtonBrandyEnd: String
     
     /// Navigation icon color
@@ -49,17 +49,17 @@ public struct ThemeColor : Codable {
     
     /// Constructor for init this object
     /// - Parameters:
-    ///   - primaryBrandyStart: Page’s header bacground
-    ///   - primaryBrandyEnd: Page’s header bacground
+    ///   - primaryBrandyStart: Page’s header background
+    ///   - primaryBrandyEnd: Page’s header background
     ///   - primaryText: Primary text
     ///   - secondaryActive: Links / Border-color / Emphasized content / Check box / Radio button / Title
-    ///   - secondaryDisable: For disable component color
+    ///   - secondaryDisable: For disabled component color
     ///   - secondaryText: Secondary text
     ///   - secondaryComponentBackground: Highline / important component background
     ///   - secondaryBackground: Page background color
     ///   - primaryButtonTextColor: Primary buttons text color
-    ///   - primaryButtonBrandyStart: Buttons bacground
-    ///   - primaryButtonBrandyEnd: Buttons bacground
+    ///   - primaryButtonBrandyStart: Buttons background
+    ///   - primaryButtonBrandyEnd: Buttons background
     ///   - primaryIconColor: Navigation icon color
     public init (
         primaryBrandyStart: String = ThemeColor.default.primaryBrandyStart,

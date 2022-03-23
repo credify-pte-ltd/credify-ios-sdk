@@ -8,7 +8,7 @@
 import Foundation
 
 
-/// This is serviceX configiration
+/// This is serviceX configuration
 public struct serviceXConfig {
     let apiKey: String
     let env: CredifyEnvs
@@ -19,8 +19,8 @@ public struct serviceXConfig {
     
     /// This is constructor to create serviceX configuration
     /// - Parameters:
-    ///   - apiKey: Your API that gets from the Dashboard
-    ///   - env: Environment that you want to test
+    ///   - apiKey: API key that you can generate on the Dashboard
+    ///   - env: Environment that you want to use
     ///   - appName: Your application name
     ///   - theme: For the UI customization.
     public init(apiKey: String,
