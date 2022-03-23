@@ -97,7 +97,7 @@ public struct ThemeColor : Codable {
             secondaryActive: UIColor.ex.secondaryActive,
             secondaryDisable: UIColor.ex.secondaryDisable,
             secondaryText: UIColor.ex.secondaryText,
-            secondaryComponentBackground: UIColor.ex.backgroundLight,
+            secondaryComponentBackground: UIColor.ex.backgroundComponent,
             secondaryBackground: UIColor.ex.backgroundLight,
             primaryButtonTextColor: UIColor.ex.primaryButtonTextColor,
             primaryButtonBrandyStart: UIColor.ex.primaryButtonBrandyStart,
