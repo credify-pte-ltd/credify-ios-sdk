@@ -44,11 +44,11 @@ extension Extension where Base: UIColor {
     }
     
     static var primary: String {
-        return "#1382F8"
+        return "#AB2185"
     }
     
     static var primaryDarker: String {
-        return "#17A6EF"
+        return "#5A24B3"
     }
     
     static var text: String {
@@ -72,7 +72,7 @@ extension Extension where Base: UIColor {
     }
     
     static var secondaryActive: String {
-        return "#1483F7"
+        return "#9147D7"
     }
     
     static var secondaryDisable: String {
@@ -88,11 +88,11 @@ extension Extension where Base: UIColor {
     }
     
     static var primaryButtonBrandyStart: String {
-        return "#02D15D"
+        return "#AB2185"
     }
     
     static var primaryButtonBrandyEnd: String {
-        return "#01B779"
+        return "#5A24B3"
     }
     
     static var primaryIconColor: String {

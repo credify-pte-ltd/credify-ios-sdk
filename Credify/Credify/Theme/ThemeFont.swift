@@ -88,8 +88,8 @@ public struct ThemeFont : Codable {
     }
     
     public static var `default`: ThemeFont {
-        return ThemeFont(primaryFontFamily: "Roboto",
-                         secondaryFontFamily: "Roboto",
+        return ThemeFont(primaryFontFamily: "Oswald",
+                         secondaryFontFamily: "Roboto Slab",
                          bigTitleFontSize: 21,
                          bigTitleFontLineHeight: 31,
                          modelTitleFontSize: 20,
