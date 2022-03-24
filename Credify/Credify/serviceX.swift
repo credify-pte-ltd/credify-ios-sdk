@@ -106,14 +106,10 @@ public struct serviceX {
             
             // All are valid
             if errorMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                var u = userProfile
                 AppState.shared.pushClaimTokensTask = pushClaimTokensTask
                 AppState.shared.redemptionResult = completionHandler
-                if (userProfile.credifyId ?? "").isEmpty {
-                    u.credifyId = AppState.shared.credifyId
-                }
                 
-                let context = PassportContext.offer(offer: offer, user: u)
+                let context = PassportContext.offer(offer: offer, user: userProfile)
                 let vc = WebViewController.instantiate(context: context)
                 let navigationController = UINavigationController(rootViewController: vc)
                 navigationController.modalPresentationStyle = .overFullScreen
@@ -167,9 +163,6 @@ public struct serviceX {
                                    completionHandler: @escaping (RedemptionResult) -> Void) {
             AppState.shared.pushClaimTokensTask = pushClaimTokensTask
             AppState.shared.redemptionResult = completionHandler
-            if (AppState.shared.credifyId ?? "").isEmpty {
-                AppState.shared.credifyId = userProfile.credifyId
-            }
             
             let context = PassportContext.bnpl(offer: offer, user: userProfile, orderId: orderId)
             let vc = WebViewController.instantiate(context: context)

@@ -130,8 +130,6 @@ class WebPresenter: WebPresenterProtocol {
                 self.postPushedClaimMessage(webView, isSuccess: false)
                 return
             }
-            
-            AppState.shared.credifyId = credifyId
 
             task(credifyId) { result in
                 self.postPushedClaimMessage(webView, isSuccess: result)
