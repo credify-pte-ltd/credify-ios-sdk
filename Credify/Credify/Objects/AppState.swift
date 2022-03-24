@@ -14,7 +14,6 @@ class AppState {
     
     var config: serviceXConfig? = nil
     
-    var credifyId: String? = nil
     var user: CredifyUserModel? = nil
     var pushClaimTokensTask: ((String, ((Bool) -> Void)?) -> Void)? = nil
     var redemptionResult: ((RedemptionResult) -> Void)? = nil
