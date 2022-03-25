@@ -16,6 +16,9 @@ let API_PUSH_CLAIMS = "https://dev-demo-api.credify.ninja/service-j/push-claims"
 class ViewController: UIViewController {
 
     @IBOutlet weak var button: UIButton!
+    
+    @IBOutlet weak var showServiceInstance: UIButton!
+    
     private let offer = serviceX.Offer()
     private var user: CredifyUserModel!
     private var offerList: [OfferData] = [OfferData]()
@@ -79,4 +82,12 @@ class ViewController: UIViewController {
         }
     }
     
+    @IBAction func showServiceInstanceClick(_ sender: Any) {
+        serviceX.Passport().showDetail(
+            from: self,
+            user: user,
+            marketId: "8af0e885-a06c-4508-8d17-03e4fa1ea526",
+            productTypes: [ProductType.autoMobileInsurance, ProductType.bnpl]
+        )
+    }
 }

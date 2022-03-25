@@ -251,3 +251,25 @@ enum OnboardingStatus : String {
     case canceled = "CANCELED"
     case failed = "FAILED"
 }
+
+/// 20771: Add Service Instance
+public enum ProductType : String {
+    // Insurance
+    case insurance = "insurance"
+    case healthInsurance = "health-insurance"
+    case autoMobileInsurance = "automobile-insurance"
+    case homeInsurance = "home-insurance"
+    // Finance
+    case consumerFinancing = "consumer-financing"
+    case corporateFinancing = "corporate-financing"
+    case unsecuredLoanFinance = "unsecured-loan"
+    case securedLoanFinance = "secured-loan"
+    // Credit card
+    case creditCard = "credit-card"
+    case traditionalCreditCard = "traditional"
+    case cbccCreditCard = "cbcc"
+    // BNPL
+    case bnpl = "bnpl"
+    case consumerBNPL = "consumer"
+    case merchantBNPL = "merchant"
+}
