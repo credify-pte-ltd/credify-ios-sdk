@@ -252,7 +252,7 @@ enum OnboardingStatus : String {
     case failed = "FAILED"
 }
 
-/// 20771: Add Service Instance
+/// The list of product types
 public enum ProductType : String {
     // Insurance
     case insurance = "insurance"
@@ -260,16 +260,16 @@ public enum ProductType : String {
     case autoMobileInsurance = "automobile-insurance"
     case homeInsurance = "home-insurance"
     // Finance
-    case consumerFinancing = "consumer-financing"
-    case corporateFinancing = "corporate-financing"
-    case unsecuredLoanFinance = "unsecured-loan"
-    case securedLoanFinance = "secured-loan"
+//    case consumerFinancing = "consumer-financing"
+//    case corporateFinancing = "corporate-financing"
+//    case unsecuredLoanFinance = "unsecured-loan"
+//    case securedLoanFinance = "secured-loan"
     // Credit card
-    case creditCard = "credit-card"
-    case traditionalCreditCard = "traditional"
-    case cbccCreditCard = "cbcc"
+//    case creditCard = "credit-card"
+//    case traditionalCreditCard = "traditional"
+//    case cbccCreditCard = "cbcc"
     // BNPL
-    case bnpl = "bnpl"
-    case consumerBNPL = "consumer"
-    case merchantBNPL = "merchant"
+//    case bnpl = "bnpl"
+//    case consumerBNPL = "consumer"
+//    case merchantBNPL = "merchant"
 }

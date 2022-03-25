@@ -12,6 +12,7 @@ import Alamofire
 let API_KEY = "7kx6vx9p9gZmqrtvHjRTOiSXMkAfZB3s5u3yjLehQHQCtjWrjAk9XlQHR2IOqpuR"
 let APP_NAME = "TestService"
 let API_PUSH_CLAIMS = "https://dev-demo-api.credify.ninja/service-j/push-claims"
+let MARKET_ID = "8af0e885-a06c-4508-8d17-03e4fa1ea526"
 
 class ViewController: UIViewController {
 
@@ -86,8 +87,8 @@ class ViewController: UIViewController {
         serviceX.Passport().showDetail(
             from: self,
             user: user,
-            marketId: "8af0e885-a06c-4508-8d17-03e4fa1ea526",
-            productTypes: [ProductType.autoMobileInsurance, ProductType.bnpl]
+            marketId: MARKET_ID,
+            productTypes: [ProductType.autoMobileInsurance]
         )
     }
 }
