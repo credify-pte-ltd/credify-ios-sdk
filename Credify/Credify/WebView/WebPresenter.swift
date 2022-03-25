@@ -12,7 +12,7 @@ import SwiftUI
 enum PassportContext {
     case mypage(user: CredifyUserModel)
     case offer(offer: OfferData, user: CredifyUserModel)
-    case serviceInstance
+    case serviceInstance(user: CredifyUserModel, marketId: String, productTypes: [ProductType])
     case bnpl(offer: OfferData?, user: CredifyUserModel, orderId: String)
     
     var url: URL {
@@ -21,8 +21,15 @@ enum PassportContext {
             return URL(string: "\(Constants.WEB_URL)/login")!
         case .offer(offer: _, user: _):
             return URL(string: "\(Constants.WEB_URL)/initial")!
-        case .serviceInstance:
-            return URL(string: "\(Constants.WEB_URL)/service-instance")!
+        case .serviceInstance(user: _, let marketId, let productTypes):
+            var params = [(String, String)]()
+            params.append(("market-id", marketId))
+            for item in productTypes {
+                params.append(("product-types[]", item.rawValue))
+            }
+            let urlParams = params.map { "\($0)=\($1)" }.joined(separator: "&")
+            
+            return URL(string: "\(Constants.WEB_URL)/service-instance?\(urlParams)")!
         case .bnpl(offer: _, user: _, orderId: _):
             return URL(string: "\(Constants.WEB_URL)/bnpl")!
         }
@@ -72,9 +79,19 @@ class WebPresenter: WebPresenterProtocol {
         
         switch type {
         case .initialLoadCompleted:
-            // TODO: This is not called. We need to have communication from passport web app
-            print(context)
             if case let .mypage(user) = context {
+                doPostMessage(
+                    webView,
+                    type: ACTION_TYPE,
+                    action: SendMessageHandler.actionLogin.rawValue,
+                    payload: [
+                        "phoneNumber": user.phoneNumber,
+                        "countryCode": user.countryCode,
+                        "fullName": user.localizedName
+                    ]
+                )
+            }
+            if case let .serviceInstance(user, _, _) = context {
                 doPostMessage(
                     webView,
                     type: ACTION_TYPE,

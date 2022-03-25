@@ -44,10 +44,18 @@ public struct serviceX {
         /// This opens detail page that describes a product.
         /// (e.g., insurance detail for users who have purchased an insurance package through serviceX)
         ///
-        /// - Parameter from: ViewController that renders a new view from
-        public func showDetail(from: UIViewController) {
-            // TODO: Update more params
-            let context = PassportContext.serviceInstance
+        /// - Parameter
+        ///  - from: ViewController that renders a new view from
+        ///  - user: User object
+        ///  - marketId: The market ID
+        ///  - productTypes: Product type list
+        public func showDetail(
+            from: UIViewController,
+            user: CredifyUserModel,
+            marketId: String,
+            productTypes: [ProductType]
+        ) {
+            let context = PassportContext.serviceInstance(user: user, marketId: marketId, productTypes: productTypes)
             let vc = WebViewController.instantiate(context: context)
             let navigationController = UINavigationController(rootViewController: vc)
             navigationController.modalPresentationStyle = .overFullScreen
