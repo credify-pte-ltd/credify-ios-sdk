@@ -53,8 +53,10 @@ public struct serviceX {
             from: UIViewController,
             user: CredifyUserModel,
             marketId: String,
-            productTypes: [ProductType]
+            productTypes: [ProductType],
+            completion: @escaping (() -> Void)
         ) {
+            AppState.shared.dismissCompletion = completion
             let context = PassportContext.serviceInstance(user: user, marketId: marketId, productTypes: productTypes)
             let vc = WebViewController.instantiate(context: context)
             let navigationController = UINavigationController(rootViewController: vc)

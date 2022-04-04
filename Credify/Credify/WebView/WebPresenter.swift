@@ -195,6 +195,7 @@ class WebPresenter: WebPresenterProtocol {
         case .bnpl(offer: _, user: _, orderId: _):
             AppState.shared.redemptionResult?(offerTransactionStatus)
         case .serviceInstance:
+            AppState.shared.dismissCompletion?()
             break
         }
     }
