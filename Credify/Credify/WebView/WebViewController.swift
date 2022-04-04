@@ -92,6 +92,8 @@ class WebViewController: UIViewController {
         // Scroll the WKWebView once the page is changed
         if keyPath == #keyPath(WKWebView.url) {
             webView.scrollView.setContentOffset(CGPoint.zero, animated: true)
+            
+            self.setBackButtonVisibility(isVisible: webView.backForwardList.backList.count > 0)
         }
     }
     
@@ -154,12 +156,16 @@ class WebViewController: UIViewController {
                 action: #selector(close)
             )
         }
+        
+        setBackButtonVisibility(isVisible: false)
     }
     
     @objc private func goBack() {
         if webView.canGoBack {
             webView.goBack()
         }
+        
+        self.setBackButtonVisibility(isVisible: webView.backForwardList.backList.count > 1)
     }
     
     @objc private func close() {
@@ -168,6 +174,17 @@ class WebViewController: UIViewController {
         }
     }
 
+    private func setBackButtonVisibility(isVisible: Bool) {
+        if isVisible {
+            let themeColor = AppState.shared.config?.theme.color
+            navigationItem.leftBarButtonItem?.isEnabled = true
+            navigationItem.leftBarButtonItem?.tintColor = UIColor.fromHex(themeColor?.primaryIconColor ?? "#FFFFFF")
+            return
+        }
+        
+        navigationItem.leftBarButtonItem?.isEnabled = false
+        navigationItem.leftBarButtonItem?.tintColor = .clear
+    }
 }
 
 extension WebViewController: WKUIDelegate {
@@ -209,6 +226,12 @@ extension WebViewController: WKNavigationDelegate {
 extension WebViewController: WKScriptMessageHandler{
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         let body = message.body as? [String: Any]
+        
+        if presenter.shouldHideBackButton(messageName: message.name, body: body) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.setBackButtonVisibility(isVisible: false)
+            }
+        }
         
         if presenter.shouldClose(messageName: message.name) {
             dismiss(animated: true) {
