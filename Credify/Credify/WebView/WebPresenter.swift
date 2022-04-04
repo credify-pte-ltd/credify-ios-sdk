@@ -39,6 +39,7 @@ enum PassportContext {
 protocol WebPresenterProtocol {
     var receiveHandlers: [ReceiveMessageHandler] { get }
     func shouldClose(messageName: String) -> Bool
+    func shouldHideBackButton(messageName: String, body: [String: Any]?) -> Bool
     func handleMessage(_: WKWebView, name: String, body: [String: Any]?)
     func hanldeCompletionHandler()
 }
@@ -69,6 +70,18 @@ class WebPresenter: WebPresenterProtocol {
         if case .actionClose = type {
             return true
         }
+        return false
+    }
+    
+    func shouldHideBackButton(messageName: String, body: [String: Any]?) -> Bool {
+        guard let type = ReceiveMessageHandler(rawValue: messageName) else {
+            return false
+        }
+        
+        if type == .offerTransactionStatusChanged {
+            return extractOnboardingStatus(body: body) == .canceled
+        }
+        
         return false
     }
     
@@ -152,13 +165,12 @@ class WebPresenter: WebPresenterProtocol {
                 self.postPushedClaimMessage(webView, isSuccess: result)
             }
         case .offerTransactionStatusChanged:
-            guard let dict = body else { return }
-            guard let payload = PostMessageUtils.parsePayload(dict: dict), let status = payload["status"] as? String else {
+            let onboardingStatus = extractOnboardingStatus(body: body)
+            if onboardingStatus == nil {
                 return
             }
-            guard let onboardingStatus = OnboardingStatus(rawValue: status) else { return }
             
-            switch onboardingStatus {
+            switch onboardingStatus! {
             case .completed:
                 offerTransactionStatus = .completed
             case .pending:
@@ -213,5 +225,14 @@ class WebPresenter: WebPresenterProtocol {
         
         let js = "(function() { window.postMessage('\(data.json)','*'); })();"
         webView.evaluateJavaScript(js)
+    }
+    
+    private func extractOnboardingStatus(body: [String: Any]?) -> OnboardingStatus? {
+        guard let dict = body else { return nil}
+        guard let payload = PostMessageUtils.parsePayload(dict: dict), let status = payload["status"] as? String else {
+            return nil
+        }
+        guard let onboardingStatus = OnboardingStatus(rawValue: status) else { return nil}
+        return onboardingStatus
     }
 }
