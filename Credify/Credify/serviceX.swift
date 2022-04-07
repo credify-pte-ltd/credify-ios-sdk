@@ -172,7 +172,7 @@ public struct serviceX {
                                    pushClaimTokensTask: @escaping ((String, ((Bool) -> Void)?) -> Void),
                                    completionHandler: @escaping (_ status: RedemptionResult,_ orderId: String, _ isPaymentCompleted: Bool) -> Void) {
             AppState.shared.pushClaimTokensTask = pushClaimTokensTask
-            AppState.shared.bnplEedemptionResult = completionHandler
+            AppState.shared.bnplRedemptionResult = completionHandler
             
             let context = PassportContext.bnpl(
                 offers: offers,
@@ -187,11 +187,11 @@ public struct serviceX {
             from.present(navigationController, animated: true)
         }
         
-        public func getCompletedBnplProvider(
+        public func getConnectedBnplProviders(
             credifyId: String,
             completion: @escaping ((Result<[Organization], CredifyError>) -> Void)
         ) {
-            return organizationUseCase.getCompletedBnplProvider(credifyId: credifyId, completion: completion)
+            return organizationUseCase.getConnectedBnplProviders(credifyId: credifyId, completion: completion)
         }
     }
 }

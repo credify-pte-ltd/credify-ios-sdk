@@ -212,7 +212,7 @@ class WebPresenter: WebPresenterProtocol {
             // TODO we maybe need to update this when the BNPL proxy integrate with real flow
             switch context {
             case .bnpl(offers: _, user: _, let orderId, completedBnplProviders: _):
-                AppState.shared.bnplEedemptionResult?(offerTransactionStatus, orderId, true)
+                AppState.shared.bnplRedemptionResult?(offerTransactionStatus, orderId, true)
             default:
                 break
             }
@@ -227,7 +227,7 @@ class WebPresenter: WebPresenterProtocol {
             AppState.shared.redemptionResult?(offerTransactionStatus)
         case .bnpl(offers: _, user: _, let orderId, completedBnplProviders: _):
             // TODO we maybe need to update this when the BNPL proxy integrate with real flow
-            AppState.shared.bnplEedemptionResult?(offerTransactionStatus, orderId, false)
+            AppState.shared.bnplRedemptionResult?(offerTransactionStatus, orderId, false)
         case .serviceInstance:
             AppState.shared.dismissCompletion?()
             break

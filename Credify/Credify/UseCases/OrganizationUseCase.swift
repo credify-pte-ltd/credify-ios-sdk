@@ -8,11 +8,11 @@
 import Foundation
 
 protocol OrganizationUseCaseProtocol {
-    func getCompletedBnplProvider(credifyId: String, completion: @escaping (Result<[Organization], CredifyError>) -> Void)
+    func getConnectedBnplProviders(credifyId: String, completion: @escaping (Result<[Organization], CredifyError>) -> Void)
 }
 
 class OrganizationUseCase : OrganizationUseCaseProtocol {
-    func getCompletedBnplProvider(credifyId: String, completion: @escaping (Result<[Organization], CredifyError>) -> Void) {
+    func getConnectedBnplProviders(credifyId: String, completion: @escaping (Result<[Organization], CredifyError>) -> Void) {
         let request = GetCompletedBnplProviderRequest(credifyId: credifyId)
         
         APIClient.shared.call(request: request, success: { (res: CompletedBnplProviderListRestResponse) in
