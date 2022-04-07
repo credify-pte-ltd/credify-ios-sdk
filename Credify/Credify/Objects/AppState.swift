@@ -14,7 +14,8 @@ class AppState {
     
     var config: serviceXConfig? = nil
     
-    var user: CredifyUserModel? = nil
+    var bnplOfferInfo: BNPLOfferInfo? = nil
+    
     var pushClaimTokensTask: ((String, ((Bool) -> Void)?) -> Void)? = nil
     var redemptionResult: ((RedemptionResult) -> Void)? = nil
     var dismissCompletion: (() -> Void)? = nil

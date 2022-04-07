@@ -212,7 +212,7 @@ class WebPresenter: WebPresenterProtocol {
             // TODO we maybe need to update this when the BNPL proxy integrate with real flow
             switch context {
             case .bnpl(offers: _, user: _, let orderId, completedBnplProviders: _):
-                AppState.shared.bnplRedemptionResult?(offerTransactionStatus, orderId, true)
+                hanldeBnplCompletionHandler(status: offerTransactionStatus, orderId: orderId, isPaymentCompleted: true)
             default:
                 break
             }
@@ -220,18 +220,37 @@ class WebPresenter: WebPresenterProtocol {
     }
     
     func hanldeCompletionHandler() {
+        let appState = AppState.shared
+        
         switch context {
         case .mypage(_):
-            AppState.shared.dismissCompletion?()
+            appState.dismissCompletion?()
+            appState.dismissCompletion = nil
         case .offer(_, _):
-            AppState.shared.redemptionResult?(offerTransactionStatus)
+            appState.redemptionResult?(offerTransactionStatus)
+            appState.redemptionResult = nil
         case .bnpl(offers: _, user: _, let orderId, completedBnplProviders: _):
             // TODO we maybe need to update this when the BNPL proxy integrate with real flow
-            AppState.shared.bnplRedemptionResult?(offerTransactionStatus, orderId, false)
+            hanldeBnplCompletionHandler(status: offerTransactionStatus, orderId: orderId, isPaymentCompleted: false)
         case .serviceInstance:
-            AppState.shared.dismissCompletion?()
+            appState.dismissCompletion?()
+            appState.dismissCompletion = nil
             break
         }
+    }
+    
+    private func hanldeBnplCompletionHandler(
+        status: RedemptionResult,
+        orderId: String,
+        isPaymentCompleted: Bool
+    ) {
+        let appState = AppState.shared
+        
+        // TODO we maybe need to update this when the BNPL proxy integrate with real flow
+        appState.bnplRedemptionResult?(status, orderId, isPaymentCompleted)
+        
+        appState.bnplOfferInfo = nil
+        appState.bnplRedemptionResult = nil
     }
     
     private func postPushedClaimMessage(_ webView: WKWebView, isSuccess: Bool) {
