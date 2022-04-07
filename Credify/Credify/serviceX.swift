@@ -142,6 +142,7 @@ public struct serviceX {
     /// `serviceX.BNPL()`
     public struct BNPL {
         private let useCase = OfferUseCase()
+        private let organizationUseCase = OrganizationUseCase()
         
         public init() {}
         
@@ -151,8 +152,6 @@ public struct serviceX {
         ///   - user: User object
         ///   - completion: Completion handler. You can access to BNPL offers list in this handler.
         public func getOffers(user: CredifyUserModel? = nil, completion: @escaping ((Result<OfferListInfo, CredifyError>) -> Void)) {
-            // TODO: handle non-offer case
-            
             useCase.getOffers(phoneNumber: user?.phoneNumber, countryCode: user?.countryCode, internalId: user?.id ?? "", credifyId: user?.credifyId, productTypes: ["bnpl"], completion: completion)
         }
         
@@ -166,20 +165,33 @@ public struct serviceX {
         ///   - pushClaimTokensTask: A task that calls your push claim token API. This SDK needs to receive success status of this task.
         ///   - completionHandler: Completion handler. You can get notified about the result of the BNPL flow.
         public func presentModally(from: UIViewController,
-                                   offer: OfferData,
+                                   offers: [OfferData],
                                    userProfile: CredifyUserModel,
                                    orderId: String,
+                                   completedBnplProviders: [Organization],
                                    pushClaimTokensTask: @escaping ((String, ((Bool) -> Void)?) -> Void),
-                                   completionHandler: @escaping (RedemptionResult) -> Void) {
+                                   completionHandler: @escaping (_ status: RedemptionResult,_ orderId: String, _ isPaymentCompleted: Bool) -> Void) {
             AppState.shared.pushClaimTokensTask = pushClaimTokensTask
-            AppState.shared.redemptionResult = completionHandler
+            AppState.shared.bnplEedemptionResult = completionHandler
             
-            let context = PassportContext.bnpl(offer: offer, user: userProfile, orderId: orderId)
+            let context = PassportContext.bnpl(
+                offers: offers,
+                user: userProfile,
+                orderId: orderId,
+                completedBnplProviders: completedBnplProviders
+            )
             let vc = WebViewController.instantiate(context: context)
             let navigationController = UINavigationController(rootViewController: vc)
             navigationController.modalPresentationStyle = .overFullScreen
             navigationController.interactivePopGestureRecognizer?.isEnabled = false // disable navigation bar swipe back
             from.present(navigationController, animated: true)
+        }
+        
+        public func getCompletedBnplProvider(
+            credifyId: String,
+            completion: @escaping ((Result<[Organization], CredifyError>) -> Void)
+        ) {
+            return organizationUseCase.getCompletedBnplProvider(credifyId: credifyId, completion: completion)
         }
     }
 }

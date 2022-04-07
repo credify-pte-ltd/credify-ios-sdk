@@ -18,4 +18,5 @@ class AppState {
     var pushClaimTokensTask: ((String, ((Bool) -> Void)?) -> Void)? = nil
     var redemptionResult: ((RedemptionResult) -> Void)? = nil
     var dismissCompletion: (() -> Void)? = nil
+    var bnplEedemptionResult: ((_ status: RedemptionResult,_ orderId: String,_ isPaymentCompleted: Bool) -> Void)? = nil
 }

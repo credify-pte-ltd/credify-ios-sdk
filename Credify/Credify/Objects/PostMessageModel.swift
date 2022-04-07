@@ -26,4 +26,27 @@ internal enum ReceiveMessageHandler: String {
     case createUserCompleted
     case offerTransactionStatusChanged
     case actionClose
+    case bnplPaymentComplete
+}
+
+internal class StartBnplMessage: Codable {
+    let offers: [OfferData]
+    let profile: CredifyUserModel
+    let orderId: String
+    let completeBnplProviders: [Organization]
+    let theme: serviceXTheme?
+    
+    init(
+        offers: [OfferData],
+        profile: CredifyUserModel,
+        orderId: String,
+        completeBnplProviders: [Organization],
+        theme: serviceXTheme?
+    ) {
+        self.offers = offers
+        self.profile = profile
+        self.orderId = orderId
+        self.completeBnplProviders = completeBnplProviders
+        self.theme = theme
+    }
 }
