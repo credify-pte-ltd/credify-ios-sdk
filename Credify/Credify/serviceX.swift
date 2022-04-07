@@ -146,13 +146,46 @@ public struct serviceX {
         
         public init() {}
         
-        
-        /// This loads all the offers that meet specified conditions.
+        /// This loads all the offers and connected providers that meet specified conditions.
         /// - Parameters:
         ///   - user: User object
-        ///   - completion: Completion handler. You can access to BNPL offers list in this handler.
-        public func getOffers(user: CredifyUserModel? = nil, completion: @escaping ((Result<OfferListInfo, CredifyError>) -> Void)) {
-            useCase.getOffers(phoneNumber: user?.phoneNumber, countryCode: user?.countryCode, internalId: user?.id ?? "", credifyId: user?.credifyId, productTypes: ["bnpl"], completion: completion)
+        ///   - completion: Completion handler. You can access to BNPL offers and connected providers list in this handler.
+        public func getOffersAndConnectedProviders(
+            user: CredifyUserModel?,
+            completion: @escaping ((Result<BNPLOfferInfo, CredifyError>) -> Void)
+        ) {
+            // Get offer list
+            useCase.getOffers(
+                phoneNumber: user?.phoneNumber,
+                countryCode: user?.countryCode,
+                internalId: user?.id ?? "",
+                credifyId: user?.credifyId,
+                productTypes: ["bnpl"]
+            ) { offersResult in
+                switch offersResult {
+                case .success(let offersInfo):
+                    let offers = offersInfo.offers
+                    let credifyId = offersInfo.credifyId
+                    
+                    if (credifyId ?? "").isEmpty {
+                        completion(.success(BNPLOfferInfo(offers: offers, providers: [], credifyId: credifyId)))
+                        return
+                    }
+                    
+                    // Get connected provider list
+                    organizationUseCase.getConnectedBnplProviders(credifyId: credifyId!) { providersResult in
+                        switch providersResult {
+                        case .success(let providersInfo):
+                            completion(.success(BNPLOfferInfo(offers: offers, providers: providersInfo, credifyId: credifyId)))
+                        case .failure(let error):
+                            completion(.failure(error))
+                        }
+                    }
+                    
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
         }
         
         
@@ -185,13 +218,6 @@ public struct serviceX {
             navigationController.modalPresentationStyle = .overFullScreen
             navigationController.interactivePopGestureRecognizer?.isEnabled = false // disable navigation bar swipe back
             from.present(navigationController, animated: true)
-        }
-        
-        public func getConnectedBnplProviders(
-            credifyId: String,
-            completion: @escaping ((Result<[Organization], CredifyError>) -> Void)
-        ) {
-            return organizationUseCase.getConnectedBnplProviders(credifyId: credifyId, completion: completion)
         }
     }
 }

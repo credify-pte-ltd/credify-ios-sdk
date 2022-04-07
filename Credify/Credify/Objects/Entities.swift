@@ -335,3 +335,18 @@ public enum ProductType : String {
 //    case consumerBNPL = "consumer"
 //    case merchantBNPL = "merchant"
 }
+
+public struct BNPLOfferInfo : Codable {
+    public let offers: [OfferData]
+    
+    public let providers: [Organization]
+    
+    // NOTE: when getting list offer from consumer, credifyId maybe nil if user haven't account from Credify yet. After creating credify account from provider, we will have credifyId and we will assign it.
+    public let credifyId: String?
+    
+    private enum CodingKeys: String, CodingKey {
+        case offers
+        case providers
+        case credifyId = "credify_id"
+    }
+}
