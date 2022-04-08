@@ -142,39 +142,116 @@ public struct serviceX {
     /// `serviceX.BNPL()`
     public struct BNPL {
         private let useCase = OfferUseCase()
+        private let organizationUseCase = OrganizationUseCase()
         
         public init() {}
         
-        
-        /// This loads all the offers that meet specified conditions.
+        /// This loads all the offers and connected providers that meet specified conditions.
         /// - Parameters:
         ///   - user: User object
-        ///   - completion: Completion handler. You can access to BNPL offers list in this handler.
-        public func getOffers(user: CredifyUserModel? = nil, completion: @escaping ((Result<OfferListInfo, CredifyError>) -> Void)) {
-            // TODO: handle non-offer case
-            
-            useCase.getOffers(phoneNumber: user?.phoneNumber, countryCode: user?.countryCode, internalId: user?.id ?? "", credifyId: user?.credifyId, productTypes: ["bnpl"], completion: completion)
+        ///   - completion: Completion handler. You can access to BNPL offers and connected providers list in this handler.
+        private func getOffersAndConnectedProviders(
+            user: CredifyUserModel?,
+            completion: @escaping ((Result<BNPLOfferInfo, CredifyError>) -> Void)
+        ) {
+            // Get offer list
+            useCase.getOffers(
+                phoneNumber: user?.phoneNumber,
+                countryCode: user?.countryCode,
+                internalId: user?.id ?? "",
+                credifyId: user?.credifyId,
+                productTypes: ["bnpl"]
+            ) { offersResult in
+                switch offersResult {
+                case .success(let offersInfo):
+                    let offers = offersInfo.offers
+                    let credifyId = offersInfo.credifyId
+                    
+                    if (credifyId ?? "").isEmpty {
+                        completion(.success(BNPLOfferInfo(offers: offers, providers: [], credifyId: credifyId)))
+                        return
+                    }
+                    
+                    // Get connected provider list
+                    organizationUseCase.getConnectedBnplProviders(credifyId: credifyId!) { providersResult in
+                        switch providersResult {
+                        case .success(let providersInfo):
+                            completion(.success(BNPLOfferInfo(offers: offers, providers: providersInfo, credifyId: credifyId)))
+                        case .failure(let error):
+                            completion(.failure(error))
+                        }
+                    }
+                    
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+        
+        /// This will check that BNPL is available for this user or not
+        /// If yes, you can call BNPL().presentModally method to start BNPL flow
+        /// If no, you should not
+        /// - Parameters:
+        ///   - user: User object
+        ///   - completion: Completion handler. BNPL is available for this user or not
+        public func getBNPLAvailability(
+            user: CredifyUserModel?,
+            completion: @escaping ((Result<(available: Bool, credifyId: String?), CredifyError>) -> Void)
+        ) {
+            self.getOffersAndConnectedProviders(user: user) { bnplResult in
+                switch bnplResult {
+                case .success(let bnplInfo):
+                    AppState.shared.bnplOfferInfo = bnplInfo
+                    
+                    let isBNPLAvailable = !bnplInfo.offers.isEmpty || !bnplInfo.providers.isEmpty
+                    completion(.success((isBNPLAvailable, bnplInfo.credifyId)))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
         }
         
         
         /// This kicks off BNPL flow
         /// - Parameters:
         ///   - from: ViewController that renders a new view from
-        ///   - offer: The offer that the user want to redeem
         ///   - userProfile: User's information
         ///   - orderId: Order ID. This is to be created by your backend before starting this process.
         ///   - pushClaimTokensTask: A task that calls your push claim token API. This SDK needs to receive success status of this task.
         ///   - completionHandler: Completion handler. You can get notified about the result of the BNPL flow.
         public func presentModally(from: UIViewController,
-                                   offer: OfferData,
                                    userProfile: CredifyUserModel,
                                    orderId: String,
                                    pushClaimTokensTask: @escaping ((String, ((Bool) -> Void)?) -> Void),
-                                   completionHandler: @escaping (RedemptionResult) -> Void) {
-            AppState.shared.pushClaimTokensTask = pushClaimTokensTask
-            AppState.shared.redemptionResult = completionHandler
+                                   completionHandler: @escaping (_ status: RedemptionResult,_ orderId: String, _ isPaymentCompleted: Bool) -> Void) {
+            let tableName = "serviceX"
+            let appState = AppState.shared
             
-            let context = PassportContext.bnpl(offer: offer, user: userProfile, orderId: orderId)
+            let bnplOfferInfo = appState.bnplOfferInfo
+            let offers = bnplOfferInfo?.offers ?? []
+            let connectedProviders = bnplOfferInfo?.providers ?? []
+            
+            let isBNPLAvailable = !offers.isEmpty || !connectedProviders.isEmpty
+            if !isBNPLAvailable {
+                print("BNPL is not available for this user. You should call BNPL().getBNPLAvailability function to check it.")
+                UIUtils.alert(
+                    from: from,
+                    title: "Error".localized(tableName: tableName),
+                    errorMessage: "BNPLIsNotAvailable".localized(tableName: tableName),
+                    actionText: "OK".localized(tableName: tableName)
+                )
+                return
+            }
+            
+            appState.pushClaimTokensTask = pushClaimTokensTask
+            appState.bnplRedemptionResult = completionHandler
+            
+            let context = PassportContext.bnpl(
+                offers: offers,
+                user: userProfile,
+                orderId: orderId,
+                completedBnplProviders: connectedProviders
+            )
             let vc = WebViewController.instantiate(context: context)
             let navigationController = UINavigationController(rootViewController: vc)
             navigationController.modalPresentationStyle = .overFullScreen

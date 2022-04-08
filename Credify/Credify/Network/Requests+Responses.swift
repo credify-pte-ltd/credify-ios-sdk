@@ -17,14 +17,12 @@ protocol RequestProtocol {
     var method: Alamofire.HTTPMethod { get }
     var parameters: Alamofire.Parameters? { get }
     var headers: Alamofire.HTTPHeaders? { get }
+    var encoding: Alamofire.ParameterEncoding { get }
 }
 
 extension RequestProtocol {
     var baseUrl: String {
         return Constants.API_URL
-    }
-    var encoding: Alamofire.ParameterEncoding {
-        return JSONEncoding.default
     }
     var parameters: Alamofire.Parameters? {
         return nil
@@ -39,6 +37,9 @@ struct ClientAuthenticationRequest: RequestProtocol {
     typealias Response = GetAccessTokenResponse
     var path = "v1/token"
     var method = HTTPMethod.post
+    var encoding: ParameterEncoding {
+        return JSONEncoding.default
+    }
     
     init(apiKey: String) {
 //        headers?["X-API-KEY"] = apiKey
@@ -66,6 +67,9 @@ struct GetOffersFromProviderRequest: RequestProtocol {
     var path = "v1/claim-providers/offers"
     var method = Alamofire.HTTPMethod.post
     var parameters: Alamofire.Parameters? = [:]
+    var encoding: ParameterEncoding {
+        return JSONEncoding.default
+    }
     
     init(phoneNumber: String?, countryCode: String?, localId: String, credifyId: String?, productTypes: [String]) {
         parameters?["local_id"] = localId
@@ -88,6 +92,35 @@ struct OfferListRestResponse: ResponseProtocol {
         private enum CodingKeys: String, CodingKey {
             case offers
             case credifyId = "credify_id"
+        }
+    }
+}
+
+/// Gets completed BNPL provider list
+struct GetCompletedBnplProviderRequest: RequestProtocol {
+    typealias Response = CompletedBnplProviderListRestResponse
+    var path = "v1/integration/bnpl-consumers/completed-bnpl-providers"
+    var method = Alamofire.HTTPMethod.get
+    var parameters: Alamofire.Parameters? = [:]
+    var encoding: Alamofire.ParameterEncoding {
+        return URLEncoding.default
+    }
+    
+    init(credifyId: String) {
+        parameters?["credify_id"] = credifyId
+    }
+}
+
+/// Response of `GetCompletedBNPLProviderRequest`
+struct CompletedBnplProviderListRestResponse: ResponseProtocol {
+    let success: Bool
+    let data: CompletedBnplProviderListResponse
+    
+    struct CompletedBnplProviderListResponse: Codable {
+        let providers: [Organization]
+        
+        private enum CodingKeys: String, CodingKey {
+            case providers
         }
     }
 }

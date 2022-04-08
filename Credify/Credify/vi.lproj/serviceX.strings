@@ -9,3 +9,4 @@
 "FieldIsInvalid" = "%@ không hợp lệ.";
 "OK" = "OK";
 "Error" = "Lỗi";
+"BNPLIsNotAvailable" = "BNPL không khả dụng";

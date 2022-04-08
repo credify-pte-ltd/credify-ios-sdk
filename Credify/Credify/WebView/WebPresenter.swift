@@ -13,7 +13,7 @@ enum PassportContext {
     case mypage(user: CredifyUserModel)
     case offer(offer: OfferData, user: CredifyUserModel)
     case serviceInstance(user: CredifyUserModel, marketId: String, productTypes: [ProductType])
-    case bnpl(offer: OfferData?, user: CredifyUserModel, orderId: String)
+    case bnpl(offers: [OfferData], user: CredifyUserModel, orderId: String, completedBnplProviders: [Organization])
     
     var url: URL {
         switch self {
@@ -30,7 +30,7 @@ enum PassportContext {
             let urlParams = params.map { "\($0)=\($1)" }.joined(separator: "&")
             
             return URL(string: "\(Constants.WEB_URL)/service-instance?\(urlParams)")!
-        case .bnpl(offer: _, user: _, orderId: _):
+        case .bnpl(offers: _, user: _, orderId: _, completedBnplProviders: _):
             return URL(string: "\(Constants.WEB_URL)/bnpl")!
         }
     }
@@ -59,6 +59,7 @@ class WebPresenter: WebPresenterProtocol {
             .createUserCompleted,
             .offerTransactionStatusChanged,
             .actionClose,
+            .bnplPaymentComplete,
         ]
     }
     
@@ -67,10 +68,7 @@ class WebPresenter: WebPresenterProtocol {
         guard let type = ReceiveMessageHandler(rawValue: messageName) else {
             return false
         }
-        if case .actionClose = type {
-            return true
-        }
-        return false
+        return type == .actionClose || type == .bnplPaymentComplete
     }
     
     func shouldHideBackButton(messageName: String, body: [String: Any]?) -> Bool {
@@ -149,7 +147,34 @@ class WebPresenter: WebPresenterProtocol {
                     ]
                 )
             }
-            // TODO: other context
+            if case let .bnpl(offers, user, orderId, completedBnplProviders) = context {
+                let message = StartBnplMessage(
+                    offers: offers,
+                    profile: user,
+                    orderId: orderId,
+                    completeBnplProviders: completedBnplProviders,
+                    theme: AppState.shared.config?.theme
+                )
+                
+                guard let messageJsonData = try? message.jsonData() else {
+                    return
+                }
+                
+                guard let messageJson = try? JSONSerialization.jsonObject(with: messageJsonData, options: []) else {
+                    return
+                }
+                
+                guard let messageDict = messageJson as? [String: Any] else {
+                    return
+                }
+                
+                doPostMessage(
+                    webView,
+                    type: ACTION_TYPE,
+                    action: SendMessageHandler.startRedemption.rawValue,
+                    payload: messageDict
+                )
+            }
         case .createUserCompleted:
             guard let dict = body else { return }
             guard let payload = PostMessageUtils.parsePayload(dict: dict), let credifyId = payload["credifyId"] as? String else {
@@ -183,21 +208,49 @@ class WebPresenter: WebPresenterProtocol {
             }
         case .actionClose:
             hanldeCompletionHandler()
+        case .bnplPaymentComplete:
+            // TODO we maybe need to update this when the BNPL proxy integrate with real flow
+            switch context {
+            case .bnpl(offers: _, user: _, let orderId, completedBnplProviders: _):
+                hanldeBnplCompletionHandler(status: offerTransactionStatus, orderId: orderId, isPaymentCompleted: true)
+            default:
+                break
+            }
         }
     }
     
     func hanldeCompletionHandler() {
+        let appState = AppState.shared
+        
         switch context {
         case .mypage(_):
-            AppState.shared.dismissCompletion?()
+            appState.dismissCompletion?()
+            appState.dismissCompletion = nil
         case .offer(_, _):
-            AppState.shared.redemptionResult?(offerTransactionStatus)
-        case .bnpl(offer: _, user: _, orderId: _):
-            AppState.shared.redemptionResult?(offerTransactionStatus)
+            appState.redemptionResult?(offerTransactionStatus)
+            appState.redemptionResult = nil
+        case .bnpl(offers: _, user: _, let orderId, completedBnplProviders: _):
+            // TODO we maybe need to update this when the BNPL proxy integrate with real flow
+            hanldeBnplCompletionHandler(status: offerTransactionStatus, orderId: orderId, isPaymentCompleted: false)
         case .serviceInstance:
-            AppState.shared.dismissCompletion?()
+            appState.dismissCompletion?()
+            appState.dismissCompletion = nil
             break
         }
+    }
+    
+    private func hanldeBnplCompletionHandler(
+        status: RedemptionResult,
+        orderId: String,
+        isPaymentCompleted: Bool
+    ) {
+        let appState = AppState.shared
+        
+        // TODO we maybe need to update this when the BNPL proxy integrate with real flow
+        appState.bnplRedemptionResult?(status, orderId, isPaymentCompleted)
+        
+        appState.bnplOfferInfo = nil
+        appState.bnplRedemptionResult = nil
     }
     
     private func postPushedClaimMessage(_ webView: WKWebView, isSuccess: Bool) {

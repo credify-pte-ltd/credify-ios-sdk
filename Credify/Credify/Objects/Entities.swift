@@ -183,6 +183,8 @@ public struct ProductModel: Codable {
     public let displayName: String
     public let description: String?
     public let detail: ProductDetail?
+    public let consumerId: String
+    public let customScopes: [Scope]?
     
     //NOTE: for use select package product in UI
     public var selectedProductCode: String?
@@ -194,6 +196,8 @@ public struct ProductModel: Codable {
         case description
         case detail
         case selectedProductCode
+        case consumerId = "consumer_id"
+        case customScopes = "custom_scopes"
     }
     
     public struct ProductDetail: Codable {
@@ -222,6 +226,64 @@ public struct InsurancePackageModel: Codable {
 public struct FiatCurrency: Codable {
     public let value: String
     public let currency: String
+}
+
+public struct Scope: Codable {
+    public let id: String?
+    public let name: String
+    public let displayName: String?
+    public let description: String?
+    public let price: Double?
+    public let isOneTimeCharge: Bool?
+    public let unit: String?
+    public let claims: [Claim]?
+    
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case displayName = "display_name"
+        case description
+        case price
+        case isOneTimeCharge = "is_one_time_charge"
+        case unit
+        case claims
+    }
+}
+
+public struct Claim: Codable {
+    public let id: String?
+    public let scopeId: String?
+    public let name: String
+    public let displayName: String?
+    public let description: String?
+    public let valueType: ValueType
+    public let isActive: Bool?
+    public let minValue: String?
+    public let maxValue: String?
+    public let value: AnyValue?
+    public let input: AnyValue?
+    
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case scopeId = "scope_id"
+        case name
+        case displayName = "display_name"
+        case description
+        case valueType = "value_type"
+        case isActive = "is_active"
+        case minValue = "min_value"
+        case maxValue = "max_value"
+        case value
+        case input
+    }
+}
+
+public enum ValueType: String, Codable {
+    case boolean = "BOOLEAN"
+    case object = "OBJECT"
+    case text = "TEXT"
+    case integer = "INTEGER"
+    case float = "FLOAT"
 }
 
 public enum BasicProfileType: String, Codable {
@@ -272,4 +334,19 @@ public enum ProductType : String {
 //    case bnpl = "bnpl"
 //    case consumerBNPL = "consumer"
 //    case merchantBNPL = "merchant"
+}
+
+public struct BNPLOfferInfo : Codable {
+    public let offers: [OfferData]
+    
+    public let providers: [Organization]
+    
+    // NOTE: when getting list offer from consumer, credifyId maybe nil if user haven't account from Credify yet. After creating credify account from provider, we will have credifyId and we will assign it.
+    public let credifyId: String?
+    
+    private enum CodingKeys: String, CodingKey {
+        case offers
+        case providers
+        case credifyId = "credify_id"
+    }
 }

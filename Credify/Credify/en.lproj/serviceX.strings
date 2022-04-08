@@ -9,3 +9,4 @@
 "FieldIsInvalid" = "%@ is invalid.";
 "OK" = "OK";
 "Error" = "Error";
+"BNPLIsNotAvailable" = "BNPL is not available";
