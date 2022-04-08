@@ -125,6 +125,59 @@ class SampleViewController: UIViewController {
 
 ```
 
+### BNPL
+
+```swift
+import UIKit
+import Credify
+
+class SampleViewController: UIViewController {
+
+    private let bnpl = serviceX.BNPL()
+    private var user: CredifyUserModel!
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        let config = serviceXConfig(apiKey: API_KEY, env: .sandbox, appName: APP_NAME)
+        serviceX.configure(config)
+        
+        user = CredifyUserModel(id: "internal ID in your system", firstName: "Vũ", lastName: "Nguyển", email: "vu.nguyen@gmail.com", credifyId: nil, countryCode: "+84", phoneNumber: "0381239876")
+    }
+
+    /// This starts Credify SDK
+    /// You need to create "orderId" on your side.
+    func startBNPL(orderId: String) {
+        let task: ((String, ((Bool) -> Void)?) -> Void) = { credifyId, result in
+            // Using Alamofire
+            AF.request(API_PUSH_CLAIMS,
+                       method: .post,
+                       parameters: ["id": self.user.id, "credify_id": credifyId],
+                       encoding: JSONEncoding.default).responseJSON { data in
+                switch data.result {
+                case .success:
+                    result?(true)
+                case .failure:
+                    result?(false)
+                }
+            }
+        }
+        
+        bnpl.presentModally(
+                from: self,
+                userProfile: user,
+                orderId: orderId,
+                pushClaimTokensTask: task
+        ) { [weak self] status, orderId, isPaymentCompleted in
+            self?.dismiss(animated: false) {
+                print("Status: \(status.rawValue), order id: \(orderId), payment completed: \(isPaymentCompleted)")
+            }
+        }
+    }
+}
+
+```
+
 ## License
 
 Credify iOS SDK is released under the MIT License. See LICENSE for details.
