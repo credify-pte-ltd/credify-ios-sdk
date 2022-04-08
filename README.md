@@ -144,6 +144,26 @@ class SampleViewController: UIViewController {
         
         user = CredifyUserModel(id: "internal ID in your system", firstName: "Vũ", lastName: "Nguyển", email: "vu.nguyen@gmail.com", credifyId: nil, countryCode: "+84", phoneNumber: "0381239876")
     }
+    
+    /// This will check whether BNPL is available or not
+    /// You need to create "orderId" on your side.
+    func getBNPLAvailability(orderId: String) {
+        bnpl.getBNPLAvailability(user: self.user) { result in
+            switch result {
+            case .success((let isAvailable, let credifyId)):
+                if isAvailable {
+                    // This will start BNPL flow
+                    self.startBNPL(orderId: orderId)
+                    return
+                }
+                
+                // BNPL is not available
+            case .failure(let error):
+                // Error
+                break
+            }
+        }
+    }
 
     /// This starts Credify SDK
     /// You need to create "orderId" on your side.
@@ -165,7 +185,7 @@ class SampleViewController: UIViewController {
         
         bnpl.presentModally(
                 from: self,
-                userProfile: user,
+                userProfile: self.user,
                 orderId: orderId,
                 pushClaimTokensTask: task
         ) { [weak self] status, orderId, isPaymentCompleted in
