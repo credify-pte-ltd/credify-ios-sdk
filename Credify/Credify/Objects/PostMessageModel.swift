@@ -32,20 +32,20 @@ internal enum ReceiveMessageHandler: String {
 internal class StartBnplMessage: Codable {
     let offers: [OfferData]
     let profile: CredifyUserModel
-    let orderId: String
+    let order: OrderInfo
     let completeBnplProviders: [Organization]
     let theme: serviceXTheme?
     
     init(
         offers: [OfferData],
         profile: CredifyUserModel,
-        orderId: String,
+        order: OrderInfo,
         completeBnplProviders: [Organization],
         theme: serviceXTheme?
     ) {
         self.offers = offers
         self.profile = profile
-        self.orderId = orderId
+        self.order = order
         self.completeBnplProviders = completeBnplProviders
         self.theme = theme
     }

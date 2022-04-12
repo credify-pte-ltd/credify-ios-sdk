@@ -151,7 +151,9 @@ class WebPresenter: WebPresenterProtocol {
                 let message = StartBnplMessage(
                     offers: offers,
                     profile: user,
-                    orderId: orderId,
+                    order: OrderInfo(
+                        orderId: orderId
+                    ),
                     completeBnplProviders: completedBnplProviders,
                     theme: AppState.shared.config?.theme
                 )
