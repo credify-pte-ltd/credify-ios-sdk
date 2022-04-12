@@ -237,3 +237,11 @@ public class JSONCodingKey: CodingKey {
         return key
     }
 }
+
+internal class OrderInfo : Codable {
+    let orderId: String
+    
+    init(orderId: String) {
+        self.orderId = orderId
+    }
+}
