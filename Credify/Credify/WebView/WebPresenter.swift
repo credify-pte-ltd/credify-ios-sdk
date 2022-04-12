@@ -278,7 +278,10 @@ class WebPresenter: WebPresenterProtocol {
         ]
         
         let js = "(function() { window.postMessage('\(data.json)','*'); })();"
-        webView.evaluateJavaScript(js)
+        
+        DispatchQueue.main.async {
+            webView.evaluateJavaScript(js)
+        }
     }
     
     private func extractOnboardingStatus(body: [String: Any]?) -> OnboardingStatus? {
