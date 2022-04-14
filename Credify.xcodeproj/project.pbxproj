@@ -53,6 +53,7 @@
 		F862448327FE6C59002C85F8 /* EntitiesTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F862448227FE6C59002C85F8 /* EntitiesTest.swift */; };
 		F862448527FE6DC6002C85F8 /* OrganizationUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F862448427FE6DC6002C85F8 /* OrganizationUseCase.swift */; };
 		F8AED25127E984780095DB6C /* PostMessageUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8AED25027E984780095DB6C /* PostMessageUtilsTest.swift */; };
+		F8E9FFA628068C2400F25B59 /* CommonModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9FFA528068C2400F25B59 /* CommonModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -120,6 +121,7 @@
 		F862448227FE6C59002C85F8 /* EntitiesTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntitiesTest.swift; sourceTree = "<group>"; };
 		F862448427FE6DC6002C85F8 /* OrganizationUseCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrganizationUseCase.swift; sourceTree = "<group>"; };
 		F8AED25027E984780095DB6C /* PostMessageUtilsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostMessageUtilsTest.swift; sourceTree = "<group>"; };
+		F8E9FFA528068C2400F25B59 /* CommonModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CommonModel.swift; path = Credify/Credify/Objects/CommonModel.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -231,6 +233,7 @@
 			isa = PBXGroup;
 			children = (
 				2517EC4427E5A4520025E396 /* WebPresenter.swift */,
+				F8E9FFA528068C2400F25B59 /* CommonModel.swift */,
 				2517EC4527E5A4520025E396 /* WebViewController.swift */,
 			);
 			name = WebView;
@@ -535,6 +538,7 @@
 			files = (
 				2517EC6027E5A4520025E396 /* WebViewController.swift in Sources */,
 				2517EC3927E5A4360025E396 /* Extension.swift in Sources */,
+				F8E9FFA628068C2400F25B59 /* CommonModel.swift in Sources */,
 				2517EC3827E5A4360025E396 /* String+Extension.swift in Sources */,
 				F84828B827EAE8BC00ED1E12 /* UIUtils.swift in Sources */,
 				2517EC2327E5A3B40025E396 /* serviceX.swift in Sources */,
