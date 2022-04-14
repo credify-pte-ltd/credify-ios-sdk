@@ -88,7 +88,10 @@ class ViewController: UIViewController {
             from: self,
             user: user,
             marketId: MARKET_ID,
-            productTypes: [ProductType.autoMobileInsurance]
-        )
+            productTypes: [ProductType.autoMobileInsurance]) { [weak self] in
+                self?.dismiss(animated: true) {
+                    print("Done")
+                }
+            }
     }
 }

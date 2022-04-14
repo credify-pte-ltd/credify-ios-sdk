@@ -39,9 +39,10 @@ enum PassportContext {
 protocol WebPresenterProtocol {
     var receiveHandlers: [ReceiveMessageHandler] { get }
     func shouldClose(messageName: String) -> Bool
-    func shouldHideBackButton(messageName: String, body: [String: Any]?) -> Bool
     func handleMessage(_: WKWebView, name: String, body: [String: Any]?)
     func hanldeCompletionHandler()
+    func isBackButtonVisible(urlObj: URL?) -> Bool
+    func isCloseButtonVisible(urlObj: URL?) -> Bool
 }
 
 class WebPresenter: WebPresenterProtocol {
@@ -69,18 +70,6 @@ class WebPresenter: WebPresenterProtocol {
             return false
         }
         return type == .actionClose || type == .bnplPaymentComplete
-    }
-    
-    func shouldHideBackButton(messageName: String, body: [String: Any]?) -> Bool {
-        guard let type = ReceiveMessageHandler(rawValue: messageName) else {
-            return false
-        }
-        
-        if type == .offerTransactionStatusChanged {
-            return extractOnboardingStatus(body: body) == .canceled
-        }
-        
-        return false
     }
     
     func handleMessage(_ webView: WKWebView, name: String, body: [String: Any]?) {
@@ -238,6 +227,73 @@ class WebPresenter: WebPresenterProtocol {
             appState.dismissCompletion?()
             appState.dismissCompletion = nil
             break
+        }
+    }
+    
+    func isBackButtonVisible(urlObj: URL?) -> Bool {
+        if urlObj == nil {
+            return true
+        }
+        
+        let url = urlObj!.absoluteString
+        
+        // For the redirect url case(after redeem offer)
+        if !url.starts(with: Constants.WEB_URL) {
+            return true
+        }
+        
+        switch context {
+        case .offer(_, _):
+            // Both buttons are hidden in the Offer Pending page
+            if url.starts(with: "\(Constants.WEB_URL)/pending-offer") {
+                return false
+            }
+            
+            return !isCloseButtonVisible(urlObj: urlObj)
+        default:
+            return !isCloseButtonVisible(urlObj: urlObj)
+        }
+    }
+    
+    func isCloseButtonVisible(urlObj: URL?) -> Bool {
+        if urlObj == nil {
+            return true
+        }
+        
+        let url = urlObj!.absoluteString
+        
+        // For the redirect url case(after redeem offer)
+        if !url.starts(with: Constants.WEB_URL) {
+            return true
+        }
+        
+        switch context {
+        case .mypage(_):
+            // E.g: https://dev-passport.credify.ninja/
+            if url.starts(with: "\(Constants.WEB_URL)/") && urlObj!.lastPathComponent == "/" {
+                return true
+            }
+            
+            return Constants.MY_PAGE_SHOWING_CLOSE_BUTTON_URLS.first { item in
+                url.starts(with: item)
+            } != nil
+        case .offer(_, _):
+            return Constants.OFFER_SHOWING_CLOSE_BUTTON_URLS.first { item in
+                url.starts(with: item)
+            } != nil
+        case .bnpl(_, _, _, _):
+            // E.g: https://dev-passport.credify.ninja/bpnl
+            if url.starts(with: "\(Constants.WEB_URL)/bnpl") && urlObj!.lastPathComponent == "bnpl" {
+                return true
+            }
+            
+            return Constants.BNPL_SHOWING_CLOSE_BUTTON_URLS.first { item in
+                url.starts(with: item)
+            } != nil
+        case .serviceInstance:
+            return Constants.SERVICE_INSTANCE_SHOWING_CLOSE_BUTTON_URLS.first { item in
+                url.starts(with: item)
+            } != nil
         }
     }
     

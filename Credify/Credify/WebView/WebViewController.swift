@@ -93,7 +93,9 @@ class WebViewController: UIViewController {
         if keyPath == #keyPath(WKWebView.url) {
             webView.scrollView.setContentOffset(CGPoint.zero, animated: true)
             
-            self.setBackButtonVisibility(isVisible: webView.backForwardList.backList.count > 0)
+            let url = webView.url
+            self.setBackButtonVisibility(isVisible: self.presenter.isBackButtonVisible(urlObj: url))
+            self.setCloseButtonVisibility(isVisible: self.presenter.isCloseButtonVisible(urlObj: url))
         }
     }
     
@@ -164,8 +166,6 @@ class WebViewController: UIViewController {
         if webView.canGoBack {
             webView.goBack()
         }
-        
-        self.setBackButtonVisibility(isVisible: webView.backForwardList.backList.count > 1)
     }
     
     @objc private func close() {
@@ -184,6 +184,18 @@ class WebViewController: UIViewController {
         
         navigationItem.leftBarButtonItem?.isEnabled = false
         navigationItem.leftBarButtonItem?.tintColor = .clear
+    }
+    
+    private func setCloseButtonVisibility(isVisible: Bool) {
+        if isVisible {
+            let themeColor = AppState.shared.config?.theme.color
+            navigationItem.rightBarButtonItem?.isEnabled = true
+            navigationItem.rightBarButtonItem?.tintColor = UIColor.fromHex(themeColor?.primaryIconColor ?? "#FFFFFF")
+            return
+        }
+        
+        navigationItem.rightBarButtonItem?.isEnabled = false
+        navigationItem.rightBarButtonItem?.tintColor = .clear
     }
 }
 
@@ -226,12 +238,6 @@ extension WebViewController: WKNavigationDelegate {
 extension WebViewController: WKScriptMessageHandler{
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         let body = message.body as? [String: Any]
-        
-        if presenter.shouldHideBackButton(messageName: message.name, body: body) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.setBackButtonVisibility(isVisible: false)
-            }
-        }
         
         if presenter.shouldClose(messageName: message.name) {
             dismiss(animated: true) {
