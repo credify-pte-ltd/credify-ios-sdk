@@ -231,7 +231,11 @@ extension WebViewController: WKUIDelegate {
 extension WebViewController: WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        presenter.handleMessage(webView, name: ReceiveMessageHandler.initialLoadCompleted.rawValue, body: nil)
+        // BNPL and Offer flow will post a message(market proxy also needs this message)
+        // to native app once the web app is loaded
+        // So the app only needs to post a message
+        // to web app for the login case(My Page and Service Instance)
+        presenter.doPostMessageForLoggingIn(webView: webView)
     }
 }
 

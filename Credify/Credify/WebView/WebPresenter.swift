@@ -43,6 +43,7 @@ protocol WebPresenterProtocol {
     func hanldeCompletionHandler()
     func isBackButtonVisible(urlObj: URL?) -> Bool
     func isCloseButtonVisible(urlObj: URL?) -> Bool
+    func doPostMessageForLoggingIn(webView: WKWebView)
 }
 
 class WebPresenter: WebPresenterProtocol {
@@ -294,6 +295,12 @@ class WebPresenter: WebPresenterProtocol {
             return Constants.SERVICE_INSTANCE_SHOWING_CLOSE_BUTTON_URLS.first { item in
                 url.starts(with: item)
             } != nil
+        }
+    }
+    
+    func doPostMessageForLoggingIn(webView: WKWebView) {
+        if "\(Constants.WEB_URL)/login".starts(with: (webView.url?.absoluteString ?? "")) {
+            handleMessage(webView, name: ReceiveMessageHandler.initialLoadCompleted.rawValue, body: nil)
         }
     }
     
