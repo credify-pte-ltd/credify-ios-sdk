@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "Credify"
-  spec.version      = "0.2.5"
+  spec.version      = "0.2.6"
   spec.summary      = "serviceX SDK is for marketplaces to integrate Credify serviceX."
   spec.description  = "This is an SDK for Credify serviceX distributed for iOS platform."
   spec.homepage     = "https://github.com/credify-pte-ltd/credify-ios-sdk"
@@ -36,7 +36,7 @@ Pod::Spec.new do |spec|
 
   # ――― Resources ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
-  spec.resources = "Credify/Credify/**/*.{storyboard,xib,xcassets,json,png,jpg,jpeg,plist,ttf}"
+  spec.resources = "Credify/Credify/**/*.{storyboard,xib,xcassets,json,png,jpg,jpeg,plist,ttf,strings}"
 
   # spec.resource  = "icon.png"
   # spec.resources = "Resources/*.png"
