@@ -44,6 +44,7 @@ protocol WebPresenterProtocol {
     func isBackButtonVisible(urlObj: URL?) -> Bool
     func isCloseButtonVisible(urlObj: URL?) -> Bool
     func doPostMessageForLoggingIn(webView: WKWebView)
+    func checkWebPageHasLoading(webView: WKWebView, onResult: @escaping (Bool) -> Void)
 }
 
 class WebPresenter: WebPresenterProtocol {
@@ -301,6 +302,17 @@ class WebPresenter: WebPresenterProtocol {
     func doPostMessageForLoggingIn(webView: WKWebView) {
         if "\(Constants.WEB_URL)/login".starts(with: (webView.url?.absoluteString ?? "")) {
             handleMessage(webView, name: ReceiveMessageHandler.initialLoadCompleted.rawValue, body: nil)
+        }
+    }
+    
+    func checkWebPageHasLoading(webView: WKWebView, onResult: @escaping (Bool) -> Void) {
+        webView.evaluateJavaScript("document.getElementById('credify-main-loading-component') !== null") { result, error in
+            guard let hasLoading = result as? Bool else {
+                onResult(false)
+                return
+            }
+            
+            onResult(hasLoading)
         }
     }
     
