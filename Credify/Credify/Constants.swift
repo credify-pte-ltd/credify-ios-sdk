@@ -51,34 +51,4 @@ struct Constants {
             "\(webUrl)/ocb-offer-referral",
         ]
     }
-    
-    /// BNPL
-    internal static var BNPL_SHOWING_CLOSE_BUTTON_URLS: [String] {
-        let webUrl = WEB_URL
-        
-        return [
-            "\(webUrl)/bnpl/bad-request",
-        ]
-    }
-    
-    /// My page
-    internal static var MY_PAGE_SHOWING_CLOSE_BUTTON_URLS: [String] {
-        let webUrl = WEB_URL
-        
-        return [
-            "\(webUrl)/login",
-            "\(webUrl)/bad-request",
-        ]
-    }
-    
-    /// Service Instance
-    internal static var SERVICE_INSTANCE_SHOWING_CLOSE_BUTTON_URLS: [String] {
-        let webUrl = WEB_URL
-        
-        return [
-            "\(webUrl)/login",
-            "\(webUrl)/bad-request",
-            "\(webUrl)/service-instance",
-        ]
-    }
 }

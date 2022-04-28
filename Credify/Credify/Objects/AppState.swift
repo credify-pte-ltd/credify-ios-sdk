@@ -7,7 +7,7 @@
 
 import Foundation
 
-class AppState {
+internal class AppState {
     static let shared = AppState()
     
     private init() {}
@@ -20,4 +20,16 @@ class AppState {
     var redemptionResult: ((RedemptionResult) -> Void)? = nil
     var dismissCompletion: (() -> Void)? = nil
     var bnplRedemptionResult: ((_ status: RedemptionResult,_ orderId: String,_ isPaymentCompleted: Bool) -> Void)? = nil
+    
+    /// Offer: for show/hide the close and back buttons
+    var offerShowingCloseButtonUrls: [String] = []
+    
+    /// BNPL: for show/hide the close and back buttons
+    var bnplShowingCloseButtonUrls: [String] = []
+    
+    /// My page: for show/hide the close and back buttons
+    var myPageShowingCloseButtonUrls: [String] = []
+    
+    /// Service Instance: for show/hide the close and back buttons
+    var serviceInstanceShowingCloseButtonUrls: [String] = []
 }
