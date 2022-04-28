@@ -309,12 +309,12 @@ class WebPresenter: WebPresenterProtocol {
     
     func isLoading(webView: WKWebView, onResult: @escaping (Bool) -> Void) {
         webView.evaluateJavaScript("document.getElementById('\(LOADING_COMPONENT_ID)') !== null") { result, error in
-            guard let hasLoading = result as? Bool else {
+            guard let isLoading = result as? Bool else {
                 onResult(false)
                 return
             }
             
-            onResult(hasLoading)
+            onResult(isLoading)
         }
     }
     

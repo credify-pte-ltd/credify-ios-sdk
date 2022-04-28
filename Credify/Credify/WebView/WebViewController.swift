@@ -163,16 +163,16 @@ class WebViewController: UIViewController {
     }
     
     @objc private func goBack() {
-        presenter.isLoading(webView: webView) { hasLoading in
-            if !hasLoading && self.webView.canGoBack  {
+        presenter.isLoading(webView: webView) { isLoading in
+            if !isLoading && self.webView.canGoBack  {
                 self.webView.goBack()
             }
         }
     }
     
     @objc private func close() {
-        presenter.isLoading(webView: webView) { hasLoading in
-            if !hasLoading {
+        presenter.isLoading(webView: webView) { isLoading in
+            if !isLoading {
                 self.dismiss(animated: true) {
                     self.presenter.hanldeCompletionHandler()
                 }
