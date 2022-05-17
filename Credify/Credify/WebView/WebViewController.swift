@@ -55,6 +55,7 @@ class WebViewController: UIViewController {
         } else {
             webViewHeight = view.frame.height - navAndStatusBarHeight
         }
+        
         webView = WKWebView(
             frame: CGRect(
                 x: 0,
@@ -64,20 +65,34 @@ class WebViewController: UIViewController {
             ),
             configuration: configuration
         )
-        webView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(webView)
-
-        webView.uiDelegate = self
-
-        webView.load(URLRequest(url: url))
-
-        webView.allowsBackForwardNavigationGestures = true
-        webView.addObserver(self, forKeyPath: #keyPath(WKWebView.title), options: .new, context: nil)
-        webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
-        webView.addObserver(self, forKeyPath: #keyPath(WKWebView.url), options: .new, context: nil)
-        webView.customUserAgent = AppState.shared.config?.userAgent
         
-        webView.navigationDelegate = self
+        // 23274: Investigate caching issue on webview
+        // Clear website data first for testing some bugs to make sure
+        // that the bugs happen due to caching issue
+        // If it fixed these bugs then we need to think about the improvement for caching.
+        WKWebsiteDataStore.default().removeData(
+            ofTypes: WKWebsiteDataStore.allWebsiteDataTypes(),
+            modifiedSince: Date(timeIntervalSince1970: 0)
+        ) {
+            guard let webView = self.webView else { return }
+            guard let url = self.url else { return }
+            guard let view = self.view else { return }
+
+            webView.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(webView)
+
+            webView.uiDelegate = self
+
+            webView.load(URLRequest(url: url))
+
+            webView.allowsBackForwardNavigationGestures = true
+            webView.addObserver(self, forKeyPath: #keyPath(WKWebView.title), options: .new, context: nil)
+            webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
+            webView.addObserver(self, forKeyPath: #keyPath(WKWebView.url), options: .new, context: nil)
+            webView.customUserAgent = AppState.shared.config?.userAgent
+
+            webView.navigationDelegate = self
+        }
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -163,14 +178,20 @@ class WebViewController: UIViewController {
     }
     
     @objc private func goBack() {
-        if webView.canGoBack {
-            webView.goBack()
+        presenter.isLoading(webView: webView) { isLoading in
+            if !isLoading && self.webView.canGoBack  {
+                self.webView.goBack()
+            }
         }
     }
     
     @objc private func close() {
-        dismiss(animated: true) {
-            self.presenter.hanldeCompletionHandler()
+        presenter.isLoading(webView: webView) { isLoading in
+            if !isLoading {
+                self.dismiss(animated: true) {
+                    self.presenter.hanldeCompletionHandler()
+                }
+            }
         }
     }
 

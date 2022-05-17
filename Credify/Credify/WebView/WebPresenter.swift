@@ -44,9 +44,12 @@ protocol WebPresenterProtocol {
     func isBackButtonVisible(urlObj: URL?) -> Bool
     func isCloseButtonVisible(urlObj: URL?) -> Bool
     func doPostMessageForLoggingIn(webView: WKWebView)
+    func isLoading(webView: WKWebView, onResult: @escaping (Bool) -> Void)
 }
 
 class WebPresenter: WebPresenterProtocol {
+    private let LOADING_COMPONENT_ID = "credify-main-loading-component"
+    
     private let context: PassportContext
     
     init(context: PassportContext) {
@@ -62,6 +65,7 @@ class WebPresenter: WebPresenterProtocol {
             .offerTransactionStatusChanged,
             .actionClose,
             .bnplPaymentComplete,
+            .sendPathsForShowingCloseButton,
         ]
     }
     
@@ -208,6 +212,8 @@ class WebPresenter: WebPresenterProtocol {
             default:
                 break
             }
+        case .sendPathsForShowingCloseButton:
+            handleSendPathsForShowingCloseButton(body: body)
         }
     }
     
@@ -268,6 +274,8 @@ class WebPresenter: WebPresenterProtocol {
             return true
         }
         
+        let appState = AppState.shared
+        
         switch context {
         case .mypage(_):
             // E.g: https://dev-passport.credify.ninja/
@@ -275,11 +283,11 @@ class WebPresenter: WebPresenterProtocol {
                 return true
             }
             
-            return Constants.MY_PAGE_SHOWING_CLOSE_BUTTON_URLS.first { item in
+            return appState.myPageShowingCloseButtonUrls.first { item in
                 url.starts(with: item)
             } != nil
         case .offer(_, _):
-            return Constants.OFFER_SHOWING_CLOSE_BUTTON_URLS.first { item in
+            return appState.offerShowingCloseButtonUrls.first { item in
                 url.starts(with: item)
             } != nil
         case .bnpl(_, _, _, _):
@@ -288,11 +296,11 @@ class WebPresenter: WebPresenterProtocol {
                 return true
             }
             
-            return Constants.BNPL_SHOWING_CLOSE_BUTTON_URLS.first { item in
+            return appState.bnplShowingCloseButtonUrls.first { item in
                 url.starts(with: item)
             } != nil
         case .serviceInstance:
-            return Constants.SERVICE_INSTANCE_SHOWING_CLOSE_BUTTON_URLS.first { item in
+            return appState.serviceInstanceShowingCloseButtonUrls.first { item in
                 url.starts(with: item)
             } != nil
         }
@@ -301,6 +309,19 @@ class WebPresenter: WebPresenterProtocol {
     func doPostMessageForLoggingIn(webView: WKWebView) {
         if "\(Constants.WEB_URL)/login".starts(with: (webView.url?.absoluteString ?? "")) {
             handleMessage(webView, name: ReceiveMessageHandler.initialLoadCompleted.rawValue, body: nil)
+        }
+    }
+    
+    func isLoading(webView: WKWebView, onResult: @escaping (Bool) -> Void) {
+        DispatchQueue.main.async {
+            webView.evaluateJavaScript("document.getElementById('\(self.LOADING_COMPONENT_ID)') !== null") { result, error in
+                guard let isLoading = result as? Bool else {
+                    onResult(false)
+                    return
+                }
+                
+                onResult(isLoading)
+            }
         }
     }
     
@@ -356,5 +377,38 @@ class WebPresenter: WebPresenterProtocol {
         }
         guard let onboardingStatus = OnboardingStatus(rawValue: status) else { return nil}
         return onboardingStatus
+    }
+    
+    private func handleSendPathsForShowingCloseButton(body: [String: Any]?) {
+        guard let dict = body else { return }
+        guard let payload = PostMessageUtils.parsePayload(dict: dict) else {
+            return
+        }
+        
+        let appState = AppState.shared
+        
+        if let normalOffer = payload["normalOffer"] as? [String] {
+            appState.offerShowingCloseButtonUrls = normalOffer.map({ item in
+                return "\(Constants.WEB_URL)\(item)"
+            })
+        }
+        
+        if let bnpl = payload["bnpl"] as? [String] {
+            appState.bnplShowingCloseButtonUrls = bnpl.map({ item in
+                return "\(Constants.WEB_URL)\(item)"
+            })
+        }
+        
+        if let passport = payload["passport"] as? [String] {
+            appState.myPageShowingCloseButtonUrls = passport.map({ item in
+                return "\(Constants.WEB_URL)\(item)"
+            })
+        }
+        
+        if let serviceInstance = payload["serviceInstance"] as? [String] {
+            appState.serviceInstanceShowingCloseButtonUrls = serviceInstance.map({ item in
+                return "\(Constants.WEB_URL)\(item)"
+            })
+        }
     }
 }
