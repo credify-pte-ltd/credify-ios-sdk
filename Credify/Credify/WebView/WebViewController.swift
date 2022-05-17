@@ -25,6 +25,11 @@ class WebViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // 23462: Med247 app - Passport's background does not fit with height of Med247 app
+        let theme = AppState.shared.config?.theme
+        let themeColor = theme?.color
+        view.backgroundColor = UIColor.fromHex(themeColor?.secondaryBackground ?? "#FFFFFF")
+        
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
         }
