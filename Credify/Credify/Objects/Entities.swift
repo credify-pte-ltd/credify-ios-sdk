@@ -331,9 +331,9 @@ public enum ProductType : String {
 //    case traditionalCreditCard = "traditional"
 //    case cbccCreditCard = "cbcc"
     // BNPL
-//    case bnpl = "bnpl"
-//    case consumerBNPL = "consumer"
-//    case merchantBNPL = "merchant"
+    case bnpl = "bnpl"
+    case consumerBNPL = "consumer"
+    case merchantBNPL = "merchant"
 }
 
 public struct BNPLOfferInfo : Codable {

@@ -45,6 +45,7 @@ protocol WebPresenterProtocol {
     func isCloseButtonVisible(urlObj: URL?) -> Bool
     func doPostMessageForLoggingIn(webView: WKWebView)
     func isLoading(webView: WKWebView, onResult: @escaping (Bool) -> Void)
+    func shouldUseCredifyTheme() -> Bool
 }
 
 class WebPresenter: WebPresenterProtocol {
@@ -322,6 +323,17 @@ class WebPresenter: WebPresenterProtocol {
                 
                 onResult(isLoading)
             }
+        }
+    }
+    
+    func shouldUseCredifyTheme() -> Bool {
+        switch context {
+        case .mypage(_):
+            return true
+        case .serviceInstance:
+            return true
+        default:
+            return false
         }
     }
     
