@@ -113,6 +113,13 @@ class WebViewController: UIViewController {
         if keyPath == #keyPath(WKWebView.url) {
             webView.scrollView.setContentOffset(CGPoint.zero, animated: true)
             
+            // There is no history
+            if !webView.canGoBack {
+                self.setBackButtonVisibility(isVisible: false)
+                self.setCloseButtonVisibility(isVisible: true)
+                return
+            }
+            
             let url = webView.url
             self.setBackButtonVisibility(isVisible: self.presenter.isBackButtonVisible(urlObj: url))
             self.setCloseButtonVisibility(isVisible: self.presenter.isCloseButtonVisible(urlObj: url))
@@ -129,9 +136,22 @@ class WebViewController: UIViewController {
         
         let theme = AppState.shared.config?.theme
         let themeColor = theme?.color
-        let startColor = themeColor?.primaryBrandyStart ?? ThemeColor.default.primaryBrandyStart
-        let endColor = themeColor?.primaryBrandyEnd ?? ThemeColor.default.primaryBrandyEnd
-        navBar.setGradientBackground(colors: [UIColor.fromHex(startColor), UIColor.fromHex(endColor)], startPoint: .topLeft, endPoint: .bottomRight)
+        
+        var startColor = themeColor?.primaryBrandyStart ?? ThemeColor.default.primaryBrandyStart
+        var endColor = themeColor?.primaryBrandyEnd ?? ThemeColor.default.primaryBrandyEnd
+        if presenter.shouldUseCredifyTheme() {
+            startColor = ThemeColor.default.primaryBrandyStart
+            endColor = ThemeColor.default.primaryBrandyEnd
+        }
+        
+        navBar.setGradientBackground(
+            colors: [
+                UIColor.fromHex(startColor),
+                UIColor.fromHex(endColor)
+            ],
+            startPoint: .centerLeft,
+            endPoint: .centerRight
+        )
         
         // TODO I will update it later
         let titleFont: UIFont? = nil //AppState.shared.config?.theme.font.primaryPageTitle
@@ -184,8 +204,12 @@ class WebViewController: UIViewController {
     
     @objc private func goBack() {
         presenter.isLoading(webView: webView) { isLoading in
-            if !isLoading && self.webView.canGoBack  {
-                self.webView.goBack()
+            if !isLoading {
+                if self.webView.canGoBack {
+                    self.webView.goBack()
+                } else {
+                    self.presenter.hanldeCompletionHandler()
+                }
             }
         }
     }
