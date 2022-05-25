@@ -95,6 +95,8 @@ class SampleViewController: UIViewController {
 }
 ```
 
+> **Important**: For the `pushClaimTokensTask` callback, you need to keep `credifyId` on your side. You have to send the `credifyId` to Credify SDK when you use the methods that require `credifyId`. E.g: call `offer.presentModally` method or create `CredifyUserModel` model.
+
 ### Passport
 
 ```swift
@@ -197,6 +199,8 @@ class SampleViewController: UIViewController {
 }
 
 ```
+
+> **Important**: For the `pushClaimTokensTask` callback, you need to keep `credifyId` on your side. You have to send the `credifyId` to Credify SDK when you use the methods that require `credifyId`. E.g: call `bnpl.presentModally` method or create `CredifyUserModel` model.
 
 ## License
 
