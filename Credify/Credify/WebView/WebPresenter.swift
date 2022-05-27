@@ -46,12 +46,25 @@ protocol WebPresenterProtocol {
     func doPostMessageForLoggingIn(webView: WKWebView)
     func isLoading(webView: WKWebView, onResult: @escaping (Bool) -> Void)
     func shouldUseCredifyTheme() -> Bool
+    func goToPreviousPageOrClose(webView: WKWebView)
 }
 
 class WebPresenter: WebPresenterProtocol {
     private let LOADING_COMPONENT_ID = "credify-main-loading-component"
     
     private let context: PassportContext
+    
+    private var pendingUrl: String {
+        get {
+            return "\(Constants.WEB_URL)/pending-offer"
+        }
+    }
+    
+    private var canceledUrl: String {
+        get {
+            return "\(Constants.WEB_URL)/canceled-offer"
+        }
+    }
     
     init(context: PassportContext) {
         self.context = context
@@ -67,6 +80,7 @@ class WebPresenter: WebPresenterProtocol {
             .actionClose,
             .bnplPaymentComplete,
             .sendPathsForShowingCloseButton,
+            .loginLoadCompleted
         ]
     }
     
@@ -90,11 +104,7 @@ class WebPresenter: WebPresenterProtocol {
                     webView,
                     type: ACTION_TYPE,
                     action: SendMessageHandler.actionLogin.rawValue,
-                    payload: [
-                        "phoneNumber": user.phoneNumber,
-                        "countryCode": user.countryCode,
-                        "fullName": user.localizedName
-                    ]
+                    payload: createPostMessagePayloadForLoggingIn(user: user)
                 )
             }
             if case let .serviceInstance(user, _, _) = context {
@@ -102,11 +112,7 @@ class WebPresenter: WebPresenterProtocol {
                     webView,
                     type: ACTION_TYPE,
                     action: SendMessageHandler.actionLogin.rawValue,
-                    payload: [
-                        "phoneNumber": user.phoneNumber,
-                        "countryCode": user.countryCode,
-                        "fullName": user.localizedName
-                    ]
+                    payload: createPostMessagePayloadForLoggingIn(user: user)
                 )
             }
             if case let .offer(offer, user) = context {
@@ -215,6 +221,8 @@ class WebPresenter: WebPresenterProtocol {
             }
         case .sendPathsForShowingCloseButton:
             handleSendPathsForShowingCloseButton(body: body)
+        case .loginLoadCompleted:
+            doPostMessageForLoggingIn(webView: webView)
         }
     }
     
@@ -225,9 +233,11 @@ class WebPresenter: WebPresenterProtocol {
         case .mypage(_):
             appState.dismissCompletion?()
             appState.dismissCompletion = nil
+            appState.pushClaimTokensTask = nil
         case .offer(_, _):
             appState.redemptionResult?(offerTransactionStatus)
             appState.redemptionResult = nil
+            appState.pushClaimTokensTask = nil
         case .bnpl(offers: _, user: _, let orderId, completedBnplProviders: _):
             // TODO we maybe need to update this when the BNPL proxy integrate with real flow
             hanldeBnplCompletionHandler(status: offerTransactionStatus, orderId: orderId, isPaymentCompleted: false)
@@ -251,10 +261,10 @@ class WebPresenter: WebPresenterProtocol {
         }
         
         switch context {
-        case .offer(_, _):
-            // Both buttons are hidden in the Offer Pending page
-            if url.starts(with: "\(Constants.WEB_URL)/pending-offer") {
-                return false
+        case .mypage(_), .serviceInstance(_, _, _):
+            // In this case, the back button is visible
+            if url.starts(with: pendingUrl) || url.starts(with: canceledUrl) {
+                return true
             }
             
             return !isCloseButtonVisible(urlObj: urlObj)
@@ -284,6 +294,11 @@ class WebPresenter: WebPresenterProtocol {
                 return true
             }
             
+            // In this case, the back button is invisible
+            if url.starts(with: pendingUrl) || url.starts(with: canceledUrl) {
+                return false
+            }
+            
             return appState.myPageShowingCloseButtonUrls.first { item in
                 url.starts(with: item)
             } != nil
@@ -301,6 +316,11 @@ class WebPresenter: WebPresenterProtocol {
                 url.starts(with: item)
             } != nil
         case .serviceInstance:
+            // In this case, the back button is invisible
+            if url.starts(with: pendingUrl) || url.starts(with: canceledUrl) {
+                return false
+            }
+            
             return appState.serviceInstanceShowingCloseButtonUrls.first { item in
                 url.starts(with: item)
             } != nil
@@ -337,6 +357,35 @@ class WebPresenter: WebPresenterProtocol {
         }
     }
     
+    func goToPreviousPageOrClose(webView: WKWebView) {
+        let url = webView.url?.absoluteString
+        isLoading(webView: webView) { isLoading in
+            if isLoading {
+                return
+            }
+            
+            if !webView.canGoBack {
+                self.hanldeCompletionHandler()
+                return
+            }
+            
+            switch self.context {
+            case .mypage(_), .serviceInstance:
+                if url != nil && (url!.starts(with: self.pendingUrl) || url!.starts(with: self.canceledUrl)) {
+                    let backList = webView.backForwardList.backList
+                    if backList.count > 0 {
+                        webView.go(to: backList[0])
+                        return
+                    }
+                }
+            default:
+                break
+            }
+            
+            webView.goBack()
+        }
+    }
+    
     private func hanldeBnplCompletionHandler(
         status: RedemptionResult,
         orderId: String,
@@ -349,6 +398,7 @@ class WebPresenter: WebPresenterProtocol {
         
         appState.bnplOfferInfo = nil
         appState.bnplRedemptionResult = nil
+        appState.pushClaimTokensTask = nil
     }
     
     private func postPushedClaimMessage(_ webView: WKWebView, isSuccess: Bool) {
@@ -422,5 +472,23 @@ class WebPresenter: WebPresenterProtocol {
                 return "\(Constants.WEB_URL)\(item)"
             })
         }
+    }
+    
+    private func createPostMessagePayloadForLoggingIn(user: CredifyUserModel) -> [String: Any] {
+        let credifyId = user.credifyId ?? ""
+        if credifyId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return [
+                "phoneNumber": user.phoneNumber,
+                "countryCode": user.countryCode,
+                "fullName": user.localizedName,
+            ]
+        }
+        
+        return [
+            "phoneNumber": user.phoneNumber,
+            "countryCode": user.countryCode,
+            "fullName": user.localizedName,
+            "credifyId": credifyId,
+        ]
     }
 }

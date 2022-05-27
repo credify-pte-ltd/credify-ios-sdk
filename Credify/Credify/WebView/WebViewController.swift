@@ -35,7 +35,23 @@ class WebViewController: UIViewController {
         }
         
         customizeNavBar()
-
+        
+        // 24002: Passport of redeemed list- Start over link on a pending offer
+        // https://stackoverflow.com/questions/40452034/disable-zoom-in-wkwebview
+        let disableZoomInScript: String = "var meta = document.createElement('meta');" +
+            "meta.name = 'viewport';" +
+            "meta.content = 'width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no, user-scalable=no';" +
+            "var head = document.getElementsByTagName('head')[0];" +
+            "head.appendChild(meta);"
+        
+        // Use for localization in the web app
+        var languageScript: String? = nil
+        let language = AppState.shared.language
+        if language != nil {
+            languageScript = "window.appLanguage = '\(language!)';"
+        }
+            
+        let userDisableZoomInScript: WKUserScript = WKUserScript(source: disableZoomInScript, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
         let configuration = WKWebViewConfiguration()
         let userController = WKUserContentController()
         
@@ -45,6 +61,12 @@ class WebViewController: UIViewController {
         
         configuration.userContentController = userController
         configuration.allowsInlineMediaPlayback = true // Needed for eKYC camera
+        configuration.userContentController.addUserScript(userDisableZoomInScript)
+        if languageScript != nil {
+            configuration.userContentController.addUserScript(
+                WKUserScript(source: languageScript!, injectionTime: .atDocumentStart, forMainFrameOnly: true)
+            )
+        }
         
         let window = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
         var statusBarHeight: CGFloat = 0
@@ -94,9 +116,9 @@ class WebViewController: UIViewController {
             webView.addObserver(self, forKeyPath: #keyPath(WKWebView.title), options: .new, context: nil)
             webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
             webView.addObserver(self, forKeyPath: #keyPath(WKWebView.url), options: .new, context: nil)
+            webView.addObserver(self, forKeyPath: #keyPath(WKWebView.canGoBack), options: .new, context: nil)
+            webView.addObserver(self, forKeyPath: #keyPath(WKWebView.canGoForward), options: .new, context: nil)
             webView.customUserAgent = AppState.shared.config?.userAgent
-
-            webView.navigationDelegate = self
         }
     }
     
@@ -113,16 +135,21 @@ class WebViewController: UIViewController {
         if keyPath == #keyPath(WKWebView.url) {
             webView.scrollView.setContentOffset(CGPoint.zero, animated: true)
             
+            let url = webView.url
+            self.setBackButtonVisibility(isVisible: self.presenter.isBackButtonVisible(urlObj: url))
+            self.setCloseButtonVisibility(isVisible: self.presenter.isCloseButtonVisible(urlObj: url))
+        }
+        
+        if keyPath == #keyPath(WKWebView.canGoBack) ||
+            keyPath == #keyPath(WKWebView.canGoForward) ||
+            keyPath == #keyPath(WKWebView.url) ||
+            keyPath == #keyPath(WKWebView.estimatedProgress){
             // There is no history
             if !webView.canGoBack {
                 self.setBackButtonVisibility(isVisible: false)
                 self.setCloseButtonVisibility(isVisible: true)
                 return
             }
-            
-            let url = webView.url
-            self.setBackButtonVisibility(isVisible: self.presenter.isBackButtonVisible(urlObj: url))
-            self.setCloseButtonVisibility(isVisible: self.presenter.isCloseButtonVisible(urlObj: url))
         }
     }
     
@@ -203,15 +230,7 @@ class WebViewController: UIViewController {
     }
     
     @objc private func goBack() {
-        presenter.isLoading(webView: webView) { isLoading in
-            if !isLoading {
-                if self.webView.canGoBack {
-                    self.webView.goBack()
-                } else {
-                    self.presenter.hanldeCompletionHandler()
-                }
-            }
-        }
+        presenter.goToPreviousPageOrClose(webView: webView)
     }
     
     @objc private func close() {
@@ -275,17 +294,6 @@ extension WebViewController: WKUIDelegate {
             return nil
         }
         return nil
-    }
-}
-
-extension WebViewController: WKNavigationDelegate {
-    
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        // BNPL and Offer flow will post a message(market proxy also needs this message)
-        // to native app once the web app is loaded
-        // So the app only needs to post a message
-        // to web app for the login case(My Page and Service Instance)
-        presenter.doPostMessageForLoggingIn(webView: webView)
     }
 }
 
