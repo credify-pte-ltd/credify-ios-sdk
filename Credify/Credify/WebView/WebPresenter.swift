@@ -54,18 +54,6 @@ class WebPresenter: WebPresenterProtocol {
     
     private let context: PassportContext
     
-    private var pendingUrl: String {
-        get {
-            return "\(Constants.WEB_URL)/pending-offer"
-        }
-    }
-    
-    private var canceledUrl: String {
-        get {
-            return "\(Constants.WEB_URL)/canceled-offer"
-        }
-    }
-    
     init(context: PassportContext) {
         self.context = context
     }
@@ -263,7 +251,7 @@ class WebPresenter: WebPresenterProtocol {
         switch context {
         case .mypage(_), .serviceInstance(_, _, _):
             // In this case, the back button is visible
-            if url.starts(with: pendingUrl) || url.starts(with: canceledUrl) {
+            if WebViewUtils.isPendingOrCanceledPage(url: url) {
                 return true
             }
             
@@ -295,7 +283,7 @@ class WebPresenter: WebPresenterProtocol {
             }
             
             // In this case, the back button is invisible
-            if url.starts(with: pendingUrl) || url.starts(with: canceledUrl) {
+            if WebViewUtils.isPendingOrCanceledPage(url: url) {
                 return false
             }
             
@@ -317,7 +305,7 @@ class WebPresenter: WebPresenterProtocol {
             } != nil
         case .serviceInstance:
             // In this case, the back button is invisible
-            if url.starts(with: pendingUrl) || url.starts(with: canceledUrl) {
+            if WebViewUtils.isPendingOrCanceledPage(url: url) {
                 return false
             }
             
@@ -371,7 +359,7 @@ class WebPresenter: WebPresenterProtocol {
             
             switch self.context {
             case .mypage(_), .serviceInstance:
-                if url != nil && (url!.starts(with: self.pendingUrl) || url!.starts(with: self.canceledUrl)) {
+                if url != nil && WebViewUtils.isPendingOrCanceledPage(url: url!) {
                     let backList = webView.backForwardList.backList
                     if backList.count > 0 {
                         webView.go(to: backList[0])

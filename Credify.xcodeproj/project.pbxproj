@@ -53,6 +53,8 @@
 		F862448327FE6C59002C85F8 /* EntitiesTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F862448227FE6C59002C85F8 /* EntitiesTest.swift */; };
 		F862448527FE6DC6002C85F8 /* OrganizationUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F862448427FE6DC6002C85F8 /* OrganizationUseCase.swift */; };
 		F8AED25127E984780095DB6C /* PostMessageUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8AED25027E984780095DB6C /* PostMessageUtilsTest.swift */; };
+		F8C445E42840EDE700310CDF /* WebViewUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C445E22840EDE700310CDF /* WebViewUtils.swift */; };
+		F8C445E52840EDE700310CDF /* ValidationUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C445E32840EDE700310CDF /* ValidationUtils.swift */; };
 		F8E9FFA628068C2400F25B59 /* CommonModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9FFA528068C2400F25B59 /* CommonModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -121,6 +123,8 @@
 		F862448227FE6C59002C85F8 /* EntitiesTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntitiesTest.swift; sourceTree = "<group>"; };
 		F862448427FE6DC6002C85F8 /* OrganizationUseCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrganizationUseCase.swift; sourceTree = "<group>"; };
 		F8AED25027E984780095DB6C /* PostMessageUtilsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostMessageUtilsTest.swift; sourceTree = "<group>"; };
+		F8C445E22840EDE700310CDF /* WebViewUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewUtils.swift; sourceTree = "<group>"; };
+		F8C445E32840EDE700310CDF /* ValidationUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValidationUtils.swift; sourceTree = "<group>"; };
 		F8E9FFA528068C2400F25B59 /* CommonModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CommonModel.swift; path = Credify/Credify/Objects/CommonModel.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -325,6 +329,8 @@
 		F83B400227E89DF200A01A2E /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				F8C445E32840EDE700310CDF /* ValidationUtils.swift */,
+				F8C445E22840EDE700310CDF /* WebViewUtils.swift */,
 				F83B400327E89DF200A01A2E /* PostMessageUtils.swift */,
 				F84828B727EAE8BC00ED1E12 /* UIUtils.swift */,
 			);
@@ -548,6 +554,7 @@
 				2517EC5B27E5A4520025E396 /* Entities.swift in Sources */,
 				F83B400627E89E7300A01A2E /* PostMessageModel.swift in Sources */,
 				2517EC5C27E5A4520025E396 /* CredifyUserModel.swift in Sources */,
+				F8C445E52840EDE700310CDF /* ValidationUtils.swift in Sources */,
 				2517EC6A27E5A4520025E396 /* serviceXTheme.swift in Sources */,
 				2517EC3A27E5A4360025E396 /* UINavigationBar+Extension.swift in Sources */,
 				2517EC5A27E5A4520025E396 /* CredifyEnvs.swift in Sources */,
@@ -561,6 +568,7 @@
 				2517EC3727E5A4360025E396 /* UIViewController+Extension.swift in Sources */,
 				2517EC5D27E5A4520025E396 /* CredifyError.swift in Sources */,
 				2517EC6827E5A4520025E396 /* ThemeFont.swift in Sources */,
+				F8C445E42840EDE700310CDF /* WebViewUtils.swift in Sources */,
 				2517EC5F27E5A4520025E396 /* WebPresenter.swift in Sources */,
 				2517EC3527E5A4360025E396 /* UIColor+Extension.swift in Sources */,
 				2517EC6B27E5A4520025E396 /* APIClient.swift in Sources */,

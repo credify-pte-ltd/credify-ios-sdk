@@ -40,38 +40,19 @@ public struct serviceX {
             pushClaimTokensTask: @escaping ((String, ((Bool) -> Void)?) -> Void),
             completion: @escaping (() -> Void)
         ) {
-            let tableName = "serviceX"
-            var errorMessage = ""
-            
-            // Phone number
-            let countryCode = user.countryCode.trimmingCharacters(in: .whitespacesAndNewlines)
-            let phoneNumber = user.phoneNumber.trimmingCharacters(in: .whitespacesAndNewlines)
-            if countryCode.isEmpty || phoneNumber.isEmpty || phoneNumber.count < 8 || phoneNumber.count > 12 {
-                errorMessage.append(String(format:"FieldIsInvalid".localized(tableName: tableName), "\'Phone number\'"))
-                errorMessage.append(" ")
-            }
-            
-            // All are valid
-            if errorMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                AppState.shared.pushClaimTokensTask = pushClaimTokensTask
-                AppState.shared.dismissCompletion = completion
-                
-                let context = PassportContext.mypage(user: user)
-                let vc = WebViewController.instantiate(context: context)
-                let navigationController = UINavigationController(rootViewController: vc)
-                navigationController.modalPresentationStyle = .overFullScreen
-                navigationController.interactivePopGestureRecognizer?.isEnabled = false // disable navigation bar swipe back
-                from.present(navigationController, animated: true)
+            if !ValidationUtils.canShowMyPage(from: from, user: user) {
                 return
             }
             
-            // Show error
-            UIUtils.alert(
-                from: from,
-                title: "Error".localized(tableName: tableName),
-                errorMessage: errorMessage,
-                actionText: "OK".localized(tableName: tableName)
-            )
+            AppState.shared.pushClaimTokensTask = pushClaimTokensTask
+            AppState.shared.dismissCompletion = completion
+            
+            let context = PassportContext.mypage(user: user)
+            let vc = WebViewController.instantiate(context: context)
+            let navigationController = UINavigationController(rootViewController: vc)
+            navigationController.modalPresentationStyle = .overFullScreen
+            navigationController.interactivePopGestureRecognizer?.isEnabled = false // disable navigation bar swipe back
+            from.present(navigationController, animated: true)
         }
         
         
@@ -90,42 +71,17 @@ public struct serviceX {
             productTypes: [ProductType],
             completion: @escaping (() -> Void)
         ) {
-            let tableName = "serviceX"
-            var errorMessage = ""
-            
-            // Market id
-            if marketId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                errorMessage.append(String(format:"FieldIsRequired".localized(tableName: tableName), "\'Market Id\'"))
-                errorMessage.append(" ")
-            }
-            
-            // Phone number
-            let countryCode = user.countryCode.trimmingCharacters(in: .whitespacesAndNewlines)
-            let phoneNumber = user.phoneNumber.trimmingCharacters(in: .whitespacesAndNewlines)
-            if countryCode.isEmpty || phoneNumber.isEmpty || phoneNumber.count < 8 || phoneNumber.count > 12 {
-                errorMessage.append(String(format:"FieldIsInvalid".localized(tableName: tableName), "\'Phone number\'"))
-                errorMessage.append(" ")
-            }
-            
-            // All are valid
-            if errorMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                AppState.shared.dismissCompletion = completion
-                let context = PassportContext.serviceInstance(user: user, marketId: marketId, productTypes: productTypes)
-                let vc = WebViewController.instantiate(context: context)
-                let navigationController = UINavigationController(rootViewController: vc)
-                navigationController.modalPresentationStyle = .overFullScreen
-                navigationController.interactivePopGestureRecognizer?.isEnabled = false // disable navigation bar swipe back
-                from.present(navigationController, animated: true)
+            if !ValidationUtils.canShowDetailPage(from: from, user: user, marketId: marketId) {
                 return
             }
             
-            // Show error
-            UIUtils.alert(
-                from: from,
-                title: "Error".localized(tableName: tableName),
-                errorMessage: errorMessage,
-                actionText: "OK".localized(tableName: tableName)
-            )
+            AppState.shared.dismissCompletion = completion
+            let context = PassportContext.serviceInstance(user: user, marketId: marketId, productTypes: productTypes)
+            let vc = WebViewController.instantiate(context: context)
+            let navigationController = UINavigationController(rootViewController: vc)
+            navigationController.modalPresentationStyle = .overFullScreen
+            navigationController.interactivePopGestureRecognizer?.isEnabled = false // disable navigation bar swipe back
+            from.present(navigationController, animated: true)
         }
     }
     
@@ -160,44 +116,19 @@ public struct serviceX {
                                    userProfile: CredifyUserModel,
                                    pushClaimTokensTask: @escaping ((String, ((Bool) -> Void)?) -> Void),
                                    completionHandler: @escaping (RedemptionResult) -> Void) {
-            let tableName = "serviceX"
-            var errorMessage = ""
-            
-            // Market user id
-            if userProfile.id.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                errorMessage.append(String(format:"FieldIsRequired".localized(tableName: tableName), "\'User Id\'"))
-                errorMessage.append(" ")
-            }
-            
-            // Phone number
-            let countryCode = userProfile.countryCode.trimmingCharacters(in: .whitespacesAndNewlines)
-            let phoneNumber = userProfile.phoneNumber.trimmingCharacters(in: .whitespacesAndNewlines)
-            if countryCode.isEmpty || phoneNumber.isEmpty || phoneNumber.count < 8 || phoneNumber.count > 12 {
-                errorMessage.append(String(format:"FieldIsInvalid".localized(tableName: tableName), "\'Phone number\'"))
-                errorMessage.append(" ")
-            }
-            
-            // All are valid
-            if errorMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                AppState.shared.pushClaimTokensTask = pushClaimTokensTask
-                AppState.shared.redemptionResult = completionHandler
-                
-                let context = PassportContext.offer(offer: offer, user: userProfile)
-                let vc = WebViewController.instantiate(context: context)
-                let navigationController = UINavigationController(rootViewController: vc)
-                navigationController.modalPresentationStyle = .overFullScreen
-                navigationController.interactivePopGestureRecognizer?.isEnabled = false // disable navigation bar swipe back
-                from.present(navigationController, animated: true)
+            if !ValidationUtils.canStartToRedeemOffer(from: from, user: userProfile) {
                 return
             }
             
-            // Show error
-            UIUtils.alert(
-                from: from,
-                title: "Error".localized(tableName: tableName),
-                errorMessage: errorMessage,
-                actionText: "OK".localized(tableName: tableName)
-            )
+            AppState.shared.pushClaimTokensTask = pushClaimTokensTask
+            AppState.shared.redemptionResult = completionHandler
+            
+            let context = PassportContext.offer(offer: offer, user: userProfile)
+            let vc = WebViewController.instantiate(context: context)
+            let navigationController = UINavigationController(rootViewController: vc)
+            navigationController.modalPresentationStyle = .overFullScreen
+            navigationController.interactivePopGestureRecognizer?.isEnabled = false // disable navigation bar swipe back
+            from.present(navigationController, animated: true)
         }
     }
     
@@ -287,67 +218,33 @@ public struct serviceX {
                                    orderId: String,
                                    pushClaimTokensTask: @escaping ((String, ((Bool) -> Void)?) -> Void),
                                    completionHandler: @escaping (_ status: RedemptionResult,_ orderId: String, _ isPaymentCompleted: Bool) -> Void) {
-            let tableName = "serviceX"
             let appState = AppState.shared
-            
             let bnplOfferInfo = appState.bnplOfferInfo
             let offers = bnplOfferInfo?.offers ?? []
             let connectedProviders = bnplOfferInfo?.providers ?? []
             
-            let isBNPLAvailable = !offers.isEmpty || !connectedProviders.isEmpty
-            if !isBNPLAvailable {
-                print("BNPL is not available for this user. You should call BNPL().getBNPLAvailability function to check it.")
-                UIUtils.alert(
-                    from: from,
-                    title: "Error".localized(tableName: tableName),
-                    errorMessage: "BNPLIsNotAvailable".localized(tableName: tableName),
-                    actionText: "OK".localized(tableName: tableName)
-                )
-                return
-            }
-        
-            var errorMessage = ""
-            
-            // Market user id
-            if userProfile.id.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                errorMessage.append(String(format:"FieldIsRequired".localized(tableName: tableName), "\'User Id\'"))
-                errorMessage.append(" ")
-            }
-            
-            // Phone number
-            let countryCode = userProfile.countryCode.trimmingCharacters(in: .whitespacesAndNewlines)
-            let phoneNumber = userProfile.phoneNumber.trimmingCharacters(in: .whitespacesAndNewlines)
-            if countryCode.isEmpty || phoneNumber.isEmpty || phoneNumber.count < 8 || phoneNumber.count > 12 {
-                errorMessage.append(String(format:"FieldIsInvalid".localized(tableName: tableName), "\'Phone number\'"))
-                errorMessage.append(" ")
-            }
-            
-            // All are valid
-            if errorMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                appState.pushClaimTokensTask = pushClaimTokensTask
-                appState.bnplRedemptionResult = completionHandler
-                
-                let context = PassportContext.bnpl(
-                    offers: offers,
-                    user: userProfile,
-                    orderId: orderId,
-                    completedBnplProviders: connectedProviders
-                )
-                let vc = WebViewController.instantiate(context: context)
-                let navigationController = UINavigationController(rootViewController: vc)
-                navigationController.modalPresentationStyle = .overFullScreen
-                navigationController.interactivePopGestureRecognizer?.isEnabled = false // disable navigation bar swipe back
-                from.present(navigationController, animated: true)
+            if !ValidationUtils.checkBNPLAvailable(from: from, offers:offers, providers: connectedProviders) {
                 return
             }
             
-            // Show error
-            UIUtils.alert(
-                from: from,
-                title: "Error".localized(tableName: tableName),
-                errorMessage: errorMessage,
-                actionText: "OK".localized(tableName: tableName)
+            if !ValidationUtils.canStartToRedeemOffer(from: from, user: userProfile) {
+                return
+            }
+            
+            appState.pushClaimTokensTask = pushClaimTokensTask
+            appState.bnplRedemptionResult = completionHandler
+            
+            let context = PassportContext.bnpl(
+                offers: offers,
+                user: userProfile,
+                orderId: orderId,
+                completedBnplProviders: connectedProviders
             )
+            let vc = WebViewController.instantiate(context: context)
+            let navigationController = UINavigationController(rootViewController: vc)
+            navigationController.modalPresentationStyle = .overFullScreen
+            navigationController.interactivePopGestureRecognizer?.isEnabled = false // disable navigation bar swipe back
+            from.present(navigationController, animated: true)
         }
     }
 }

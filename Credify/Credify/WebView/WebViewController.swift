@@ -35,23 +35,7 @@ class WebViewController: UIViewController {
         }
         
         customizeNavBar()
-        
-        // 24002: Passport of redeemed list- Start over link on a pending offer
-        // https://stackoverflow.com/questions/40452034/disable-zoom-in-wkwebview
-        let disableZoomInScript: String = "var meta = document.createElement('meta');" +
-            "meta.name = 'viewport';" +
-            "meta.content = 'width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no, user-scalable=no';" +
-            "var head = document.getElementsByTagName('head')[0];" +
-            "head.appendChild(meta);"
-        
-        // Use for localization in the web app
-        var languageScript: String? = nil
-        let language = AppState.shared.language
-        if language != nil {
-            languageScript = "window.appLanguage = '\(language!)';"
-        }
             
-        let userDisableZoomInScript: WKUserScript = WKUserScript(source: disableZoomInScript, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
         let configuration = WKWebViewConfiguration()
         let userController = WKUserContentController()
         
@@ -61,10 +45,22 @@ class WebViewController: UIViewController {
         
         configuration.userContentController = userController
         configuration.allowsInlineMediaPlayback = true // Needed for eKYC camera
-        configuration.userContentController.addUserScript(userDisableZoomInScript)
-        if languageScript != nil {
+        // Disable zoom in
+        configuration.userContentController.addUserScript(
+            WKUserScript(
+                source: WebViewUtils.scriptToDisableZoomIn,
+                injectionTime: .atDocumentEnd,
+                forMainFrameOnly: true
+            )
+        )
+        // Update language
+        if let languageScript = WebViewUtils.buildScriptToUpdateAppLanguage {
             configuration.userContentController.addUserScript(
-                WKUserScript(source: languageScript!, injectionTime: .atDocumentStart, forMainFrameOnly: true)
+                WKUserScript(
+                    source: languageScript,
+                    injectionTime: .atDocumentStart,
+                    forMainFrameOnly: true
+                )
             )
         }
         

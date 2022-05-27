@@ -38,4 +38,10 @@ extension String {
         }
         return NSLocalizedString(self, tableName: tableName, bundle: bundle, value: dv, comment: "")
     }
+    
+    var isBlankOrEmpty: Bool {
+        get {
+            return self.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        }
+    }
 }
