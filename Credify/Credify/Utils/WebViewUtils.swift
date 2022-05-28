@@ -22,9 +22,8 @@ class WebViewUtils {
     
     static var buildScriptToUpdateAppLanguage: String? {
         get {
-            let language = AppState.shared.language
-            if language != nil {
-                return "window.appLanguage = '\(language!)';"
+            if let language = AppState.shared.language {
+                return "window.appLanguage = '\(language.rawValue)';"
             }
             
             return nil

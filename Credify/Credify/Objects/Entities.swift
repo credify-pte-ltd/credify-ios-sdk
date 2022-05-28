@@ -350,3 +350,9 @@ public struct BNPLOfferInfo : Codable {
         case credifyId = "credify_id"
     }
 }
+
+public enum Language : String {
+    case vietnamese = "vi"
+    case japanese = "ja"
+    case english = "en"
+}

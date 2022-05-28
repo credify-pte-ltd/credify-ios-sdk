@@ -17,7 +17,7 @@ public struct serviceX {
 //        let userAgent = "servicex/ios/\(sdkVersion)"
     }
     
-    public static func setLanguage(_ language: String) {
+    public static func setLanguage(_ language: Language) {
         AppState.shared.language = language
     }
     
@@ -40,7 +40,7 @@ public struct serviceX {
             pushClaimTokensTask: @escaping ((String, ((Bool) -> Void)?) -> Void),
             completion: @escaping (() -> Void)
         ) {
-            if !ValidationUtils.canShowMyPage(from: from, user: user) {
+            if !ValidationUtils.showErrorIfShowMyPageFails(from: from, user: user) {
                 return
             }
             
@@ -71,7 +71,7 @@ public struct serviceX {
             productTypes: [ProductType],
             completion: @escaping (() -> Void)
         ) {
-            if !ValidationUtils.canShowDetailPage(from: from, user: user, marketId: marketId) {
+            if !ValidationUtils.showErrorIfShowDetailPageFails(from: from, user: user, marketId: marketId) {
                 return
             }
             
@@ -116,7 +116,7 @@ public struct serviceX {
                                    userProfile: CredifyUserModel,
                                    pushClaimTokensTask: @escaping ((String, ((Bool) -> Void)?) -> Void),
                                    completionHandler: @escaping (RedemptionResult) -> Void) {
-            if !ValidationUtils.canStartToRedeemOffer(from: from, user: userProfile) {
+            if !ValidationUtils.showErrorIfOfferCannotStart(from: from, user: userProfile) {
                 return
             }
             
@@ -223,11 +223,11 @@ public struct serviceX {
             let offers = bnplOfferInfo?.offers ?? []
             let connectedProviders = bnplOfferInfo?.providers ?? []
             
-            if !ValidationUtils.checkBNPLAvailable(from: from, offers:offers, providers: connectedProviders) {
+            if !ValidationUtils.showErrorIfBNPLUnavailable(from: from, offers:offers, providers: connectedProviders) {
                 return
             }
             
-            if !ValidationUtils.canStartToRedeemOffer(from: from, user: userProfile) {
+            if !ValidationUtils.showErrorIfOfferCannotStart(from: from, user: userProfile) {
                 return
             }
             

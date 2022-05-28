@@ -33,5 +33,5 @@ internal class AppState {
     /// Service Instance: for show/hide the close and back buttons
     var serviceInstanceShowingCloseButtonUrls: [String] = []
     
-    var language: String? = nil
+    var language: Language? = nil
 }

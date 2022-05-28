@@ -15,7 +15,7 @@ class ValidationUtils {
         return !trimmedCountryCode.isEmpty && trimmedNumber.count >= 8 && trimmedNumber.count <= 12
     }
     
-    static func canShowMyPage(from: UIViewController, user: CredifyUserModel) -> Bool {
+    static func showErrorIfShowMyPageFails(from: UIViewController, user: CredifyUserModel) -> Bool {
         let tableName = "serviceX"
         var errorMessage = ""
         
@@ -38,7 +38,7 @@ class ValidationUtils {
         return true
     }
     
-    static func canShowDetailPage(from: UIViewController, user: CredifyUserModel, marketId: String) -> Bool {
+    static func showErrorIfShowDetailPageFails(from: UIViewController, user: CredifyUserModel, marketId: String) -> Bool {
         let tableName = "serviceX"
         var errorMessage = ""
         
@@ -67,7 +67,7 @@ class ValidationUtils {
         return true
     }
     
-    static func checkBNPLAvailable(
+    static func showErrorIfBNPLUnavailable(
         from: UIViewController,
         offers: [OfferData],
         providers: [Organization]
@@ -89,7 +89,7 @@ class ValidationUtils {
         return true
     }
     
-    static func canStartToRedeemOffer(from: UIViewController, user: CredifyUserModel) -> Bool {
+    static func showErrorIfOfferCannotStart(from: UIViewController, user: CredifyUserModel) -> Bool {
         let tableName = "serviceX"
         var errorMessage = ""
         

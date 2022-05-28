@@ -37,10 +37,7 @@ public struct CredifyUserModel: Codable {
     }
     
     public var isLastNameComesFirst: Bool {
-//        if Locale.languageSupportLastFirstNameOrder.contains(CoreService.config.locale.code) {
-//            return true
-//        }
-        return true
+        return LocaleUtils.isShowLastFirstNameOrder
     }
     
     public var localizedName: String {
