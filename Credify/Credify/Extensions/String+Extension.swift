@@ -24,11 +24,18 @@ extension String {
         }
         // Concept Language IDs:
         // https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPInternational/LanguageandLocaleIDs/LanguageandLocaleIDs.html#//apple_ref/doc/uid/10000171i-CH15
-        if let deviceLanguage = Locale.preferredLanguages.first?.split(separator: "-").first,
-           let languagePath = bundle.path(forResource: String(deviceLanguage), ofType: "lproj"),
+        // 24002: Passport of redeemed list- Start over link on a pending offer
+        if let languageCode = LocaleUtils.languageCode,
+           let languagePath = bundle.path(forResource: languageCode, ofType: "lproj"),
            let languageBundle = Bundle(path: languagePath) {
             return NSLocalizedString(self, tableName: tableName, bundle: languageBundle, value:dv, comment: "")
         }
         return NSLocalizedString(self, tableName: tableName, bundle: bundle, value: dv, comment: "")
+    }
+    
+    var isBlankOrEmpty: Bool {
+        get {
+            return self.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        }
     }
 }

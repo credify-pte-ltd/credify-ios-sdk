@@ -35,7 +35,7 @@ class WebViewController: UIViewController {
         }
         
         customizeNavBar()
-
+            
         let configuration = WKWebViewConfiguration()
         let userController = WKUserContentController()
         
@@ -45,6 +45,24 @@ class WebViewController: UIViewController {
         
         configuration.userContentController = userController
         configuration.allowsInlineMediaPlayback = true // Needed for eKYC camera
+        // Disable zoom in
+        configuration.userContentController.addUserScript(
+            WKUserScript(
+                source: WebViewUtils.scriptToDisableZoomIn,
+                injectionTime: .atDocumentEnd,
+                forMainFrameOnly: true
+            )
+        )
+        // Update language
+        if let languageScript = WebViewUtils.buildScriptToUpdateAppLanguage {
+            configuration.userContentController.addUserScript(
+                WKUserScript(
+                    source: languageScript,
+                    injectionTime: .atDocumentStart,
+                    forMainFrameOnly: true
+                )
+            )
+        }
         
         let window = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
         var statusBarHeight: CGFloat = 0
@@ -94,9 +112,9 @@ class WebViewController: UIViewController {
             webView.addObserver(self, forKeyPath: #keyPath(WKWebView.title), options: .new, context: nil)
             webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
             webView.addObserver(self, forKeyPath: #keyPath(WKWebView.url), options: .new, context: nil)
+            webView.addObserver(self, forKeyPath: #keyPath(WKWebView.canGoBack), options: .new, context: nil)
+            webView.addObserver(self, forKeyPath: #keyPath(WKWebView.canGoForward), options: .new, context: nil)
             webView.customUserAgent = AppState.shared.config?.userAgent
-
-            webView.navigationDelegate = self
         }
     }
     
@@ -113,16 +131,21 @@ class WebViewController: UIViewController {
         if keyPath == #keyPath(WKWebView.url) {
             webView.scrollView.setContentOffset(CGPoint.zero, animated: true)
             
+            let url = webView.url
+            self.setBackButtonVisibility(isVisible: self.presenter.isBackButtonVisible(urlObj: url))
+            self.setCloseButtonVisibility(isVisible: self.presenter.isCloseButtonVisible(urlObj: url))
+        }
+        
+        if keyPath == #keyPath(WKWebView.canGoBack) ||
+            keyPath == #keyPath(WKWebView.canGoForward) ||
+            keyPath == #keyPath(WKWebView.url) ||
+            keyPath == #keyPath(WKWebView.estimatedProgress){
             // There is no history
             if !webView.canGoBack {
                 self.setBackButtonVisibility(isVisible: false)
                 self.setCloseButtonVisibility(isVisible: true)
                 return
             }
-            
-            let url = webView.url
-            self.setBackButtonVisibility(isVisible: self.presenter.isBackButtonVisible(urlObj: url))
-            self.setCloseButtonVisibility(isVisible: self.presenter.isCloseButtonVisible(urlObj: url))
         }
     }
     
@@ -203,15 +226,7 @@ class WebViewController: UIViewController {
     }
     
     @objc private func goBack() {
-        presenter.isLoading(webView: webView) { isLoading in
-            if !isLoading {
-                if self.webView.canGoBack {
-                    self.webView.goBack()
-                } else {
-                    self.presenter.hanldeCompletionHandler()
-                }
-            }
-        }
+        presenter.goToPreviousPageOrClose(webView: webView)
     }
     
     @objc private func close() {
@@ -275,17 +290,6 @@ extension WebViewController: WKUIDelegate {
             return nil
         }
         return nil
-    }
-}
-
-extension WebViewController: WKNavigationDelegate {
-    
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        // BNPL and Offer flow will post a message(market proxy also needs this message)
-        // to native app once the web app is loaded
-        // So the app only needs to post a message
-        // to web app for the login case(My Page and Service Instance)
-        presenter.doPostMessageForLoggingIn(webView: webView)
     }
 }
 
