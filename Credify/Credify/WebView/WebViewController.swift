@@ -88,6 +88,7 @@ class WebViewController: UIViewController {
             ),
             configuration: configuration
         )
+        view.addSubview(webView)
         
         // 23274: Investigate caching issue on webview
         // Clear website data first for testing some bugs to make sure
@@ -99,14 +100,10 @@ class WebViewController: UIViewController {
         ) {
             guard let webView = self.webView else { return }
             guard let url = self.url else { return }
-            guard let view = self.view else { return }
 
             webView.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview(webView)
-
             webView.uiDelegate = self
-
-            webView.load(URLRequest(url: url))
+            webView.navigationDelegate = self
 
             webView.allowsBackForwardNavigationGestures = true
             webView.addObserver(self, forKeyPath: #keyPath(WKWebView.title), options: .new, context: nil)
@@ -115,7 +112,11 @@ class WebViewController: UIViewController {
             webView.addObserver(self, forKeyPath: #keyPath(WKWebView.canGoBack), options: .new, context: nil)
             webView.addObserver(self, forKeyPath: #keyPath(WKWebView.canGoForward), options: .new, context: nil)
             webView.customUserAgent = AppState.shared.config?.userAgent
+            
+            webView.load(URLRequest(url: url))
         }
+        
+        LoadingView.start(container: view)
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -231,7 +232,7 @@ class WebViewController: UIViewController {
     
     @objc private func close() {
         presenter.isLoading(webView: webView) { isLoading in
-            if !isLoading {
+            if !isLoading && !LoadingView.isShowing {
                 self.dismiss(animated: true) {
                     self.presenter.hanldeCompletionHandler()
                 }
@@ -305,6 +306,12 @@ extension WebViewController: WKScriptMessageHandler{
             presenter.handleMessage(webView, name: message.name, body: body)
         }
     }
-    
 }
+
+extension WebViewController: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        LoadingView.stop()
+    }
+}
+
 
