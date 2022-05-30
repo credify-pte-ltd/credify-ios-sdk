@@ -13,7 +13,8 @@ target 'Credify' do
   project 'Credify.xcodeproj'
 
   # Pods for Credify
-  pod "Alamofire", "~> 5.4.0"
+  pod "Alamofire", "5.4.0"
+  pod "lottie-ios", "3.1.9"
 
   target 'CredifyTests' do
     # Pods for testing
@@ -28,6 +29,7 @@ target 'ExampleApp' do
   
   project 'ExampleApp/ExampleApp.xcodeproj'
   
-  pod 'Alamofire'
+  pod 'Alamofire', "5.4.0"
   pod 'DropDown'
+  pod "lottie-ios", "3.1.9"
 end

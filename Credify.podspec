@@ -48,5 +48,6 @@ Pod::Spec.new do |spec|
   # ――― Project Settings ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   spec.dependency "Alamofire", "~> 5.4"
+  spec.dependency "lottie-ios", "3.1.9"
 
 end

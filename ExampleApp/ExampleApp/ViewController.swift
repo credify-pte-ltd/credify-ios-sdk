@@ -32,9 +32,7 @@ class ViewController: UIViewController {
         let config = serviceXConfig(apiKey: API_KEY, env: .dev, appName: APP_NAME)
         serviceX.configure(config)
         
-        if let language = GlobalSubjects.language {
-            serviceX.setLanguage(language)
-        }
+        serviceX.setLanguage(Language.vietnamese)
         
         user = CredifyUserModel(id: "123", firstName: "Sh", lastName: "Test", email: "vu.nguyen@gmail.com", credifyId: nil, countryCode: "+84", phoneNumber: "381239812")
         
