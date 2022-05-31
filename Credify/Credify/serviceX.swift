@@ -154,7 +154,7 @@ public struct serviceX {
                 countryCode: user?.countryCode,
                 internalId: user?.id ?? "",
                 credifyId: user?.credifyId,
-                productTypes: ["bnpl"]
+                productTypes: [ProductType.consumerBNPL.rawValue]
             ) { offersResult in
                 switch offersResult {
                 case .success(let offersInfo):
