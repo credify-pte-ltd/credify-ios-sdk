@@ -12,6 +12,7 @@ class UINavigationBarGradientView: UIView {
     enum Point {
         case topRight, topLeft
         case bottomRight, bottomLeft
+        case centerRight, centerLeft
         case custom(point: CGPoint)
 
         var point: CGPoint {
@@ -20,6 +21,8 @@ class UINavigationBarGradientView: UIView {
                 case .topLeft: return CGPoint(x: 0, y: 0)
                 case .bottomRight: return CGPoint(x: 1, y: 1)
                 case .bottomLeft: return CGPoint(x: 0, y: 1)
+                case .centerLeft: return CGPoint(x: 0, y: 0.5)
+                case .centerRight: return CGPoint(x: 1, y: 0.5)
                 case .custom(let point): return point
             }
         }

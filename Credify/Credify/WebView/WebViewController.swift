@@ -35,7 +35,7 @@ class WebViewController: UIViewController {
         }
         
         customizeNavBar()
-
+            
         let configuration = WKWebViewConfiguration()
         let userController = WKUserContentController()
         
@@ -45,6 +45,24 @@ class WebViewController: UIViewController {
         
         configuration.userContentController = userController
         configuration.allowsInlineMediaPlayback = true // Needed for eKYC camera
+        // Disable zoom in
+        configuration.userContentController.addUserScript(
+            WKUserScript(
+                source: WebViewUtils.scriptToDisableZoomIn,
+                injectionTime: .atDocumentEnd,
+                forMainFrameOnly: true
+            )
+        )
+        // Update language
+        if let languageScript = WebViewUtils.buildScriptToUpdateAppLanguage {
+            configuration.userContentController.addUserScript(
+                WKUserScript(
+                    source: languageScript,
+                    injectionTime: .atDocumentStart,
+                    forMainFrameOnly: true
+                )
+            )
+        }
         
         let window = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
         var statusBarHeight: CGFloat = 0
@@ -70,6 +88,7 @@ class WebViewController: UIViewController {
             ),
             configuration: configuration
         )
+        view.addSubview(webView)
         
         // 23274: Investigate caching issue on webview
         // Clear website data first for testing some bugs to make sure
@@ -81,23 +100,23 @@ class WebViewController: UIViewController {
         ) {
             guard let webView = self.webView else { return }
             guard let url = self.url else { return }
-            guard let view = self.view else { return }
 
             webView.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview(webView)
-
             webView.uiDelegate = self
-
-            webView.load(URLRequest(url: url))
+            webView.navigationDelegate = self
 
             webView.allowsBackForwardNavigationGestures = true
             webView.addObserver(self, forKeyPath: #keyPath(WKWebView.title), options: .new, context: nil)
             webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
             webView.addObserver(self, forKeyPath: #keyPath(WKWebView.url), options: .new, context: nil)
+            webView.addObserver(self, forKeyPath: #keyPath(WKWebView.canGoBack), options: .new, context: nil)
+            webView.addObserver(self, forKeyPath: #keyPath(WKWebView.canGoForward), options: .new, context: nil)
             webView.customUserAgent = AppState.shared.config?.userAgent
-
-            webView.navigationDelegate = self
+            
+            webView.load(URLRequest(url: url))
         }
+        
+        LoadingView.start(container: view)
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -117,6 +136,18 @@ class WebViewController: UIViewController {
             self.setBackButtonVisibility(isVisible: self.presenter.isBackButtonVisible(urlObj: url))
             self.setCloseButtonVisibility(isVisible: self.presenter.isCloseButtonVisible(urlObj: url))
         }
+        
+        if keyPath == #keyPath(WKWebView.canGoBack) ||
+            keyPath == #keyPath(WKWebView.canGoForward) ||
+            keyPath == #keyPath(WKWebView.url) ||
+            keyPath == #keyPath(WKWebView.estimatedProgress){
+            // There is no history
+            if !webView.canGoBack {
+                self.setBackButtonVisibility(isVisible: false)
+                self.setCloseButtonVisibility(isVisible: true)
+                return
+            }
+        }
     }
     
     
@@ -129,9 +160,22 @@ class WebViewController: UIViewController {
         
         let theme = AppState.shared.config?.theme
         let themeColor = theme?.color
-        let startColor = themeColor?.primaryBrandyStart ?? ThemeColor.default.primaryBrandyStart
-        let endColor = themeColor?.primaryBrandyEnd ?? ThemeColor.default.primaryBrandyEnd
-        navBar.setGradientBackground(colors: [UIColor.fromHex(startColor), UIColor.fromHex(endColor)], startPoint: .topLeft, endPoint: .bottomRight)
+        
+        var startColor = themeColor?.primaryBrandyStart ?? ThemeColor.default.primaryBrandyStart
+        var endColor = themeColor?.primaryBrandyEnd ?? ThemeColor.default.primaryBrandyEnd
+        if presenter.shouldUseCredifyTheme() {
+            startColor = ThemeColor.default.primaryBrandyStart
+            endColor = ThemeColor.default.primaryBrandyEnd
+        }
+        
+        navBar.setGradientBackground(
+            colors: [
+                UIColor.fromHex(startColor),
+                UIColor.fromHex(endColor)
+            ],
+            startPoint: .centerLeft,
+            endPoint: .centerRight
+        )
         
         // TODO I will update it later
         let titleFont: UIFont? = nil //AppState.shared.config?.theme.font.primaryPageTitle
@@ -183,16 +227,12 @@ class WebViewController: UIViewController {
     }
     
     @objc private func goBack() {
-        presenter.isLoading(webView: webView) { isLoading in
-            if !isLoading && self.webView.canGoBack  {
-                self.webView.goBack()
-            }
-        }
+        presenter.goToPreviousPageOrClose(webView: webView)
     }
     
     @objc private func close() {
         presenter.isLoading(webView: webView) { isLoading in
-            if !isLoading {
+            if !isLoading && !LoadingView.isShowing {
                 self.dismiss(animated: true) {
                     self.presenter.hanldeCompletionHandler()
                 }
@@ -254,17 +294,6 @@ extension WebViewController: WKUIDelegate {
     }
 }
 
-extension WebViewController: WKNavigationDelegate {
-    
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        // BNPL and Offer flow will post a message(market proxy also needs this message)
-        // to native app once the web app is loaded
-        // So the app only needs to post a message
-        // to web app for the login case(My Page and Service Instance)
-        presenter.doPostMessageForLoggingIn(webView: webView)
-    }
-}
-
 extension WebViewController: WKScriptMessageHandler{
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         let body = message.body as? [String: Any]
@@ -277,6 +306,12 @@ extension WebViewController: WKScriptMessageHandler{
             presenter.handleMessage(webView, name: message.name, body: body)
         }
     }
-    
 }
+
+extension WebViewController: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        LoadingView.stop()
+    }
+}
+
 

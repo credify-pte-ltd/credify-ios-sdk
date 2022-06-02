@@ -28,6 +28,7 @@ internal enum ReceiveMessageHandler: String {
     case actionClose
     case bnplPaymentComplete
     case sendPathsForShowingCloseButton
+    case loginLoadCompleted
 }
 
 internal class StartBnplMessage: Codable {
