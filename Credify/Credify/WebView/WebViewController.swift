@@ -307,6 +307,11 @@ extension WebViewController: WKScriptMessageHandler{
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         let body = message.body as? [String: Any]
         
+        // 24517: See 2 loading indicators at the same time
+        if presenter.shouldDismissLoading(messageName: message.name) {
+            LoadingView.stop()
+        }
+        
         if presenter.shouldClose(messageName: message.name) {
             dismiss(animated: true) {
                 self.presenter.handleMessage(self.webView, name: message.name, body: body)
