@@ -39,6 +39,7 @@ enum PassportContext {
 protocol WebPresenterProtocol {
     var receiveHandlers: [ReceiveMessageHandler] { get }
     func shouldClose(messageName: String) -> Bool
+    func shouldDismissLoading(messageName: String) -> Bool
     func handleMessage(_: WKWebView, name: String, body: [String: Any]?)
     func hanldeCompletionHandler()
     func isBackButtonVisible(urlObj: URL?) -> Bool
@@ -78,6 +79,14 @@ class WebPresenter: WebPresenterProtocol {
             return false
         }
         return type == .actionClose || type == .bnplPaymentComplete
+    }
+    
+    /// 24517: See 2 loading indicators at the same time
+    func shouldDismissLoading(messageName: String) -> Bool {
+        guard let type = ReceiveMessageHandler(rawValue: messageName) else {
+            return false
+        }
+        return type == .loginLoadCompleted || type == .initialLoadCompleted
     }
     
     func handleMessage(_ webView: WKWebView, name: String, body: [String: Any]?) {
