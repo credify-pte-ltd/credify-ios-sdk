@@ -119,7 +119,20 @@ class SampleViewController: UIViewController {
 
     /// This renders passport page
     func showPassport() {
-        passport.showMypage(from: self, user: user) {
+        let task: ((String, ((Bool) -> Void)?) -> Void) = { credifyId, result in
+            AF.request(API_PUSH_CLAIMS,
+                       method: .post,
+                       parameters: ["id": self.user.id, "credify_id": credifyId],
+                       encoding: JSONEncoding.default).responseJSON { data in
+                switch data.result {
+                case .success:
+                    result?(true)
+                case .failure:
+                    result?(false)
+                }
+            }
+        }
+        passport.showMypage(from: self, user: user, pushClaimTokensTask: task) {
             print("page dismissed")
         }
     }
@@ -201,6 +214,14 @@ class SampleViewController: UIViewController {
 ```
 
 > **Important**: For the `pushClaimTokensTask` callback, you need to keep `credifyId` on your side. You have to send the `credifyId` to Credify SDK when you use the methods that require `credifyId`. E.g: call `bnpl.presentModally` method or create `CredifyUserModel` model.
+
+### Setting language
+
+Using `serviceX.setLanguage` to setup the language that will be used for the localization in the SDK.
+
+```
+serviceX.setLanguage(Language)
+```
 
 ## License
 
