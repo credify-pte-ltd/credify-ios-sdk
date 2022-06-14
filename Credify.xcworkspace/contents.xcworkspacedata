@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:Credify/Credify/Extensions/UIView+Extension.swift">
+   </FileRef>
+   <FileRef
       location = "group:Credify/Credify/en.lproj/serviceX.strings">
    </FileRef>
    <FileRef
