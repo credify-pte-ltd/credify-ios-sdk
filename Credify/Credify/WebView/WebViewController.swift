@@ -15,6 +15,50 @@ class WebViewController: UIViewController {
     private var url: URL!
     private var presenter: WebPresenterProtocol!
     
+    private var originalWebViewFrame: CGRect? = nil
+    
+    private var statusBarHeight: CGFloat {
+        get {
+            let window = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
+            var statusBarHeight: CGFloat = 0
+            if #available(iOS 13.0, *) {
+                statusBarHeight = window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
+            }
+            return statusBarHeight
+        }
+    }
+    
+    private var webViewHeight: CGFloat {
+        get {
+            // Have nav bar
+            // let navAndStatusBarHeight = (navigationController?.navigationBar.frame.height ?? 0) + statusBarHeight
+            // Have not nav bar
+            let navAndStatusBarHeight = statusBarHeight
+            
+            let height: CGFloat
+            
+            if #available(iOS 11.0, *) {
+                height = view.safeAreaLayoutGuide.layoutFrame.height - navAndStatusBarHeight
+            } else {
+                height = view.frame.height - navAndStatusBarHeight
+            }
+            
+            return height
+        }
+    }
+    
+    private var paddingBottom: CGFloat {
+        get {
+            var padding: CGFloat = 0.0
+            
+            if #available(iOS 11.0, *) {
+                padding = 8.0
+            }
+            
+            return padding
+        }
+    }
+    
     static func instantiate(context: PassportContext) -> WebViewController {
         let vc = WebViewController()
         vc.url = context.url
@@ -25,96 +69,21 @@ class WebViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // 23462: Med247 app - Passport's background does not fit with height of Med247 app
-        let theme = AppState.shared.config?.theme
-        let themeColor = theme?.color
-        view.backgroundColor = UIColor.fromHex(themeColor?.secondaryBackground ?? "#FFFFFF")
-        
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
         }
         
-        customizeNavBar()
+        let theme = AppState.shared.config?.theme
+        let themeColor = theme?.color
+        
+        observerShowHideKeyboardEvent()
+        
+        // 23462: Med247 app - Passport's background does not fit with height of Med247 app
+        updateBackground(themeColor: themeColor)
+        
+        customizeNavBar(themeColor: themeColor)
             
-        let configuration = WKWebViewConfiguration()
-        let userController = WKUserContentController()
-        
-        presenter.receiveHandlers.forEach { handler in
-            userController.add(self, name: handler.rawValue)
-        }
-        
-        configuration.userContentController = userController
-        configuration.allowsInlineMediaPlayback = true // Needed for eKYC camera
-        // Disable zoom in
-        configuration.userContentController.addUserScript(
-            WKUserScript(
-                source: WebViewUtils.scriptToDisableZoomIn,
-                injectionTime: .atDocumentEnd,
-                forMainFrameOnly: true
-            )
-        )
-        // Update language
-        if let languageScript = WebViewUtils.buildScriptToUpdateAppLanguage {
-            configuration.userContentController.addUserScript(
-                WKUserScript(
-                    source: languageScript,
-                    injectionTime: .atDocumentStart,
-                    forMainFrameOnly: true
-                )
-            )
-        }
-        
-        let window = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
-        var statusBarHeight: CGFloat = 0
-        if #available(iOS 13.0, *) {
-            statusBarHeight = window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
-        }
-        let navAndStatusBarHeight = (navigationController?.navigationBar.frame.height ?? 0) + statusBarHeight
-        
-        // 21840: UI issue - Long text and cut off button
-        let webViewHeight: CGFloat
-        if #available(iOS 11.0, *) {
-            webViewHeight = view.safeAreaLayoutGuide.layoutFrame.height - navAndStatusBarHeight - (window?.safeAreaInsets.bottom ?? 0.0)
-        } else {
-            webViewHeight = view.frame.height - navAndStatusBarHeight
-        }
-        
-        webView = WKWebView(
-            frame: CGRect(
-                x: 0,
-                y: navAndStatusBarHeight,
-                width: view.frame.width,
-                height: webViewHeight
-            ),
-            configuration: configuration
-        )
-        view.addSubview(webView)
-        
-        // 23274: Investigate caching issue on webview
-        // Clear website data first for testing some bugs to make sure
-        // that the bugs happen due to caching issue
-        // If it fixed these bugs then we need to think about the improvement for caching.
-        WKWebsiteDataStore.default().removeData(
-            ofTypes: WKWebsiteDataStore.allWebsiteDataTypes(),
-            modifiedSince: Date(timeIntervalSince1970: 0)
-        ) {
-            guard let webView = self.webView else { return }
-            guard let url = self.url else { return }
-
-            webView.translatesAutoresizingMaskIntoConstraints = false
-            webView.uiDelegate = self
-            webView.navigationDelegate = self
-
-            webView.allowsBackForwardNavigationGestures = true
-            webView.addObserver(self, forKeyPath: #keyPath(WKWebView.title), options: .new, context: nil)
-            webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
-            webView.addObserver(self, forKeyPath: #keyPath(WKWebView.url), options: .new, context: nil)
-            webView.addObserver(self, forKeyPath: #keyPath(WKWebView.canGoBack), options: .new, context: nil)
-            webView.addObserver(self, forKeyPath: #keyPath(WKWebView.canGoForward), options: .new, context: nil)
-            webView.customUserAgent = AppState.shared.config?.userAgent
-            
-            webView.load(URLRequest(url: url))
-        }
+        setupWebView(themeColor: themeColor)
         
         LoadingView.start(container: view)
     }
@@ -153,13 +122,166 @@ class WebViewController: UIViewController {
     
     // MARK: - Private functions
     
-    private func customizeNavBar() {
-        guard let navBar = navigationController?.navigationBar else {
+    private func createWebViewConfiguration(userController: WKUserContentController) -> WKWebViewConfiguration {
+        let configuration = WKWebViewConfiguration()
+        
+        configuration.userContentController = userController
+        
+        // Needed for eKYC camera
+        configuration.allowsInlineMediaPlayback = true
+        
+        // Disable zoom in
+        configuration.userContentController.addUserScript(
+            WKUserScript(
+                source: WebViewUtils.scriptToDisableZoomIn,
+                injectionTime: .atDocumentEnd,
+                forMainFrameOnly: true
+            )
+        )
+        
+        // Update language
+        if let languageScript = WebViewUtils.buildScriptToUpdateAppLanguage {
+            configuration.userContentController.addUserScript(
+                WKUserScript(
+                    source: languageScript,
+                    injectionTime: .atDocumentStart,
+                    forMainFrameOnly: true
+                )
+            )
+        }
+        
+        return configuration
+    }
+    
+    private func createWebViewUserContentController() -> WKUserContentController {
+        let userController = WKUserContentController()
+        
+        presenter.receiveHandlers.forEach { handler in
+            userController.add(self, name: handler.rawValue)
+        }
+        
+        return userController
+    }
+    
+    private func setupWebView(themeColor: ThemeColor?) {
+        let userController = createWebViewUserContentController()
+        let configuration = createWebViewConfiguration(userController: userController)
+        
+        // Background
+        let bgColor = themeColor?.secondaryBackground ?? "#FFFFFF"
+        let bg = UIView(
+            frame: CGRect(
+                x: 0,
+                y: statusBarHeight,
+                width: view.frame.width,
+                height: webViewHeight
+            )
+        )
+        bg.backgroundColor = UIColor.fromHex(bgColor)
+        view.addSubview(bg)
+        
+        // WebView
+        webView = WKWebView(
+            frame: CGRect(
+                x: 0,
+                y: statusBarHeight,
+                width: view.frame.width,
+                height: webViewHeight - paddingBottom
+            ),
+            configuration: configuration
+        )
+        view.addSubview(webView)
+        
+        self.originalWebViewFrame = webView.frame
+        
+        // 23274: Investigate caching issue on webview
+        // Clear website data first for testing some bugs to make sure
+        // that the bugs happen due to caching issue
+        // If it fixed these bugs then we need to think about the improvement for caching.
+        WKWebsiteDataStore.default().removeData(
+            ofTypes: WKWebsiteDataStore.allWebsiteDataTypes(),
+            modifiedSince: Date(timeIntervalSince1970: 0)
+        ) {
+            guard let webView = self.webView else { return }
+            guard let url = self.url else { return }
+
+            webView.translatesAutoresizingMaskIntoConstraints = false
+            webView.uiDelegate = self
+            webView.navigationDelegate = self
+            webView.scrollView.delegate = self
+
+            webView.allowsBackForwardNavigationGestures = true
+            webView.addObserver(self, forKeyPath: #keyPath(WKWebView.title), options: .new, context: nil)
+            webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
+            webView.addObserver(self, forKeyPath: #keyPath(WKWebView.url), options: .new, context: nil)
+            webView.addObserver(self, forKeyPath: #keyPath(WKWebView.canGoBack), options: .new, context: nil)
+            webView.addObserver(self, forKeyPath: #keyPath(WKWebView.canGoForward), options: .new, context: nil)
+            webView.customUserAgent = AppState.shared.config?.userAgent
+            // Disable scroll
+            webView.scrollView.bounces = false
+            webView.scrollView.isScrollEnabled = false
+            
+            webView.load(URLRequest(url: url))
+        }
+    }
+    
+    private func observerShowHideKeyboardEvent() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
+    }
+    
+    @objc private func keyboardWillShow(notification: NSNotification) {
+        if let frame = self.originalWebViewFrame,
+           let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            webView.frame = CGRect(
+                x: frame.origin.x,
+                y: frame.origin.y,
+                width: frame.width,
+                height: frame.height - keyboardSize.height
+            )
+        }
+    }
+
+    @objc private func keyboardWillHide(notification: NSNotification) {
+        if self.originalWebViewFrame == nil {
             return
         }
         
-        let theme = AppState.shared.config?.theme
-        let themeColor = theme?.color
+        webView.frame = self.originalWebViewFrame!
+    }
+    
+    private func updateBackground(themeColor: ThemeColor?) {
+        var startColor = themeColor?.primaryBrandyStart ?? ThemeColor.default.primaryBrandyStart
+        var endColor = themeColor?.primaryBrandyEnd ?? ThemeColor.default.primaryBrandyEnd
+        if presenter.shouldUseCredifyTheme() {
+            startColor = ThemeColor.default.primaryBrandyStart
+            endColor = ThemeColor.default.primaryBrandyEnd
+        }
+        
+        view.setGradient(
+            colors: [
+                UIColor.fromHex(startColor),
+                UIColor.fromHex(endColor)
+            ],
+            startPoint: CGPoint(x: 0, y: 0.5),
+            endPoint: CGPoint(x: 1, y: 0.5)
+        )
+    }
+    
+    private func customizeNavBar(themeColor: ThemeColor?) {
+        guard let navBar = navigationController?.navigationBar else {
+            return
+        }
         
         var startColor = themeColor?.primaryBrandyStart ?? ThemeColor.default.primaryBrandyStart
         var endColor = themeColor?.primaryBrandyEnd ?? ThemeColor.default.primaryBrandyEnd
@@ -224,6 +346,7 @@ class WebViewController: UIViewController {
         }
         
         setBackButtonVisibility(isVisible: false)
+        navBar.isHidden = true
     }
     
     @objc private func goBack() {
@@ -314,4 +437,10 @@ extension WebViewController: WKNavigationDelegate {
     }
 }
 
-
+extension WebViewController : UIScrollViewDelegate {
+    /// Don't allow the webview to scroll
+    /// The passport will handle it
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        webView.scrollView.setContentOffset(CGPoint.zero, animated: false)
+    }
+}
