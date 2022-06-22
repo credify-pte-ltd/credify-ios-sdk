@@ -220,6 +220,8 @@ class WebViewController: UIViewController {
             // Disable scroll
             webView.scrollView.bounces = false
             webView.scrollView.isScrollEnabled = false
+            // Disable preview to avoid white page
+            webView.allowsLinkPreview = false
             
             webView.load(URLRequest(url: url))
         }

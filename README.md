@@ -148,14 +148,14 @@ class SampleViewController: UIViewController {
     }
     
     /// This will check whether BNPL is available or not
-    /// You need to create "orderId" on your side.
-    func getBNPLAvailability(orderId: String) {
+    /// You need to create "orderInfo" on your side.
+    func getBNPLAvailability(orderInfo: OrderInfo) {
         bnpl.getBNPLAvailability(user: self.user) { result in
             switch result {
             case .success((let isAvailable, let credifyId)):
                 if isAvailable {
                     // This will start BNPL flow
-                    self.startBNPL(orderId: orderId)
+                    self.startBNPL(orderInfo: OrderInfo)
                     return
                 }
                 
@@ -168,8 +168,8 @@ class SampleViewController: UIViewController {
     }
 
     /// This starts Credify SDK
-    /// You need to create "orderId" on your side.
-    func startBNPL(orderId: String) {
+    /// You need to create "orderInfo" on your side.
+    func startBNPL(orderInfo: OrderInfo) {
         let task: ((String, ((Bool) -> Void)?) -> Void) = { credifyId, result in
             // Using Alamofire
             AF.request(API_PUSH_CLAIMS,
@@ -188,7 +188,7 @@ class SampleViewController: UIViewController {
         bnpl.presentModally(
                 from: self,
                 userProfile: self.user,
-                orderId: orderId,
+                orderInfo: orderInfo,
                 pushClaimTokensTask: task
         ) { [weak self] status, orderId, isPaymentCompleted in
             self?.dismiss(animated: false) {
