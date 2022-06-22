@@ -215,7 +215,7 @@ public struct serviceX {
         ///   - completionHandler: Completion handler. You can get notified about the result of the BNPL flow.
         public func presentModally(from: UIViewController,
                                    userProfile: CredifyUserModel,
-                                   orderId: String,
+                                   orderInfo: OrderInfo,
                                    pushClaimTokensTask: @escaping ((String, ((Bool) -> Void)?) -> Void),
                                    completionHandler: @escaping (_ status: RedemptionResult,_ orderId: String, _ isPaymentCompleted: Bool) -> Void) {
             let appState = AppState.shared
@@ -237,7 +237,7 @@ public struct serviceX {
             let context = PassportContext.bnpl(
                 offers: offers,
                 user: userProfile,
-                orderId: orderId,
+                orderInfo: orderInfo,
                 completedBnplProviders: connectedProviders
             )
             let vc = WebViewController.instantiate(context: context)

@@ -238,10 +238,12 @@ public class JSONCodingKey: CodingKey {
     }
 }
 
-internal class OrderInfo : Codable {
+public class OrderInfo : Codable {
     let orderId: String
+    let orderAmount: Double
     
-    init(orderId: String) {
+    public init(orderId: String, orderAmount: Double) {
         self.orderId = orderId
+        self.orderAmount = orderAmount
     }
 }
