@@ -256,12 +256,18 @@ public struct InsurancePackageModel: Codable {
 
 public struct FiatCurrency: Codable {
     public let value: String
-    public let currency: String
+    public let currency: CurrencyType
     
-    public init(value: String, currency: String) {
+    public init(value: String, currency: CurrencyType) {
         self.value = value
         self.currency = currency
     }
+}
+
+public enum CurrencyType : String, Codable {
+    case vnd = "VND"
+    case usd = "USD"
+    case jpy = "JPY"
 }
 
 public struct Scope: Codable {
