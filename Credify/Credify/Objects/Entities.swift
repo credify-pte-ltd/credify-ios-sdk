@@ -202,11 +202,37 @@ public struct ProductModel: Codable {
     
     public struct ProductDetail: Codable {
         internal let packages: [InsurancePackageModel]?
+        internal let availableTerms: [AvailableTerms]?
         
         public var insurancePackages: [InsurancePackageModel] {
             return packages ?? [InsurancePackageModel]()
         }
+        
+        public var terms: [AvailableTerms] {
+            return availableTerms ?? [AvailableTerms]()
+        }
+        
+        private enum CodingKeys: String, CodingKey {
+            case packages
+            case availableTerms = "available_terms"
+        }
     }
+}
+
+public struct AvailableTerms : Codable {
+    public let duration: AvailableTermsDuration?
+    public let fee: AvailableTermsFee?
+    public let interest: Float?
+}
+
+
+public struct AvailableTermsDuration : Codable {
+    public let value: Int64
+    public let unit: String
+}
+
+public struct AvailableTermsFee : Codable {
+    public let type: Int
 }
 
 public struct InsurancePackageModel: Codable {
@@ -226,6 +252,11 @@ public struct InsurancePackageModel: Codable {
 public struct FiatCurrency: Codable {
     public let value: String
     public let currency: String
+    
+    public init(value: String, currency: String) {
+        self.value = value
+        self.currency = currency
+    }
 }
 
 public struct Scope: Codable {

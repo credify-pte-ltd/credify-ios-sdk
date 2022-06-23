@@ -13,7 +13,7 @@ enum PassportContext {
     case mypage(user: CredifyUserModel)
     case offer(offer: OfferData, user: CredifyUserModel)
     case serviceInstance(user: CredifyUserModel, marketId: String, productTypes: [ProductType])
-    case bnpl(offers: [OfferData], user: CredifyUserModel, orderId: String, completedBnplProviders: [Organization])
+    case bnpl(offers: [OfferData], user: CredifyUserModel, orderInfo: OrderInfo, completedBnplProviders: [Organization])
     
     var url: URL {
         switch self {
@@ -30,7 +30,7 @@ enum PassportContext {
             let urlParams = params.map { "\($0)=\($1)" }.joined(separator: "&")
             
             return URL(string: "\(Constants.WEB_URL)/service-instance?\(urlParams)")!
-        case .bnpl(offers: _, user: _, orderId: _, completedBnplProviders: _):
+        case .bnpl(offers: _, user: _, orderInfo: _, completedBnplProviders: _):
             return URL(string: "\(Constants.WEB_URL)/bnpl")!
         }
     }
@@ -145,13 +145,11 @@ class WebPresenter: WebPresenterProtocol {
                     ]
                 )
             }
-            if case let .bnpl(offers, user, orderId, completedBnplProviders) = context {
+            if case let .bnpl(offers, user, orderInfo, completedBnplProviders) = context {
                 let message = StartBnplMessage(
                     offers: offers,
                     profile: user,
-                    order: OrderInfo(
-                        orderId: orderId
-                    ),
+                    order: orderInfo,
                     completeBnplProviders: completedBnplProviders,
                     theme: AppState.shared.config?.theme
                 )
@@ -211,8 +209,8 @@ class WebPresenter: WebPresenterProtocol {
         case .bnplPaymentComplete:
             // TODO we maybe need to update this when the BNPL proxy integrate with real flow
             switch context {
-            case .bnpl(offers: _, user: _, let orderId, completedBnplProviders: _):
-                hanldeBnplCompletionHandler(status: offerTransactionStatus, orderId: orderId, isPaymentCompleted: true)
+            case .bnpl(offers: _, user: _, let orderInfo, completedBnplProviders: _):
+                hanldeBnplCompletionHandler(status: offerTransactionStatus, orderId: orderInfo.orderId, isPaymentCompleted: true)
             default:
                 break
             }
@@ -235,9 +233,9 @@ class WebPresenter: WebPresenterProtocol {
             appState.redemptionResult?(offerTransactionStatus)
             appState.redemptionResult = nil
             appState.pushClaimTokensTask = nil
-        case .bnpl(offers: _, user: _, let orderId, completedBnplProviders: _):
+        case .bnpl(offers: _, user: _, let orderInfo, completedBnplProviders: _):
             // TODO we maybe need to update this when the BNPL proxy integrate with real flow
-            hanldeBnplCompletionHandler(status: offerTransactionStatus, orderId: orderId, isPaymentCompleted: false)
+            hanldeBnplCompletionHandler(status: offerTransactionStatus, orderId: orderInfo.orderId, isPaymentCompleted: false)
         case .serviceInstance:
             appState.dismissCompletion?()
             appState.dismissCompletion = nil
