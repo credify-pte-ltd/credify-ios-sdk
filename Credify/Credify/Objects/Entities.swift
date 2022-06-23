@@ -252,6 +252,11 @@ public struct InsurancePackageModel: Codable {
 public struct FiatCurrency: Codable {
     public let value: String
     public let currency: String
+    
+    public init(value: String, currency: String) {
+        self.value = value
+        self.currency = currency
+    }
 }
 
 public struct Scope: Codable {

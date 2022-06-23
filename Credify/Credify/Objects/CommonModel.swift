@@ -240,9 +240,9 @@ public class JSONCodingKey: CodingKey {
 
 public class OrderInfo : Codable {
     let orderId: String
-    let orderAmount: Double
+    let orderAmount: FiatCurrency
     
-    public init(orderId: String, orderAmount: Double) {
+    public init(orderId: String, orderAmount: FiatCurrency) {
         self.orderId = orderId
         self.orderAmount = orderAmount
     }
