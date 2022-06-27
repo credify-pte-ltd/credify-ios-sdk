@@ -83,6 +83,8 @@ public struct OfferCampaign: Codable {
     public let extraSteps: Bool?
     public let levels: [String]?
     public let thumbnailUrl: String?
+    // 25994: HouseCare - Add bannerUrl to the Campaign object
+    public let bannerUrl: String?
     public let verificationScopes: [String]?
     public let useReferral: Bool
     public var product: ProductModel?
@@ -100,6 +102,7 @@ public struct OfferCampaign: Codable {
                 verificationScopes: [String]?,
                 levels: [String]?,
                 thumbnailUrl: String?,
+                bannerUrl: String?,
                 useReferral: Bool,
                 product: ProductModel?,
                 requiredStandardScopes: [String],
@@ -116,6 +119,7 @@ public struct OfferCampaign: Codable {
         self.levels = levels
         self.verificationScopes = verificationScopes
         self.thumbnailUrl = thumbnailUrl
+        self.bannerUrl = bannerUrl
         self.useReferral = useReferral
         self.product = product
         self.requiredStandardScopes = requiredStandardScopes
@@ -133,6 +137,7 @@ public struct OfferCampaign: Codable {
         case extraSteps = "extra_steps"
         case levels
         case thumbnailUrl = "thumbnail_url"
+        case bannerUrl = "banner_url"
         case verificationScopes = "verified_scopes"
         case useReferral = "use_referral"
         case product
