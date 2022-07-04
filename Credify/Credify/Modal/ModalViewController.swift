@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import SDWebImage
 
 class ModalViewController : UIViewController {
     private var maxWidth: CGFloat {
@@ -49,8 +50,8 @@ class ModalViewController : UIViewController {
         }
     }
     
-    // https://i.ibb.co/bzYH2CF/offer.png
-    private let imageUrl = "https://i.ibb.co/T0sbHCC/banner-2.png"
+    // TODO it is for temporary use. We should have an API for get this image.
+    private let imageUrl = "https://assets.credify.dev/images/housecare/banner/insurance-banner1.png"
     
     private var onPromotionClick: (() -> Void)!
     
@@ -70,7 +71,23 @@ class ModalViewController : UIViewController {
         view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
         
         // Main image
-        let promotionClick = UITapGestureRecognizer(target: self, action: #selector(self.promotionClick(_:)))
+        let promotionImageView = createPromotionImage()
+        view.addSubview(promotionImageView)
+        
+        // Close icon
+        let closeImage = createCloseIcon()
+        view.addSubview(closeImage)
+        
+        // Footer
+        let footerImage = createFooter()
+        view.addSubview(footerImage)
+        
+        // Load main image
+        loadImage(iv: promotionImageView)
+    }
+    
+    private func createPromotionImage() -> UIImageView {
+        let promotionClick = UITapGestureRecognizer(target: self, action: #selector(promotionClick(_:)))
         let promotionImageView = UIImageView(
             frame: CGRect(
                 x: (maxWidth - imageWidth) / 2,
@@ -82,10 +99,11 @@ class ModalViewController : UIViewController {
         promotionImageView.isUserInteractionEnabled = true
         promotionImageView.addGestureRecognizer(promotionClick)
         promotionImageView.contentMode = UIImageView.ContentMode.scaleAspectFit
-        view.addSubview(promotionImageView)
-        
-        // Close icon
-        let closeViewClick = UITapGestureRecognizer(target: self, action: #selector(self.closeClick(_:)))
+        return promotionImageView
+    }
+    
+    private func createCloseIcon() -> UIImageView {
+        let closeViewClick = UITapGestureRecognizer(target: self, action: #selector(closeClick(_:)))
         let closeView = UIImageView(frame: CGRect(x: maxWidth - 56, y: topbarHeight + 32, width: 32, height: 32))
         closeView.image = UIImage(named: "ic_modal_close", in: Bundle.serviceX, compatibleWith: nil)
         closeView.isUserInteractionEnabled = true
@@ -94,48 +112,36 @@ class ModalViewController : UIViewController {
         if #available(iOS 11.0, *) {
             closeView.adjustsImageSizeForAccessibilityContentSizeCategory = true
         }
-        view.addSubview(closeView)
-        
-        // Footer
+        return closeView
+    }
+    
+    private func createFooter() -> UIImageView {
         let footerView = UIImageView(frame: CGRect(x: (maxWidth - 112) / 2, y: maxHeight - 16, width: 112, height: 18))
         footerView.image = UIImage(named: "ic_credify_footer", in: Bundle.serviceX, compatibleWith: nil)
         footerView.contentMode = UIImageView.ContentMode.scaleAspectFit
         if #available(iOS 11.0, *) {
             footerView.adjustsImageSizeForAccessibilityContentSizeCategory = true
         }
-        view.addSubview(footerView)
-        
-        // Load main image
-        loadImage(iv: promotionImageView)
+        return footerView
     }
     
     private func loadImage(iv: UIImageView) {
-        LoadingView.start()        
-        DispatchQueue.global(qos: .userInitiated).async {
-            var image: UIImage?
-            let imageURL = URL(string: self.imageUrl)
-            if let url = imageURL {
-                let imageData = NSData(contentsOf: url)
-                DispatchQueue.main.async {
-                    if imageData != nil {
-                        image = UIImage(data: imageData! as Data)
-                        iv.image = image
-                    } else {
-                        image = nil
-                    }
-
-                    LoadingView.stop()
-                }
-            }
+        LoadingView.start()
+        
+        // Using SDWebImage lib. I will cache the image
+        // and the same image will display immidiately on the next time
+        // https://github.com/SDWebImage/SDWebImage
+        iv.sd_setImage(with: URL(string: imageUrl)) { image, error, cacheType, imageURL in
+            LoadingView.stop()
         }
     }
     
     @objc func closeClick(_ sender: Any) {
-        self.dismiss(animated: false)
+        dismiss(animated: true)
     }
     
     @objc func promotionClick(_ sender: Any) {
-        self.closeClick(sender)
-        self.onPromotionClick()
+        closeClick(sender)
+        onPromotionClick()
     }
 }
