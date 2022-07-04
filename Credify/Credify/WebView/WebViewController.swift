@@ -64,30 +64,17 @@ class WebViewController: UIViewController {
             )
         }
         
-        let window = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
-        var statusBarHeight: CGFloat = 0
-        if #available(iOS 13.0, *) {
-            statusBarHeight = window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
-        }
-        let navAndStatusBarHeight = (navigationController?.navigationBar.frame.height ?? 0) + statusBarHeight
-        
         // 21840: UI issue - Long text and cut off button
-        let webViewHeight: CGFloat
+        let webViewFrame: CGRect
         if #available(iOS 11.0, *) {
-            webViewHeight = view.safeAreaLayoutGuide.layoutFrame.height - navAndStatusBarHeight - (window?.safeAreaInsets.bottom ?? 0.0)
+            let safeAreaFrame = view.safeAreaLayoutGuide.layoutFrame
+            webViewFrame = CGRect(origin: CGPoint(x: 0, y: 0), size: safeAreaFrame.size)
         } else {
-            webViewHeight = view.frame.height - navAndStatusBarHeight
+            let viewFrame = view.frame
+            webViewFrame = CGRect(origin: CGPoint(x: 0, y: 0), size: viewFrame.size)
         }
         
-        webView = WKWebView(
-            frame: CGRect(
-                x: 0,
-                y: navAndStatusBarHeight,
-                width: view.frame.width,
-                height: webViewHeight
-            ),
-            configuration: configuration
-        )
+        webView = WKWebView(frame: webViewFrame,configuration: configuration)
         view.addSubview(webView)
         
         // 23274: Investigate caching issue on webview
@@ -114,6 +101,28 @@ class WebViewController: UIViewController {
             webView.customUserAgent = AppState.shared.config?.userAgent
             
             webView.load(URLRequest(url: url))
+        }
+        
+        // 26031: Housecare ios - SDK - styling issue
+        // Position the WebView
+        // Leading and Trailing
+        NSLayoutConstraint.activate([
+            webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            webView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+        
+        // Top and Bottom
+        if #available(iOS 11, *) {
+            let guide = view.safeAreaLayoutGuide
+            NSLayoutConstraint.activate([
+                webView.topAnchor.constraint(equalToSystemSpacingBelow: guide.topAnchor, multiplier: 0.0),
+                guide.bottomAnchor.constraint(equalToSystemSpacingBelow: webView.bottomAnchor, multiplier: 0.0)
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                webView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 0),
+                bottomLayoutGuide.topAnchor.constraint(equalTo: webView.bottomAnchor, constant: 0)
+            ])
         }
         
         LoadingView.start(container: view)
