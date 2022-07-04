@@ -15,6 +15,7 @@ target 'Credify' do
   # Pods for Credify
   pod "Alamofire", "5.4.0"
   pod "lottie-ios", "3.1.9"
+  pod "SDWebImage", "5.0.0"
 
   target 'CredifyTests' do
     # Pods for testing
@@ -32,4 +33,5 @@ target 'ExampleApp' do
   pod 'Alamofire', "5.4.0"
   pod 'DropDown'
   pod "lottie-ios", "3.1.9"
+  pod "SDWebImage", "5.0.0"
 end
