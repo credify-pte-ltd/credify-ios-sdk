@@ -180,16 +180,17 @@ class WebViewController: UIViewController {
         bg.backgroundColor = UIColor.fromHex(bgColor)
         view.addSubview(bg)
         
-        // WebView
-        webView = WKWebView(
-            frame: CGRect(
-                x: 0,
-                y: statusBarHeight,
-                width: view.frame.width,
-                height: webViewHeight - paddingBottom
-            ),
-            configuration: configuration
-        )
+        // 21840: UI issue - Long text and cut off button
+        let webViewFrame: CGRect
+        if #available(iOS 11.0, *) {
+            let safeAreaFrame = view.safeAreaLayoutGuide.layoutFrame
+            webViewFrame = CGRect(origin: CGPoint(x: 0, y: 0), size: safeAreaFrame.size)
+        } else {
+            let viewFrame = view.frame
+            webViewFrame = CGRect(origin: CGPoint(x: 0, y: 0), size: viewFrame.size)
+        }
+        
+        webView = WKWebView(frame: webViewFrame,configuration: configuration)
         view.addSubview(webView)
         
         self.originalWebViewFrame = webView.frame
@@ -224,6 +225,28 @@ class WebViewController: UIViewController {
             webView.allowsLinkPreview = false
             
             webView.load(URLRequest(url: url))
+        }
+        
+        // 26031: Housecare ios - SDK - styling issue
+        // Position the WebView
+        // Leading and Trailing
+        NSLayoutConstraint.activate([
+            webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            webView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+        
+        // Top and Bottom
+        if #available(iOS 11, *) {
+            let guide = view.safeAreaLayoutGuide
+            NSLayoutConstraint.activate([
+                webView.topAnchor.constraint(equalToSystemSpacingBelow: guide.topAnchor, multiplier: 0.0),
+                guide.bottomAnchor.constraint(equalToSystemSpacingBelow: webView.bottomAnchor, multiplier: 0.0)
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                webView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 0),
+                bottomLayoutGuide.topAnchor.constraint(equalTo: webView.bottomAnchor, constant: 0)
+            ])
         }
     }
     
