@@ -19,6 +19,7 @@ internal enum SendMessageHandler: String {
     case startRedemption
     case pushClaimCompleted
     case actionLogin
+    case showPromotionOffers
 }
 
 internal enum ReceiveMessageHandler: String {
@@ -29,6 +30,7 @@ internal enum ReceiveMessageHandler: String {
     case bnplPaymentComplete
     case sendPathsForShowingCloseButton
     case loginLoadCompleted
+    case promotionOfferLoadCompleted
 }
 
 internal class StartBnplMessage: Codable {
@@ -49,6 +51,22 @@ internal class StartBnplMessage: Codable {
         self.profile = profile
         self.order = order
         self.completeBnplProviders = completeBnplProviders
+        self.theme = theme
+    }
+}
+
+internal class ShowPromotionOfferMessage: Codable {
+    let offers: [OfferData]
+    let profile: CredifyUserModel
+    let theme: serviceXTheme?
+    
+    init(
+        offers: [OfferData],
+        profile: CredifyUserModel,
+        theme: serviceXTheme?
+    ) {
+        self.offers = offers
+        self.profile = profile
         self.theme = theme
     }
 }

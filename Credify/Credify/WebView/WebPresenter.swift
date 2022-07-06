@@ -12,6 +12,7 @@ import SwiftUI
 enum PassportContext {
     case mypage(user: CredifyUserModel)
     case offer(offer: OfferData, user: CredifyUserModel)
+    case promotionOffers(offers: [OfferData], user: CredifyUserModel)
     case serviceInstance(user: CredifyUserModel, marketId: String, productTypes: [ProductType])
     case bnpl(offers: [OfferData], user: CredifyUserModel, orderInfo: OrderInfo, completedBnplProviders: [Organization])
     
@@ -21,6 +22,8 @@ enum PassportContext {
             return URL(string: "\(Constants.WEB_URL)/login")!
         case .offer(offer: _, user: _):
             return URL(string: "\(Constants.WEB_URL)/initial")!
+        case .promotionOffers(offers: _, user: _):
+            return URL(string: "\(Constants.WEB_URL)/start")!
         case .serviceInstance(user: _, let marketId, let productTypes):
             var params = [(String, String)]()
             params.append(("market-id", marketId))
@@ -48,6 +51,7 @@ protocol WebPresenterProtocol {
     func isLoading(webView: WKWebView, onResult: @escaping (Bool) -> Void)
     func shouldUseCredifyTheme() -> Bool
     func goToPreviousPageOrClose(webView: WKWebView)
+    func shouldUseTransparentBackground(url: String) -> Bool
 }
 
 class WebPresenter: WebPresenterProtocol {
@@ -69,7 +73,8 @@ class WebPresenter: WebPresenterProtocol {
             .actionClose,
             .bnplPaymentComplete,
             .sendPathsForShowingCloseButton,
-            .loginLoadCompleted
+            .loginLoadCompleted,
+            .promotionOfferLoadCompleted
         ]
     }
     
@@ -218,6 +223,8 @@ class WebPresenter: WebPresenterProtocol {
             handleSendPathsForShowingCloseButton(body: body)
         case .loginLoadCompleted:
             doPostMessageForLoggingIn(webView: webView)
+        case .promotionOfferLoadCompleted:
+            doPostMessageForShowingPromotionOffer(webView: webView)
         }
     }
     
@@ -230,6 +237,10 @@ class WebPresenter: WebPresenterProtocol {
             appState.dismissCompletion = nil
             appState.pushClaimTokensTask = nil
         case .offer(_, _):
+            appState.redemptionResult?(offerTransactionStatus)
+            appState.redemptionResult = nil
+            appState.pushClaimTokensTask = nil
+        case .promotionOffers(_, _):
             appState.redemptionResult?(offerTransactionStatus)
             appState.redemptionResult = nil
             appState.pushClaimTokensTask = nil
@@ -301,6 +312,10 @@ class WebPresenter: WebPresenterProtocol {
             return appState.offerShowingCloseButtonUrls.first { item in
                 url.starts(with: item)
             } != nil
+        case .promotionOffers(_, _):
+            return appState.offerShowingCloseButtonUrls.first { item in
+                url.starts(with: item)
+            } != nil
         case .bnpl(_, _, _, _):
             // E.g: https://dev-passport.credify.ninja/bpnl
             if url.starts(with: "\(Constants.WEB_URL)/bnpl") && urlObj!.lastPathComponent == "bnpl" {
@@ -325,6 +340,36 @@ class WebPresenter: WebPresenterProtocol {
     func doPostMessageForLoggingIn(webView: WKWebView) {
         if "\(Constants.WEB_URL)/login".starts(with: (webView.url?.absoluteString ?? "")) {
             handleMessage(webView, name: ReceiveMessageHandler.initialLoadCompleted.rawValue, body: nil)
+        }
+    }
+    
+    /// 25736: Add offer popup to SDK
+    func doPostMessageForShowingPromotionOffer(webView: WKWebView) {
+        if case let .promotionOffers(offers, user) = context {
+            let message = ShowPromotionOfferMessage(
+                offers: offers,
+                profile: user,
+                theme: AppState.shared.config?.theme
+            )
+            
+            guard let messageJsonData = try? message.jsonData() else {
+                return
+            }
+            
+            guard let messageJson = try? JSONSerialization.jsonObject(with: messageJsonData, options: []) else {
+                return
+            }
+            
+            guard let messageDict = messageJson as? [String: Any] else {
+                return
+            }
+            
+            doPostMessage(
+                webView,
+                type: ACTION_TYPE,
+                action: SendMessageHandler.showPromotionOffers.rawValue,
+                payload: messageDict
+            )
         }
     }
     
@@ -378,6 +423,15 @@ class WebPresenter: WebPresenterProtocol {
             }
             
             webView.goBack()
+        }
+    }
+    
+    func shouldUseTransparentBackground(url: String) -> Bool {
+        switch self.context {
+        case .promotionOffers(_, _):
+            return url == "\(Constants.WEB_URL)/start"
+        default:
+            return false
         }
     }
     
