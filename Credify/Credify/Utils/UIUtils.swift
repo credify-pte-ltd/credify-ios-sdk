@@ -21,4 +21,12 @@ class UIUtils {
         alert.addAction(action)
         from.present(alert, animated: true)
     }
+    
+    static func createUINavigationController(vc: UIViewController) -> UINavigationController {
+        let navigationController = UINavigationController(rootViewController: vc)
+        navigationController.modalPresentationStyle = .overFullScreen
+        // disable navigation bar swipe back
+        navigationController.interactivePopGestureRecognizer?.isEnabled = false
+        return navigationController
+    }
 }

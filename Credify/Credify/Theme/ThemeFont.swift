@@ -16,6 +16,9 @@ public struct ThemeFont : Codable {
     public let bigTitleFontSize: Int
     public let bigTitleFontLineHeight: Int
     
+    public let pageHeaderFontSize: Int
+    public let pageHeaderLineHeight: Int
+    
     public let modelTitleFontSize: Int
     public let modelTitleFontLineHeight: Int
     
@@ -57,6 +60,8 @@ public struct ThemeFont : Codable {
                 secondaryFontFamily: String = ThemeFont.default.secondaryFontFamily,
                 bigTitleFontSize: Int = ThemeFont.default.bigTitleFontSize,
                 bigTitleFontLineHeight: Int = ThemeFont.default.bigTitleFontLineHeight,
+                pageHeaderFontSize: Int = ThemeFont.default.pageHeaderFontSize,
+                pageHeaderLineHeight: Int = ThemeFont.default.pageHeaderLineHeight,
                 modelTitleFontSize: Int = ThemeFont.default.modelTitleFontSize,
                 modelTitleFontLineHeight: Int = ThemeFont.default.modelTitleFontLineHeight,
                 sectionTitleFontSize: Int = ThemeFont.default.sectionTitleFontSize,
@@ -73,6 +78,8 @@ public struct ThemeFont : Codable {
         self.secondaryFontFamily = secondaryFontFamily
         self.bigTitleFontSize = bigTitleFontSize
         self.bigTitleFontLineHeight = bigTitleFontLineHeight
+        self.pageHeaderFontSize = pageHeaderFontSize
+        self.pageHeaderLineHeight = pageHeaderLineHeight
         self.modelTitleFontSize = modelTitleFontSize
         self.modelTitleFontLineHeight = modelTitleFontLineHeight
         self.sectionTitleFontSize = sectionTitleFontSize
@@ -92,6 +99,8 @@ public struct ThemeFont : Codable {
                          secondaryFontFamily: "Roboto Slab",
                          bigTitleFontSize: 21,
                          bigTitleFontLineHeight: 31,
+                         pageHeaderFontSize: 21,
+                         pageHeaderLineHeight: 31,
                          modelTitleFontSize: 20,
                          modelTitleFontLineHeight: 29,
                          sectionTitleFontSize: 16,

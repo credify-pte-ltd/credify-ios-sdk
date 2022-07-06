@@ -10,6 +10,7 @@ import WebKit
 import SafariServices
 
 class WebViewController: UIViewController {
+    private var maskBackgroud: UIView!
     private var webView: WKWebView!
     
     private var url: URL!
@@ -75,15 +76,18 @@ class WebViewController: UIViewController {
         
         let theme = AppState.shared.config?.theme
         let themeColor = theme?.color
+        let isBackgroundTransparent = presenter.shouldUseTransparentBackground(url: self.url.absoluteString)
         
         observerShowHideKeyboardEvent()
         
         // 23462: Med247 app - Passport's background does not fit with height of Med247 app
-        updateBackground(themeColor: themeColor)
+        updateBackground(themeColor: themeColor, isTransparentBackground: isBackgroundTransparent)
         
         customizeNavBar(themeColor: themeColor)
             
         setupWebView(themeColor: themeColor)
+        
+        updateWebViewBackground(themeColor: themeColor, isTransparentBackground: isBackgroundTransparent)
         
         LoadingView.start(container: view)
     }
@@ -102,20 +106,11 @@ class WebViewController: UIViewController {
             webView.scrollView.setContentOffset(CGPoint.zero, animated: true)
             
             let url = webView.url
-            self.setBackButtonVisibility(isVisible: self.presenter.isBackButtonVisible(urlObj: url))
-            self.setCloseButtonVisibility(isVisible: self.presenter.isCloseButtonVisible(urlObj: url))
-        }
-        
-        if keyPath == #keyPath(WKWebView.canGoBack) ||
-            keyPath == #keyPath(WKWebView.canGoForward) ||
-            keyPath == #keyPath(WKWebView.url) ||
-            keyPath == #keyPath(WKWebView.estimatedProgress){
-            // There is no history
-            if !webView.canGoBack {
-                self.setBackButtonVisibility(isVisible: false)
-                self.setCloseButtonVisibility(isVisible: true)
-                return
-            }
+            let theme = AppState.shared.config?.theme
+            let themeColor = theme?.color
+            let isBackgroundTransparent = presenter.shouldUseTransparentBackground(url: url?.absoluteString ?? "")
+            updateBackground(themeColor: themeColor, isTransparentBackground: isBackgroundTransparent)
+            updateWebViewBackground(themeColor: themeColor, isTransparentBackground: isBackgroundTransparent)
         }
     }
     
@@ -166,19 +161,6 @@ class WebViewController: UIViewController {
     private func setupWebView(themeColor: ThemeColor?) {
         let userController = createWebViewUserContentController()
         let configuration = createWebViewConfiguration(userController: userController)
-        
-        // Background
-        let bgColor = themeColor?.secondaryBackground ?? "#FFFFFF"
-        let bg = UIView(
-            frame: CGRect(
-                x: 0,
-                y: statusBarHeight,
-                width: view.frame.width,
-                height: webViewHeight
-            )
-        )
-        bg.backgroundColor = UIColor.fromHex(bgColor)
-        view.addSubview(bg)
         
         // 21840: UI issue - Long text and cut off button
         let webViewFrame: CGRect
@@ -250,6 +232,18 @@ class WebViewController: UIViewController {
         }
     }
     
+    private func updateWebViewBackground(themeColor: ThemeColor?, isTransparentBackground: Bool) {
+        if isTransparentBackground {
+            webView.backgroundColor = .clear
+            webView.isOpaque = false
+            return
+        }
+        
+        let bgColor = themeColor?.secondaryBackground ?? "#FFFFFF"
+        webView.backgroundColor = UIColor.fromHex(bgColor)
+        webView.isOpaque = true
+    }
+    
     private func observerShowHideKeyboardEvent() {
         NotificationCenter.default.addObserver(
             self,
@@ -285,15 +279,65 @@ class WebViewController: UIViewController {
         webView.frame = self.originalWebViewFrame!
     }
     
-    private func updateBackground(themeColor: ThemeColor?) {
+    private func updateBackground(
+            themeColor: ThemeColor?,
+            isTransparentBackground: Bool = false
+    ) {
+        if maskBackgroud == nil {
+            // Mask background
+            maskBackgroud = UIView(
+                frame: CGRect(
+                    x: 0,
+                    y: 0,
+                    width: view.frame.width,
+                    height: 100
+                )
+            )
+            view.addSubview(maskBackgroud)
+            
+            // Position the mask background
+            // Leading and Trailing
+            NSLayoutConstraint.activate([
+                maskBackgroud.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                maskBackgroud.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            ])
+            
+            // Top and Bottom
+            if #available(iOS 11, *) {
+                let guide = view.safeAreaLayoutGuide
+                NSLayoutConstraint.activate([
+                    maskBackgroud.topAnchor.constraint(equalToSystemSpacingBelow: guide.topAnchor, multiplier: 0.0),
+                    guide.bottomAnchor.constraint(equalToSystemSpacingBelow: maskBackgroud.bottomAnchor, multiplier: 0.0)
+                ])
+            } else {
+                NSLayoutConstraint.activate([
+                    maskBackgroud.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 0),
+                    bottomLayoutGuide.topAnchor.constraint(equalTo: maskBackgroud.bottomAnchor, constant: 0)
+                ])
+            }
+        }
+        
+        if isTransparentBackground {
+            view.setGradient(
+                colors: [UIColor.clear, UIColor.clear],
+                startPoint: CGPoint(x: 0, y: 0.5),
+                endPoint: CGPoint(x: 1, y: 0.5)
+            )
+            
+            maskBackgroud.backgroundColor = UIColor.clear
+            return
+        }
+        
+        let bgColor = themeColor?.secondaryBackground ?? "#FFFFFF"
+        view.backgroundColor = UIColor.fromHex(bgColor)
+        
         var startColor = themeColor?.primaryBrandyStart ?? ThemeColor.default.primaryBrandyStart
         var endColor = themeColor?.primaryBrandyEnd ?? ThemeColor.default.primaryBrandyEnd
         if presenter.shouldUseCredifyTheme() {
             startColor = ThemeColor.default.primaryBrandyStart
             endColor = ThemeColor.default.primaryBrandyEnd
         }
-        
-        view.setGradient(
+        maskBackgroud.setGradient(
             colors: [
                 UIColor.fromHex(startColor),
                 UIColor.fromHex(endColor)
