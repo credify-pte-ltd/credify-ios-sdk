@@ -134,6 +134,12 @@ public struct serviceX {
                 return
             }
             
+            // If there is no offer then we just return, don't need to show an error to the user
+            if offers.isEmpty {
+                print("'offers' is empty")
+                return
+            }
+            
             let vc = ModalViewController.instantiate() {
                 self.presentOffers(
                     from: from,

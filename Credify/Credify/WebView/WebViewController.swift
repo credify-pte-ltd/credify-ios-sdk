@@ -283,38 +283,9 @@ class WebViewController: UIViewController {
             themeColor: ThemeColor?,
             isTransparentBackground: Bool = false
     ) {
+        // Mask background
         if maskBackgroud == nil {
-            // Mask background
-            maskBackgroud = UIView(
-                frame: CGRect(
-                    x: 0,
-                    y: 0,
-                    width: view.frame.width,
-                    height: 100
-                )
-            )
-            view.addSubview(maskBackgroud)
-            
-            // Position the mask background
-            // Leading and Trailing
-            NSLayoutConstraint.activate([
-                maskBackgroud.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                maskBackgroud.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-            ])
-            
-            // Top and Bottom
-            if #available(iOS 11, *) {
-                let guide = view.safeAreaLayoutGuide
-                NSLayoutConstraint.activate([
-                    maskBackgroud.topAnchor.constraint(equalToSystemSpacingBelow: guide.topAnchor, multiplier: 0.0),
-                    guide.bottomAnchor.constraint(equalToSystemSpacingBelow: maskBackgroud.bottomAnchor, multiplier: 0.0)
-                ])
-            } else {
-                NSLayoutConstraint.activate([
-                    maskBackgroud.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 0),
-                    bottomLayoutGuide.topAnchor.constraint(equalTo: maskBackgroud.bottomAnchor, constant: 0)
-                ])
-            }
+            maskBackgroud = addMaskBackground()
         }
         
         if isTransparentBackground {
@@ -345,6 +316,41 @@ class WebViewController: UIViewController {
             startPoint: CGPoint(x: 0, y: 0.5),
             endPoint: CGPoint(x: 1, y: 0.5)
         )
+    }
+    
+    private func addMaskBackground() -> UIView {
+        maskBackgroud = UIView(
+            frame: CGRect(
+                x: 0,
+                y: 0,
+                width: view.frame.width,
+                height: 100
+            )
+        )
+        view.addSubview(maskBackgroud)
+        
+        // Position the mask background
+        // Leading and Trailing
+        NSLayoutConstraint.activate([
+            maskBackgroud.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            maskBackgroud.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+        
+        // Top and Bottom
+        if #available(iOS 11, *) {
+            let guide = view.safeAreaLayoutGuide
+            NSLayoutConstraint.activate([
+                maskBackgroud.topAnchor.constraint(equalToSystemSpacingBelow: guide.topAnchor, multiplier: 0.0),
+                guide.bottomAnchor.constraint(equalToSystemSpacingBelow: maskBackgroud.bottomAnchor, multiplier: 0.0)
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                maskBackgroud.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 0),
+                bottomLayoutGuide.topAnchor.constraint(equalTo: maskBackgroud.bottomAnchor, constant: 0)
+            ])
+        }
+        
+        return maskBackgroud
     }
     
     private func customizeNavBar(themeColor: ThemeColor?) {

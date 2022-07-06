@@ -76,6 +76,7 @@ class ModalViewController : UIViewController {
         
         // Close icon
         let closeImage = createCloseIcon()
+        closeImage.isHidden = true
         view.addSubview(closeImage)
         
         // Footer
@@ -83,7 +84,9 @@ class ModalViewController : UIViewController {
         view.addSubview(footerImage)
         
         // Load main image
-        loadImage(iv: promotionImageView)
+        loadImage(iv: promotionImageView) {
+            closeImage.isHidden = false
+        }
     }
     
     private func createPromotionImage() -> UIImageView {
@@ -125,7 +128,7 @@ class ModalViewController : UIViewController {
         return footerView
     }
     
-    private func loadImage(iv: UIImageView) {
+    private func loadImage(iv: UIImageView, onFinished: @escaping () -> Void) {
         LoadingView.start()
         
         // Using SDWebImage lib. I will cache the image
@@ -133,6 +136,7 @@ class ModalViewController : UIViewController {
         // https://github.com/SDWebImage/SDWebImage
         iv.sd_setImage(with: URL(string: imageUrl)) { image, error, cacheType, imageURL in
             LoadingView.stop()
+            onFinished()
         }
     }
     
