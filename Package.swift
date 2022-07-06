@@ -17,12 +17,13 @@ let package = Package(
         .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.4.0"),
         // https://github.com/airbnb/lottie-ios
         // https://www.swiftbysundell.com/articles/managing-dependencies-using-the-swift-package-manager/
-        .package(name: "Lottie", url: "https://github.com/airbnb/lottie-ios.git", .exact("3.1.9"))
+        .package(name: "Lottie", url: "https://github.com/airbnb/lottie-ios.git", .exact("3.1.9")),
+        .package(name: "SDWebImage", url: "https://github.com/SDWebImage/SDWebImage.git", .exact("5.1.0")),
     ],
     targets: [
         .target(
             name: "Credify",
-            dependencies: ["Alamofire", "Lottie"],
+            dependencies: ["Alamofire", "Lottie", "SDWebImage"],
             path: "Credify",
             resources: [
                 .process("Credify/Credify.docc"),

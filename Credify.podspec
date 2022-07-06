@@ -49,5 +49,6 @@ Pod::Spec.new do |spec|
 
   spec.dependency "Alamofire", "~> 5.4"
   spec.dependency "lottie-ios", "3.1.9"
+  spec.dependency "SDWebImage", "5.0.0"
 
 end
