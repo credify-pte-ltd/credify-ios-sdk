@@ -19,7 +19,7 @@ enum PassportContext {
     var url: URL {
         switch self {
         case .mypage(user: _):
-            return URL(string: "\(Constants.WEB_URL)/login")!
+            return URL(string: "\(Constants.WEB_URL)/redeemed-offers")!
         case .offer(offer: _, user: _):
             return URL(string: "\(Constants.WEB_URL)/initial")!
         case .promotionOffers(offers: _, user: _):
