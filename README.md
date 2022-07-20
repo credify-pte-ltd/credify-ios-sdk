@@ -153,11 +153,11 @@ class SampleViewController: UIViewController {
             }
         }
         offer.presentPromotionOffersModally(from: self, offers: offerList, userProfile: user, pushClaimTokensTask: task) { [weak self] result in
-        self?.dismiss(animated: true) {
-            print("Done")
+            self?.dismiss(animated: true) {
+                print("Done")
+            }
         }
     }
-}
 ```      
 
 ### Passport
@@ -278,9 +278,9 @@ class SampleViewController: UIViewController {
 
 > **Important**: For the `pushClaimTokensTask` callback, you need to keep `credifyId` on your side. You have to send the `credifyId` to Credify SDK when you use the methods that require `credifyId`. E.g: call `bnpl.presentModally` method or create `CredifyUserModel` model.
 
-### The Service Instance
+### The Service detail
 
-Using the below code for showing the Service Instance page. It will show all the BNPL details which the user has used.
+Using the below code for showing the Service detail page. It will show all the BNPL details which the user has used.
 
 ```swift
 import UIKit
