@@ -53,6 +53,7 @@
 		F85DCD0F2841AAAE00A93B56 /* LocaleUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85DCD0E2841AAAE00A93B56 /* LocaleUtils.swift */; };
 		F862448327FE6C59002C85F8 /* EntitiesTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F862448227FE6C59002C85F8 /* EntitiesTest.swift */; };
 		F862448527FE6DC6002C85F8 /* OrganizationUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F862448427FE6DC6002C85F8 /* OrganizationUseCase.swift */; };
+		F87383BA285789BE00D6F99F /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87383B9285789BE00D6F99F /* UIView+Extension.swift */; };
 		F87CBCD3284488740032B196 /* credify-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = F87CBCD1284488740032B196 /* credify-loading.json */; };
 		F87CBCD4284488740032B196 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87CBCD2284488740032B196 /* LoadingView.swift */; };
 		F8AED25127E984780095DB6C /* PostMessageUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8AED25027E984780095DB6C /* PostMessageUtilsTest.swift */; };
@@ -126,6 +127,7 @@
 		F85DCD0E2841AAAE00A93B56 /* LocaleUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocaleUtils.swift; sourceTree = "<group>"; };
 		F862448227FE6C59002C85F8 /* EntitiesTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntitiesTest.swift; sourceTree = "<group>"; };
 		F862448427FE6DC6002C85F8 /* OrganizationUseCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrganizationUseCase.swift; sourceTree = "<group>"; };
+		F87383B9285789BE00D6F99F /* UIView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		F87CBCD1284488740032B196 /* credify-loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "credify-loading.json"; sourceTree = "<group>"; };
 		F87CBCD2284488740032B196 /* LoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		F8AED25027E984780095DB6C /* PostMessageUtilsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostMessageUtilsTest.swift; sourceTree = "<group>"; };
@@ -212,6 +214,7 @@
 		2517EC2B27E5A4360025E396 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				F87383B9285789BE00D6F99F /* UIView+Extension.swift */,
 				2517EC2C27E5A4360025E396 /* UIFont+Extension.swift */,
 				2517EC2D27E5A4360025E396 /* UIColor+Extension.swift */,
 				2517EC2E27E5A4360025E396 /* Encodable+Extension.swift */,
@@ -577,6 +580,7 @@
 				F84828B827EAE8BC00ED1E12 /* UIUtils.swift in Sources */,
 				2517EC2327E5A3B40025E396 /* serviceX.swift in Sources */,
 				2517EC6D27E5A4520025E396 /* OfferUseCase.swift in Sources */,
+				F87383BA285789BE00D6F99F /* UIView+Extension.swift in Sources */,
 				2517EC5927E5A4520025E396 /* AppState.swift in Sources */,
 				2517EC6927E5A4520025E396 /* ThemeColor.swift in Sources */,
 				2517EC5B27E5A4520025E396 /* Entities.swift in Sources */,
