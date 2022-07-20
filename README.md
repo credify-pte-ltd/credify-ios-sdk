@@ -37,7 +37,7 @@ pod "Credify"
 ```swift
 import UIKit
 import Credify
-import Alamofire // This is not requred, but used for demo
+import Alamofire // This is not required, but used for demo
 
 let API_KEY = "your api key"
 let APP_NAME = "your app name"
@@ -96,6 +96,69 @@ class SampleViewController: UIViewController {
 ```
 
 > **Important**: For the `pushClaimTokensTask` callback, you need to keep `credifyId` on your side. You have to send the `credifyId` to Credify SDK when you use the methods that require `credifyId`. E.g: call `offer.presentModally` method or create `CredifyUserModel` model.
+
+### Promotion offer list(available on v0.6.0)
+
+Using below are example for show promotions offer list.
+
+```swift
+import UIKit
+import Credify
+import Alamofire // This is not required, but used for demo
+
+let API_KEY = "your api key"
+let APP_NAME = "your app name"
+let API_PUSH_CLAIMS = "your API endpoint to push claim tokens"
+
+class SampleViewController: UIViewController {
+
+    private let offer = serviceX.Offer()
+    private var user: CredifyUserModel!
+    private var offerList: [OfferData] = [OfferData]()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        let config = serviceXConfig(apiKey: API_KEY, env: .sandbox, appName: APP_NAME)
+        serviceX.configure(config)
+        
+        user = CredifyUserModel(id: "internal ID in your system", firstName: "Vũ", lastName: "Nguyển", email: "vu.nguyen@gmail.com", credifyId: nil, countryCode: "+84", phoneNumber: "0381239876")
+    }
+
+    /// This loads offers list. Please call this whenever you want.
+    func loadOffers() {
+        offer.getOffers(user: user, productTypes: []) { [weak self] result in
+            switch result {
+            case .success(let offers):
+                self?.offerList = offers
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
+    /// This starts Credify SDK
+    func showPromotionOffers(_ offers: [OfferData]) {
+        let task: ((String, ((Bool) -> Void)?) -> Void) = { credifyId, result in
+            AF.request(API_PUSH_CLAIMS,
+                       method: .post,
+                       parameters: ["id": self.user.id, "credify_id": credifyId],
+                       encoding: JSONEncoding.default).responseJSON { data in
+                switch data.result {
+                case .success:
+                    result?(true)
+                case .failure:
+                    result?(false)
+                }
+            }
+        }
+        offer.presentPromotionOffersModally(from: self, offers: offerList, userProfile: user, pushClaimTokensTask: task) { [weak self] result in
+        self?.dismiss(animated: true) {
+            print("Done")
+        }
+    }
+}
+```      
 
 ### Passport
 
@@ -214,6 +277,44 @@ class SampleViewController: UIViewController {
 ```
 
 > **Important**: For the `pushClaimTokensTask` callback, you need to keep `credifyId` on your side. You have to send the `credifyId` to Credify SDK when you use the methods that require `credifyId`. E.g: call `bnpl.presentModally` method or create `CredifyUserModel` model.
+
+### The Service Instance
+
+Using the below code for showing the Service Instance page. It will show all the BNPL details which the user has used.
+
+```swift
+import UIKit
+import Credify
+
+class SampleViewController: UIViewController {
+    private let passport = serviceX.Passport()
+    private var user: CredifyUserModel!
+    private let marketId: String // Your orgnization id that you have registered with Credify
+    private let productTypes: [ProductType] // You need to initialize this field
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        let config = serviceXConfig(apiKey: API_KEY, env: .sandbox, appName: APP_NAME)
+        serviceX.configure(config)
+        
+        user = CredifyUserModel(id: "internal ID in your system", firstName: "Vũ", lastName: "Nguyển", email: "vu.nguyen@gmail.com", credifyId: nil, countryCode: "+84", phoneNumber: "0381239876")
+    }
+
+    /// This renders passport page
+    func showServiceInstance() {
+        passport.showDetail(
+            from: self,
+            user: user!,
+            marketId: marketId,
+            productTypes: []
+        ) {
+            print("page dismissed")
+        }
+    }
+}
+
+```
 
 ### Setting language
 
