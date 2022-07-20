@@ -13,8 +13,6 @@ public struct serviceX {
     /// - Returns: Void
     public static func configure(_ config: serviceXConfig) {
         AppState.shared.config = config
-//        let sdkVersion = (Bundle.serviceX.infoDictionary?["CFBundleShortVersionString"] as? String) ?? "unknown"
-//        let userAgent = "servicex/ios/\(sdkVersion)"
     }
     
     public static func setLanguage(_ language: Language) {
@@ -49,9 +47,7 @@ public struct serviceX {
             
             let context = PassportContext.mypage(user: user)
             let vc = WebViewController.instantiate(context: context)
-            let navigationController = UINavigationController(rootViewController: vc)
-            navigationController.modalPresentationStyle = .overFullScreen
-            navigationController.interactivePopGestureRecognizer?.isEnabled = false // disable navigation bar swipe back
+            let navigationController = UIUtils.createUINavigationController(vc: vc)
             from.present(navigationController, animated: true)
         }
         
@@ -78,9 +74,7 @@ public struct serviceX {
             AppState.shared.dismissCompletion = completion
             let context = PassportContext.serviceInstance(user: user, marketId: marketId, productTypes: productTypes)
             let vc = WebViewController.instantiate(context: context)
-            let navigationController = UINavigationController(rootViewController: vc)
-            navigationController.modalPresentationStyle = .overFullScreen
-            navigationController.interactivePopGestureRecognizer?.isEnabled = false // disable navigation bar swipe back
+            let navigationController = UIUtils.createUINavigationController(vc: vc)
             from.present(navigationController, animated: true)
         }
     }
@@ -125,9 +119,53 @@ public struct serviceX {
             
             let context = PassportContext.offer(offer: offer, user: userProfile)
             let vc = WebViewController.instantiate(context: context)
-            let navigationController = UINavigationController(rootViewController: vc)
-            navigationController.modalPresentationStyle = .overFullScreen
-            navigationController.interactivePopGestureRecognizer?.isEnabled = false // disable navigation bar swipe back
+            let navigationController = UIUtils.createUINavigationController(vc: vc)
+            from.present(navigationController, animated: true)
+        }
+        
+        public func presentPromotionOffersModally(
+            from: UIViewController,
+            offers: [OfferData],
+            userProfile: CredifyUserModel,
+            pushClaimTokensTask: @escaping ((String, ((Bool) -> Void)?) -> Void),
+            completionHandler: @escaping (RedemptionResult) -> Void
+        ) {
+            if !ValidationUtils.showErrorIfOfferCannotStart(from: from, user: userProfile) {
+                return
+            }
+            
+            // If there is no offer then we just return, don't need to show an error to the user
+            if offers.isEmpty {
+                print("'offers' is empty")
+                return
+            }
+            
+            let vc = ModalViewController.instantiate() {
+                self.presentOffers(
+                    from: from,
+                    offers: offers,
+                    userProfile: userProfile,
+                    pushClaimTokensTask: pushClaimTokensTask,
+                    completionHandler: completionHandler
+                )
+            }
+            let navigationController = UIUtils.createUINavigationController(vc: vc)
+            from.present(navigationController, animated: true)
+        }
+        
+        private func presentOffers(
+            from: UIViewController,
+            offers: [OfferData],
+            userProfile: CredifyUserModel,
+            pushClaimTokensTask: @escaping ((String, ((Bool) -> Void)?) -> Void),
+            completionHandler: @escaping (RedemptionResult) -> Void
+        ) {
+            AppState.shared.pushClaimTokensTask = pushClaimTokensTask
+            AppState.shared.redemptionResult = completionHandler
+            
+            let context = PassportContext.promotionOffers(offers: offers, user: userProfile)
+            let vc = WebViewController.instantiate(context: context)
+            let navigationController = UIUtils.createUINavigationController(vc: vc)
             from.present(navigationController, animated: true)
         }
     }
@@ -215,7 +253,7 @@ public struct serviceX {
         ///   - completionHandler: Completion handler. You can get notified about the result of the BNPL flow.
         public func presentModally(from: UIViewController,
                                    userProfile: CredifyUserModel,
-                                   orderId: String,
+                                   orderInfo: OrderInfo,
                                    pushClaimTokensTask: @escaping ((String, ((Bool) -> Void)?) -> Void),
                                    completionHandler: @escaping (_ status: RedemptionResult,_ orderId: String, _ isPaymentCompleted: Bool) -> Void) {
             let appState = AppState.shared
@@ -237,13 +275,11 @@ public struct serviceX {
             let context = PassportContext.bnpl(
                 offers: offers,
                 user: userProfile,
-                orderId: orderId,
+                orderInfo: orderInfo,
                 completedBnplProviders: connectedProviders
             )
             let vc = WebViewController.instantiate(context: context)
-            let navigationController = UINavigationController(rootViewController: vc)
-            navigationController.modalPresentationStyle = .overFullScreen
-            navigationController.interactivePopGestureRecognizer?.isEnabled = false // disable navigation bar swipe back
+            let navigationController = UIUtils.createUINavigationController(vc: vc)
             from.present(navigationController, animated: true)
         }
     }

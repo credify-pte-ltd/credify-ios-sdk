@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1F313F377C343E9E8B8419B9 /* Pods_Credify_CredifyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72CFF34FB6B3D730A5395E38 /* Pods_Credify_CredifyTests.framework */; };
 		2517EC0027E57CED0025E396 /* Credify.docc in Sources */ = {isa = PBXBuildFile; fileRef = 2517EBFF27E57CED0025E396 /* Credify.docc */; };
 		2517EC0627E57CEE0025E396 /* Credify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2517EBFB27E57CED0025E396 /* Credify.framework */; };
 		2517EC0B27E57CEE0025E396 /* CredifyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC0A27E57CEE0025E396 /* CredifyTests.swift */; };
@@ -45,14 +44,17 @@
 		2517EC6D27E5A4520025E396 /* OfferUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2517EC5827E5A4520025E396 /* OfferUseCase.swift */; };
 		2517EC6F27E5A4730025E396 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2517EC6E27E5A4730025E396 /* Assets.xcassets */; };
 		2517EC9127E5AFC80025E396 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 2517EC9027E5AFC80025E396 /* README.md */; };
+		2FE4974A25B84DE65ABFE2FE /* Pods_Credify_CredifyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBE6BA2E897790A987AA1126 /* Pods_Credify_CredifyTests.framework */; };
 		E0C17D0D9B8627E0F7DBC0A5 /* Pods_Credify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7A244039A269E07690C793C /* Pods_Credify.framework */; };
 		F83B400427E89DF200A01A2E /* PostMessageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83B400327E89DF200A01A2E /* PostMessageUtils.swift */; };
 		F83B400627E89E7300A01A2E /* PostMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83B400527E89E7300A01A2E /* PostMessageModel.swift */; };
 		F84828B227EADC9200ED1E12 /* serviceX.strings in Resources */ = {isa = PBXBuildFile; fileRef = F84828B027EADC9200ED1E12 /* serviceX.strings */; };
 		F84828B827EAE8BC00ED1E12 /* UIUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F84828B727EAE8BC00ED1E12 /* UIUtils.swift */; };
+		F85743CD28717981007BC00B /* ModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85743CC28717981007BC00B /* ModalViewController.swift */; };
 		F85DCD0F2841AAAE00A93B56 /* LocaleUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85DCD0E2841AAAE00A93B56 /* LocaleUtils.swift */; };
 		F862448327FE6C59002C85F8 /* EntitiesTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F862448227FE6C59002C85F8 /* EntitiesTest.swift */; };
 		F862448527FE6DC6002C85F8 /* OrganizationUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F862448427FE6DC6002C85F8 /* OrganizationUseCase.swift */; };
+		F87383BA285789BE00D6F99F /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87383B9285789BE00D6F99F /* UIView+Extension.swift */; };
 		F87CBCD3284488740032B196 /* credify-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = F87CBCD1284488740032B196 /* credify-loading.json */; };
 		F87CBCD4284488740032B196 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87CBCD2284488740032B196 /* LoadingView.swift */; };
 		F8AED25127E984780095DB6C /* PostMessageUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8AED25027E984780095DB6C /* PostMessageUtilsTest.swift */; };
@@ -111,21 +113,23 @@
 		2517EC6E27E5A4730025E396 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Credify/Assets.xcassets; sourceTree = "<group>"; };
 		2517EC9027E5AFC80025E396 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		2517EC9227E5C3BE0025E396 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
-		38857D2F2216A9015E550280 /* Pods-Credify-CredifyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Credify-CredifyTests.debug.xcconfig"; path = "Target Support Files/Pods-Credify-CredifyTests/Pods-Credify-CredifyTests.debug.xcconfig"; sourceTree = "<group>"; };
+		36B741A5C31C398C1ABC93F2 /* Pods-Credify-CredifyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Credify-CredifyTests.debug.xcconfig"; path = "Target Support Files/Pods-Credify-CredifyTests/Pods-Credify-CredifyTests.debug.xcconfig"; sourceTree = "<group>"; };
+		40E4D06AB0D0F9FE9440EC31 /* Pods-Credify-CredifyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Credify-CredifyTests.release.xcconfig"; path = "Target Support Files/Pods-Credify-CredifyTests/Pods-Credify-CredifyTests.release.xcconfig"; sourceTree = "<group>"; };
 		461F46F3653A3D0EB68428A7 /* Pods-Credify.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Credify.debug.xcconfig"; path = "Target Support Files/Pods-Credify/Pods-Credify.debug.xcconfig"; sourceTree = "<group>"; };
-		72CFF34FB6B3D730A5395E38 /* Pods_Credify_CredifyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Credify_CredifyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		B2E38A62075EB592588B1573 /* Pods-Credify-CredifyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Credify-CredifyTests.release.xcconfig"; path = "Target Support Files/Pods-Credify-CredifyTests/Pods-Credify-CredifyTests.release.xcconfig"; sourceTree = "<group>"; };
 		BFF408E83C2BFE352C258BE7 /* Pods-Credify.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Credify.release.xcconfig"; path = "Target Support Files/Pods-Credify/Pods-Credify.release.xcconfig"; sourceTree = "<group>"; };
 		C7A244039A269E07690C793C /* Pods_Credify.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Credify.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EBE6BA2E897790A987AA1126 /* Pods_Credify_CredifyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Credify_CredifyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F83B400327E89DF200A01A2E /* PostMessageUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostMessageUtils.swift; sourceTree = "<group>"; };
 		F83B400527E89E7300A01A2E /* PostMessageModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostMessageModel.swift; sourceTree = "<group>"; };
 		F84828B127EADC9200ED1E12 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Credify/en.lproj/serviceX.strings; sourceTree = "<group>"; };
 		F84828B327EADCA200ED1E12 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = Credify/ja.lproj/serviceX.strings; sourceTree = "<group>"; };
 		F84828B427EADCB300ED1E12 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = Credify/vi.lproj/serviceX.strings; sourceTree = "<group>"; };
 		F84828B727EAE8BC00ED1E12 /* UIUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIUtils.swift; sourceTree = "<group>"; };
+		F85743CC28717981007BC00B /* ModalViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalViewController.swift; sourceTree = "<group>"; };
 		F85DCD0E2841AAAE00A93B56 /* LocaleUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocaleUtils.swift; sourceTree = "<group>"; };
 		F862448227FE6C59002C85F8 /* EntitiesTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntitiesTest.swift; sourceTree = "<group>"; };
 		F862448427FE6DC6002C85F8 /* OrganizationUseCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrganizationUseCase.swift; sourceTree = "<group>"; };
+		F87383B9285789BE00D6F99F /* UIView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		F87CBCD1284488740032B196 /* credify-loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "credify-loading.json"; sourceTree = "<group>"; };
 		F87CBCD2284488740032B196 /* LoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		F8AED25027E984780095DB6C /* PostMessageUtilsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostMessageUtilsTest.swift; sourceTree = "<group>"; };
@@ -148,7 +152,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2517EC0627E57CEE0025E396 /* Credify.framework in Frameworks */,
-				1F313F377C343E9E8B8419B9 /* Pods_Credify_CredifyTests.framework in Frameworks */,
+				2FE4974A25B84DE65ABFE2FE /* Pods_Credify_CredifyTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -180,6 +184,7 @@
 		2517EBFD27E57CED0025E396 /* Credify */ = {
 			isa = PBXGroup;
 			children = (
+				F85743CB28717981007BC00B /* Modal */,
 				F87CBCCF284488740032B196 /* Views */,
 				F83B400227E89DF200A01A2E /* Utils */,
 				2517EC6E27E5A4730025E396 /* Assets.xcassets */,
@@ -212,6 +217,7 @@
 		2517EC2B27E5A4360025E396 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				F87383B9285789BE00D6F99F /* UIView+Extension.swift */,
 				2517EC2C27E5A4360025E396 /* UIFont+Extension.swift */,
 				2517EC2D27E5A4360025E396 /* UIColor+Extension.swift */,
 				2517EC2E27E5A4360025E396 /* Encodable+Extension.swift */,
@@ -318,8 +324,8 @@
 			children = (
 				461F46F3653A3D0EB68428A7 /* Pods-Credify.debug.xcconfig */,
 				BFF408E83C2BFE352C258BE7 /* Pods-Credify.release.xcconfig */,
-				38857D2F2216A9015E550280 /* Pods-Credify-CredifyTests.debug.xcconfig */,
-				B2E38A62075EB592588B1573 /* Pods-Credify-CredifyTests.release.xcconfig */,
+				36B741A5C31C398C1ABC93F2 /* Pods-Credify-CredifyTests.debug.xcconfig */,
+				40E4D06AB0D0F9FE9440EC31 /* Pods-Credify-CredifyTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -328,7 +334,7 @@
 			isa = PBXGroup;
 			children = (
 				C7A244039A269E07690C793C /* Pods_Credify.framework */,
-				72CFF34FB6B3D730A5395E38 /* Pods_Credify_CredifyTests.framework */,
+				EBE6BA2E897790A987AA1126 /* Pods_Credify_CredifyTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -344,6 +350,15 @@
 			);
 			name = Utils;
 			path = Credify/Utils;
+			sourceTree = "<group>";
+		};
+		F85743CB28717981007BC00B /* Modal */ = {
+			isa = PBXGroup;
+			children = (
+				F85743CC28717981007BC00B /* ModalViewController.swift */,
+			);
+			name = Modal;
+			path = Credify/Modal;
 			sourceTree = "<group>";
 		};
 		F862448127FE6C59002C85F8 /* Objects */ = {
@@ -417,11 +432,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2517EC1227E57CEE0025E396 /* Build configuration list for PBXNativeTarget "CredifyTests" */;
 			buildPhases = (
-				C7607102DD10DF32EDF70A27 /* [CP] Check Pods Manifest.lock */,
+				37F28815120722BD2E913D48 /* [CP] Check Pods Manifest.lock */,
 				2517EC0127E57CEE0025E396 /* Sources */,
 				2517EC0227E57CEE0025E396 /* Frameworks */,
 				2517EC0327E57CEE0025E396 /* Resources */,
-				7C957F54FC36B2EA564EF870 /* [CP] Embed Pods Frameworks */,
+				8DDE889F38EABBD03FC7FC28 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -523,24 +538,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		7C957F54FC36B2EA564EF870 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Credify-CredifyTests/Pods-Credify-CredifyTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Credify-CredifyTests/Pods-Credify-CredifyTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Credify-CredifyTests/Pods-Credify-CredifyTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C7607102DD10DF32EDF70A27 /* [CP] Check Pods Manifest.lock */ = {
+		37F28815120722BD2E913D48 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -562,6 +560,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		8DDE889F38EABBD03FC7FC28 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Credify-CredifyTests/Pods-Credify-CredifyTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Credify-CredifyTests/Pods-Credify-CredifyTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Credify-CredifyTests/Pods-Credify-CredifyTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -577,6 +592,7 @@
 				F84828B827EAE8BC00ED1E12 /* UIUtils.swift in Sources */,
 				2517EC2327E5A3B40025E396 /* serviceX.swift in Sources */,
 				2517EC6D27E5A4520025E396 /* OfferUseCase.swift in Sources */,
+				F87383BA285789BE00D6F99F /* UIView+Extension.swift in Sources */,
 				2517EC5927E5A4520025E396 /* AppState.swift in Sources */,
 				2517EC6927E5A4520025E396 /* ThemeColor.swift in Sources */,
 				2517EC5B27E5A4520025E396 /* Entities.swift in Sources */,
@@ -584,6 +600,7 @@
 				2517EC5C27E5A4520025E396 /* CredifyUserModel.swift in Sources */,
 				F8C445E52840EDE700310CDF /* ValidationUtils.swift in Sources */,
 				2517EC6A27E5A4520025E396 /* serviceXTheme.swift in Sources */,
+				F85743CD28717981007BC00B /* ModalViewController.swift in Sources */,
 				2517EC3A27E5A4360025E396 /* UINavigationBar+Extension.swift in Sources */,
 				2517EC5A27E5A4520025E396 /* CredifyEnvs.swift in Sources */,
 				2517EC0027E57CED0025E396 /* Credify.docc in Sources */,
@@ -828,7 +845,7 @@
 		};
 		2517EC1327E57CEE0025E396 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 38857D2F2216A9015E550280 /* Pods-Credify-CredifyTests.debug.xcconfig */;
+			baseConfigurationReference = 36B741A5C31C398C1ABC93F2 /* Pods-Credify-CredifyTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -846,7 +863,7 @@
 		};
 		2517EC1427E57CEE0025E396 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B2E38A62075EB592588B1573 /* Pods-Credify-CredifyTests.release.xcconfig */;
+			baseConfigurationReference = 40E4D06AB0D0F9FE9440EC31 /* Pods-Credify-CredifyTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;

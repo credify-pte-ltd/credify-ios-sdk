@@ -12,15 +12,18 @@ import SwiftUI
 enum PassportContext {
     case mypage(user: CredifyUserModel)
     case offer(offer: OfferData, user: CredifyUserModel)
+    case promotionOffers(offers: [OfferData], user: CredifyUserModel)
     case serviceInstance(user: CredifyUserModel, marketId: String, productTypes: [ProductType])
-    case bnpl(offers: [OfferData], user: CredifyUserModel, orderId: String, completedBnplProviders: [Organization])
+    case bnpl(offers: [OfferData], user: CredifyUserModel, orderInfo: OrderInfo, completedBnplProviders: [Organization])
     
     var url: URL {
         switch self {
         case .mypage(user: _):
-            return URL(string: "\(Constants.WEB_URL)/login")!
+            return URL(string: "\(Constants.WEB_URL)/redeemed-offers")!
         case .offer(offer: _, user: _):
             return URL(string: "\(Constants.WEB_URL)/initial")!
+        case .promotionOffers(offers: _, user: _):
+            return URL(string: "\(Constants.WEB_URL)/start")!
         case .serviceInstance(user: _, let marketId, let productTypes):
             var params = [(String, String)]()
             params.append(("market-id", marketId))
@@ -30,7 +33,7 @@ enum PassportContext {
             let urlParams = params.map { "\($0)=\($1)" }.joined(separator: "&")
             
             return URL(string: "\(Constants.WEB_URL)/service-instance?\(urlParams)")!
-        case .bnpl(offers: _, user: _, orderId: _, completedBnplProviders: _):
+        case .bnpl(offers: _, user: _, orderInfo: _, completedBnplProviders: _):
             return URL(string: "\(Constants.WEB_URL)/bnpl")!
         }
     }
@@ -39,6 +42,7 @@ enum PassportContext {
 protocol WebPresenterProtocol {
     var receiveHandlers: [ReceiveMessageHandler] { get }
     func shouldClose(messageName: String) -> Bool
+    func shouldDismissLoading(messageName: String) -> Bool
     func handleMessage(_: WKWebView, name: String, body: [String: Any]?)
     func hanldeCompletionHandler()
     func isBackButtonVisible(urlObj: URL?) -> Bool
@@ -47,6 +51,7 @@ protocol WebPresenterProtocol {
     func isLoading(webView: WKWebView, onResult: @escaping (Bool) -> Void)
     func shouldUseCredifyTheme() -> Bool
     func goToPreviousPageOrClose(webView: WKWebView)
+    func shouldUseTransparentBackground(url: String) -> Bool
 }
 
 class WebPresenter: WebPresenterProtocol {
@@ -68,7 +73,8 @@ class WebPresenter: WebPresenterProtocol {
             .actionClose,
             .bnplPaymentComplete,
             .sendPathsForShowingCloseButton,
-            .loginLoadCompleted
+            .loginLoadCompleted,
+            .promotionOfferLoadCompleted
         ]
     }
     
@@ -78,6 +84,14 @@ class WebPresenter: WebPresenterProtocol {
             return false
         }
         return type == .actionClose || type == .bnplPaymentComplete
+    }
+    
+    /// 24517: See 2 loading indicators at the same time
+    func shouldDismissLoading(messageName: String) -> Bool {
+        guard let type = ReceiveMessageHandler(rawValue: messageName) else {
+            return false
+        }
+        return type == .loginLoadCompleted || type == .initialLoadCompleted
     }
     
     func handleMessage(_ webView: WKWebView, name: String, body: [String: Any]?) {
@@ -136,13 +150,11 @@ class WebPresenter: WebPresenterProtocol {
                     ]
                 )
             }
-            if case let .bnpl(offers, user, orderId, completedBnplProviders) = context {
+            if case let .bnpl(offers, user, orderInfo, completedBnplProviders) = context {
                 let message = StartBnplMessage(
                     offers: offers,
                     profile: user,
-                    order: OrderInfo(
-                        orderId: orderId
-                    ),
+                    order: orderInfo,
                     completeBnplProviders: completedBnplProviders,
                     theme: AppState.shared.config?.theme
                 )
@@ -202,8 +214,8 @@ class WebPresenter: WebPresenterProtocol {
         case .bnplPaymentComplete:
             // TODO we maybe need to update this when the BNPL proxy integrate with real flow
             switch context {
-            case .bnpl(offers: _, user: _, let orderId, completedBnplProviders: _):
-                hanldeBnplCompletionHandler(status: offerTransactionStatus, orderId: orderId, isPaymentCompleted: true)
+            case .bnpl(offers: _, user: _, let orderInfo, completedBnplProviders: _):
+                hanldeBnplCompletionHandler(status: offerTransactionStatus, orderId: orderInfo.orderId, isPaymentCompleted: true)
             default:
                 break
             }
@@ -211,6 +223,8 @@ class WebPresenter: WebPresenterProtocol {
             handleSendPathsForShowingCloseButton(body: body)
         case .loginLoadCompleted:
             doPostMessageForLoggingIn(webView: webView)
+        case .promotionOfferLoadCompleted:
+            doPostMessageForShowingPromotionOffer(webView: webView)
         }
     }
     
@@ -226,9 +240,13 @@ class WebPresenter: WebPresenterProtocol {
             appState.redemptionResult?(offerTransactionStatus)
             appState.redemptionResult = nil
             appState.pushClaimTokensTask = nil
-        case .bnpl(offers: _, user: _, let orderId, completedBnplProviders: _):
+        case .promotionOffers(_, _):
+            appState.redemptionResult?(offerTransactionStatus)
+            appState.redemptionResult = nil
+            appState.pushClaimTokensTask = nil
+        case .bnpl(offers: _, user: _, let orderInfo, completedBnplProviders: _):
             // TODO we maybe need to update this when the BNPL proxy integrate with real flow
-            hanldeBnplCompletionHandler(status: offerTransactionStatus, orderId: orderId, isPaymentCompleted: false)
+            hanldeBnplCompletionHandler(status: offerTransactionStatus, orderId: orderInfo.orderId, isPaymentCompleted: false)
         case .serviceInstance:
             appState.dismissCompletion?()
             appState.dismissCompletion = nil
@@ -294,6 +312,10 @@ class WebPresenter: WebPresenterProtocol {
             return appState.offerShowingCloseButtonUrls.first { item in
                 url.starts(with: item)
             } != nil
+        case .promotionOffers(_, _):
+            return appState.offerShowingCloseButtonUrls.first { item in
+                url.starts(with: item)
+            } != nil
         case .bnpl(_, _, _, _):
             // E.g: https://dev-passport.credify.ninja/bpnl
             if url.starts(with: "\(Constants.WEB_URL)/bnpl") && urlObj!.lastPathComponent == "bnpl" {
@@ -318,6 +340,36 @@ class WebPresenter: WebPresenterProtocol {
     func doPostMessageForLoggingIn(webView: WKWebView) {
         if "\(Constants.WEB_URL)/login".starts(with: (webView.url?.absoluteString ?? "")) {
             handleMessage(webView, name: ReceiveMessageHandler.initialLoadCompleted.rawValue, body: nil)
+        }
+    }
+    
+    /// 25736: Add offer popup to SDK
+    func doPostMessageForShowingPromotionOffer(webView: WKWebView) {
+        if case let .promotionOffers(offers, user) = context {
+            let message = ShowPromotionOfferMessage(
+                offers: offers,
+                profile: user,
+                theme: AppState.shared.config?.theme
+            )
+            
+            guard let messageJsonData = try? message.jsonData() else {
+                return
+            }
+            
+            guard let messageJson = try? JSONSerialization.jsonObject(with: messageJsonData, options: []) else {
+                return
+            }
+            
+            guard let messageDict = messageJson as? [String: Any] else {
+                return
+            }
+            
+            doPostMessage(
+                webView,
+                type: ACTION_TYPE,
+                action: SendMessageHandler.showPromotionOffers.rawValue,
+                payload: messageDict
+            )
         }
     }
     
@@ -371,6 +423,15 @@ class WebPresenter: WebPresenterProtocol {
             }
             
             webView.goBack()
+        }
+    }
+    
+    func shouldUseTransparentBackground(url: String) -> Bool {
+        switch self.context {
+        case .promotionOffers(_, _):
+            return url == "\(Constants.WEB_URL)/start"
+        default:
+            return false
         }
     }
     
