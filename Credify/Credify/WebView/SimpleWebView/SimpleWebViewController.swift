@@ -11,51 +11,39 @@ import SafariServices
 
 /// I create this class to show simple web page only. Don't effect with our logic 
 class SimpleWebViewController: UIViewController {
-    private var webView: WKWebView!
+    var maskBackgroud: UIView!
     
-    private var url: URL!
+    var originalWebViewFrame: CGRect? = nil
     
-    private var originalWebViewFrame: CGRect? = nil
+    var webView: WKWebView!
     
-    private var statusBarHeight: CGFloat {
+    var url: URL!
+    
+    var webViewFrame: CGRect {
         get {
-            let window = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
-            var statusBarHeight: CGFloat = 0
-            if #available(iOS 13.0, *) {
-                statusBarHeight = window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
-            }
-            return statusBarHeight
-        }
-    }
-    
-    private var webViewHeight: CGFloat {
-        get {
-            // Have nav bar
-            // let navAndStatusBarHeight = (navigationController?.navigationBar.frame.height ?? 0) + statusBarHeight
-            // Have not nav bar
-            let navAndStatusBarHeight = statusBarHeight
-            
-            let height: CGFloat
+            let webViewFrame: CGRect
             
             if #available(iOS 11.0, *) {
-                height = view.safeAreaLayoutGuide.layoutFrame.height - navAndStatusBarHeight
+                let safeAreaFrame = view.safeAreaLayoutGuide.layoutFrame
+                webViewFrame = CGRect(origin: CGPoint(x: 0, y: 0), size: safeAreaFrame.size)
             } else {
-                height = view.frame.height - navAndStatusBarHeight
+                let viewFrame = view.frame
+                webViewFrame = CGRect(origin: CGPoint(x: 0, y: 0), size: viewFrame.size)
             }
             
-            return height
+            return webViewFrame
         }
     }
     
-    private var paddingBottom: CGFloat {
+    var shouldShowNavBar: Bool {
         get {
-            var padding: CGFloat = 0.0
-            
-            if #available(iOS 11.0, *) {
-                padding = 8.0
-            }
-            
-            return padding
+            return true
+        }
+    }
+    
+    var shouldClearCache: Bool {
+        get {
+            return false
         }
     }
     
@@ -68,15 +56,17 @@ class SimpleWebViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        LoadingView.start(container: view)
+        
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
         }
         
-        customizeNavBar()
+        addMaskBackground()
+        
+        customizeNavBar(shoulShowNavBar: shouldShowNavBar)
             
         setupWebView()
-        
-        LoadingView.start(container: view)
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -87,6 +77,27 @@ class SimpleWebViewController: UIViewController {
         if keyPath == "estimatedProgress" {
             print(Float(webView.estimatedProgress))
         }
+    }
+    
+    func createWebView() -> WKWebView {
+        let configuration = createWebViewConfiguration()
+        
+        let webView = WKWebView(frame: webViewFrame, configuration: configuration)
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        webView.uiDelegate = self
+        webView.navigationDelegate = self
+
+        webView.allowsBackForwardNavigationGestures = true
+        webView.addObserver(self, forKeyPath: #keyPath(WKWebView.title), options: .new, context: nil)
+        webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
+        webView.addObserver(self, forKeyPath: #keyPath(WKWebView.url), options: .new, context: nil)
+        webView.addObserver(self, forKeyPath: #keyPath(WKWebView.canGoBack), options: .new, context: nil)
+        webView.addObserver(self, forKeyPath: #keyPath(WKWebView.canGoForward), options: .new, context: nil)
+        webView.customUserAgent = AppState.shared.config?.userAgent
+        // Disable preview to avoid white page
+        webView.allowsLinkPreview = false
+        
+        return webView
     }
     
     
@@ -107,60 +118,14 @@ class SimpleWebViewController: UIViewController {
             )
         )
         
-        // Update language
-        if let languageScript = WebViewUtils.buildScriptToUpdateAppLanguage {
-            configuration.userContentController.addUserScript(
-                WKUserScript(
-                    source: languageScript,
-                    injectionTime: .atDocumentStart,
-                    forMainFrameOnly: true
-                )
-            )
-        }
-        
         return configuration
     }
     
     private func setupWebView() {
-        let configuration = createWebViewConfiguration()
-        
-        // 21840: UI issue - Long text and cut off button
-        let webViewFrame: CGRect
-        if #available(iOS 11.0, *) {
-            let safeAreaFrame = view.safeAreaLayoutGuide.layoutFrame
-            webViewFrame = CGRect(origin: CGPoint(x: 0, y: 0), size: safeAreaFrame.size)
-        } else {
-            let viewFrame = view.frame
-            webViewFrame = CGRect(origin: CGPoint(x: 0, y: 0), size: viewFrame.size)
-        }
-        
-        webView = WKWebView(frame: webViewFrame,configuration: configuration)
+        webView = createWebView()
         view.addSubview(webView)
         
         self.originalWebViewFrame = webView.frame
-        
-        // 23274: Investigate caching issue on webview
-        // Clear website data first for testing some bugs to make sure
-        // that the bugs happen due to caching issue
-        // If it fixed these bugs then we need to think about the improvement for caching.
-        guard let webView = self.webView else { return }
-        guard let url = self.url else { return }
-
-        webView.translatesAutoresizingMaskIntoConstraints = false
-        webView.uiDelegate = self
-        webView.navigationDelegate = self
-
-        webView.allowsBackForwardNavigationGestures = true
-        webView.addObserver(self, forKeyPath: #keyPath(WKWebView.title), options: .new, context: nil)
-        webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
-        webView.addObserver(self, forKeyPath: #keyPath(WKWebView.url), options: .new, context: nil)
-        webView.addObserver(self, forKeyPath: #keyPath(WKWebView.canGoBack), options: .new, context: nil)
-        webView.addObserver(self, forKeyPath: #keyPath(WKWebView.canGoForward), options: .new, context: nil)
-        webView.customUserAgent = AppState.shared.config?.userAgent
-        // Disable preview to avoid white page
-        webView.allowsLinkPreview = false
-        
-        webView.load(URLRequest(url: url))
         
         // 26031: Housecare ios - SDK - styling issue
         // Position the WebView
@@ -183,10 +148,32 @@ class SimpleWebViewController: UIViewController {
                 bottomLayoutGuide.topAnchor.constraint(equalTo: webView.bottomAnchor, constant: 0)
             ])
         }
+        
+        guard let url = self.url else { return }
+        
+        if shouldClearCache {
+            // 23274: Investigate caching issue on webview
+            // Clear website data first for testing some bugs to make sure
+            // that the bugs happen due to caching issue
+            // If it fixed these bugs then we need to think about the improvement for caching.
+            WKWebsiteDataStore.default().removeData(
+                ofTypes: WKWebsiteDataStore.allWebsiteDataTypes(),
+                modifiedSince: Date(timeIntervalSince1970: 0)
+            ) {
+                self.webView?.load(URLRequest(url: url))
+            }
+        } else {
+            webView?.load(URLRequest(url: url))
+        }
     }
     
-    private func customizeNavBar() {
+    private func customizeNavBar(shoulShowNavBar: Bool) {
         guard let navBar = navigationController?.navigationBar else {
+            return
+        }
+        
+        if !shoulShowNavBar {
+            navBar.isHidden = true
             return
         }
         
@@ -211,6 +198,40 @@ class SimpleWebViewController: UIViewController {
                 target: self,
                 action: #selector(goBack)
             )
+        }
+    }
+    
+    private func addMaskBackground() {
+        maskBackgroud = UIView(
+            frame: CGRect(
+                x: 0,
+                y: 0,
+                width: view.frame.width,
+                height: 100
+            )
+        )
+        maskBackgroud.backgroundColor = UIColor.white
+        view.addSubview(maskBackgroud)
+        
+        // Position the mask background
+        // Leading and Trailing
+        NSLayoutConstraint.activate([
+            maskBackgroud.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            maskBackgroud.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+        
+        // Top and Bottom
+        if #available(iOS 11, *) {
+            let guide = view.safeAreaLayoutGuide
+            NSLayoutConstraint.activate([
+                maskBackgroud.topAnchor.constraint(equalToSystemSpacingBelow: guide.topAnchor, multiplier: 0.0),
+                guide.bottomAnchor.constraint(equalToSystemSpacingBelow: maskBackgroud.bottomAnchor, multiplier: 0.0)
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                maskBackgroud.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: 0),
+                bottomLayoutGuide.topAnchor.constraint(equalTo: maskBackgroud.bottomAnchor, constant: 0)
+            ])
         }
     }
     
