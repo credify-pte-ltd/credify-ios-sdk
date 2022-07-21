@@ -500,9 +500,19 @@ extension WebViewController: WKScriptMessageHandler{
             dismiss(animated: true) {
                 self.presenter.handleMessage(self.webView, name: message.name, body: body)
             }
-        } else {
-            presenter.handleMessage(webView, name: message.name, body: body)
+            return
         }
+        
+        if presenter.isOpenRedirectUrlMessageForOffer(name: message.name) {
+            if let urlStr = presenter.extractRedirectUrlForOffer(body: body), let url = URL(string: urlStr) {
+                let vc = SimpleWebViewController.instantiate(url: url)
+                let navigationController = UIUtils.createUINavigationController(vc: vc)
+                present(navigationController, animated: true)
+                return
+            }
+        }
+        
+        presenter.handleMessage(webView, name: message.name, body: body)
     }
 }
 
