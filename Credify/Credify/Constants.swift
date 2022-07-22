@@ -8,6 +8,8 @@
 import Foundation
 
 struct Constants {
+    static let SDK_VERSION = "0.7.0"
+    
     static var API_URL: String {
         switch AppState.shared.config?.env ?? .sandbox {
         case .dev:
