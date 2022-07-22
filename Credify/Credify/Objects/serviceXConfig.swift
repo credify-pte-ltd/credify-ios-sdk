@@ -33,6 +33,6 @@ public struct serviceXConfig {
         self.env = env
         self.appName = appName
         self.theme = theme ?? serviceXTheme.default
-        self.userAgent = userAgent ?? "servicex/ios/\((Bundle.serviceX.infoDictionary?["CFBundleShortVersionString"] as? String) ?? "unknown")"
+        self.userAgent = userAgent ?? "servicex/ios/\(Constants.SDK_VERSION)"
     }
 }
