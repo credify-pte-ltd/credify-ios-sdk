@@ -31,6 +31,7 @@ internal enum ReceiveMessageHandler: String {
     case sendPathsForShowingCloseButton
     case loginLoadCompleted
     case promotionOfferLoadCompleted
+    case openRedirectUrl
 }
 
 internal class StartBnplMessage: Codable {

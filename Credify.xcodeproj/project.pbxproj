@@ -46,6 +46,7 @@
 		2517EC9127E5AFC80025E396 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 2517EC9027E5AFC80025E396 /* README.md */; };
 		2FE4974A25B84DE65ABFE2FE /* Pods_Credify_CredifyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBE6BA2E897790A987AA1126 /* Pods_Credify_CredifyTests.framework */; };
 		E0C17D0D9B8627E0F7DBC0A5 /* Pods_Credify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7A244039A269E07690C793C /* Pods_Credify.framework */; };
+		F80B1ADB28891723006FB92F /* SimpleWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F80B1ADA28891723006FB92F /* SimpleWebViewController.swift */; };
 		F83B400427E89DF200A01A2E /* PostMessageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83B400327E89DF200A01A2E /* PostMessageUtils.swift */; };
 		F83B400627E89E7300A01A2E /* PostMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83B400527E89E7300A01A2E /* PostMessageModel.swift */; };
 		F84828B227EADC9200ED1E12 /* serviceX.strings in Resources */ = {isa = PBXBuildFile; fileRef = F84828B027EADC9200ED1E12 /* serviceX.strings */; };
@@ -119,6 +120,7 @@
 		BFF408E83C2BFE352C258BE7 /* Pods-Credify.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Credify.release.xcconfig"; path = "Target Support Files/Pods-Credify/Pods-Credify.release.xcconfig"; sourceTree = "<group>"; };
 		C7A244039A269E07690C793C /* Pods_Credify.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Credify.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBE6BA2E897790A987AA1126 /* Pods_Credify_CredifyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Credify_CredifyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F80B1ADA28891723006FB92F /* SimpleWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleWebViewController.swift; sourceTree = "<group>"; };
 		F83B400327E89DF200A01A2E /* PostMessageUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostMessageUtils.swift; sourceTree = "<group>"; };
 		F83B400527E89E7300A01A2E /* PostMessageModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostMessageModel.swift; sourceTree = "<group>"; };
 		F84828B127EADC9200ED1E12 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Credify/en.lproj/serviceX.strings; sourceTree = "<group>"; };
@@ -249,6 +251,7 @@
 		2517EC4327E5A4520025E396 /* WebView */ = {
 			isa = PBXGroup;
 			children = (
+				F80B1AD928891703006FB92F /* SimpleWebView */,
 				2517EC4427E5A4520025E396 /* WebPresenter.swift */,
 				F8E9FFA528068C2400F25B59 /* CommonModel.swift */,
 				2517EC4527E5A4520025E396 /* WebViewController.swift */,
@@ -337,6 +340,14 @@
 				EBE6BA2E897790A987AA1126 /* Pods_Credify_CredifyTests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F80B1AD928891703006FB92F /* SimpleWebView */ = {
+			isa = PBXGroup;
+			children = (
+				F80B1ADA28891723006FB92F /* SimpleWebViewController.swift */,
+			);
+			path = SimpleWebView;
 			sourceTree = "<group>";
 		};
 		F83B400227E89DF200A01A2E /* Utils */ = {
@@ -609,6 +620,7 @@
 				2517EC3B27E5A4360025E396 /* Dictionary+Extension.swift in Sources */,
 				F87CBCD4284488740032B196 /* LoadingView.swift in Sources */,
 				2517EC5E27E5A4520025E396 /* serviceXConfig.swift in Sources */,
+				F80B1ADB28891723006FB92F /* SimpleWebViewController.swift in Sources */,
 				2517EC3427E5A4360025E396 /* UIFont+Extension.swift in Sources */,
 				2517EC2227E5A3B40025E396 /* Constants.swift in Sources */,
 				2517EC3727E5A4360025E396 /* UIViewController+Extension.swift in Sources */,

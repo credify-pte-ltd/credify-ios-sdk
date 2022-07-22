@@ -52,6 +52,8 @@ protocol WebPresenterProtocol {
     func shouldUseCredifyTheme() -> Bool
     func goToPreviousPageOrClose(webView: WKWebView)
     func shouldUseTransparentBackground(url: String) -> Bool
+    func isOpenRedirectUrlMessageForOffer(name: String) -> Bool
+    func extractRedirectUrlForOffer(body: [String: Any]?) -> String?
 }
 
 class WebPresenter: WebPresenterProtocol {
@@ -74,7 +76,8 @@ class WebPresenter: WebPresenterProtocol {
             .bnplPaymentComplete,
             .sendPathsForShowingCloseButton,
             .loginLoadCompleted,
-            .promotionOfferLoadCompleted
+            .promotionOfferLoadCompleted,
+            .openRedirectUrl
         ]
     }
     
@@ -225,6 +228,9 @@ class WebPresenter: WebPresenterProtocol {
             doPostMessageForLoggingIn(webView: webView)
         case .promotionOfferLoadCompleted:
             doPostMessageForShowingPromotionOffer(webView: webView)
+        case .openRedirectUrl:
+            // Do nothing => default is canceled
+            break
         }
     }
     
@@ -433,6 +439,28 @@ class WebPresenter: WebPresenterProtocol {
         default:
             return false
         }
+    }
+    
+    func isOpenRedirectUrlMessageForOffer(name: String) -> Bool {
+        switch self.context {
+        case .promotionOffers(_, _), .offer(_, _):
+            return true
+        default:
+            return false
+        }
+    }
+    
+    func extractRedirectUrlForOffer(body: [String : Any]?) -> String? {
+        guard let dict = body else { return nil }
+        guard let payload = PostMessageUtils.parsePayload(dict: dict) else {
+            return nil
+        }
+        
+        if let redirectUrl = payload["redirectUrl"] as? String {
+            return redirectUrl
+        }
+        
+        return nil
     }
     
     private func hanldeBnplCompletionHandler(
