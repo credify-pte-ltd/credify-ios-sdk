@@ -256,31 +256,45 @@ public struct serviceX {
                                    orderInfo: OrderInfo,
                                    pushClaimTokensTask: @escaping ((String, ((Bool) -> Void)?) -> Void),
                                    completionHandler: @escaping (_ status: RedemptionResult,_ orderId: String, _ isPaymentCompleted: Bool) -> Void) {
-            let appState = AppState.shared
-            let bnplOfferInfo = appState.bnplOfferInfo
-            let offers = bnplOfferInfo?.offers ?? []
-            let connectedProviders = bnplOfferInfo?.providers ?? []
-            
-            if !ValidationUtils.showErrorIfBNPLUnavailable(from: from, offers:offers, providers: connectedProviders) {
-                return
-            }
-            
             if !ValidationUtils.showErrorIfOfferCannotStart(from: from, user: userProfile) {
                 return
             }
             
-            appState.pushClaimTokensTask = pushClaimTokensTask
-            appState.bnplRedemptionResult = completionHandler
-            
-            let context = PassportContext.bnpl(
-                offers: offers,
-                user: userProfile,
-                orderInfo: orderInfo,
-                completedBnplProviders: connectedProviders
-            )
-            let vc = WebViewController.instantiate(context: context)
-            let navigationController = UIUtils.createUINavigationController(vc: vc)
-            from.present(navigationController, animated: true)
+            self.getOffersAndConnectedProviders(user: userProfile) { bnplResult in
+                switch bnplResult {
+                case .success(let bnplInfo):
+                    let offers = bnplInfo.offers
+                    let connectedProviders = bnplInfo.providers
+                    
+                    if !ValidationUtils.showErrorIfBNPLUnavailable(from: from, offers:offers, providers: connectedProviders) {
+                        return
+                    }
+                    
+                    let appState = AppState.shared
+                    
+                    appState.bnplOfferInfo = bnplInfo
+                    appState.pushClaimTokensTask = pushClaimTokensTask
+                    appState.bnplRedemptionResult = completionHandler
+                    
+                    let context = PassportContext.bnpl(
+                        offers: offers,
+                        user: userProfile,
+                        orderInfo: orderInfo,
+                        completedBnplProviders: connectedProviders
+                    )
+                    let vc = WebViewController.instantiate(context: context)
+                    let navigationController = UIUtils.createUINavigationController(vc: vc)
+                    from.present(navigationController, animated: true)
+                case .failure(_):
+                    let tableName = "serviceX"
+                    UIUtils.alert(
+                        from: from,
+                        title: "Error".localized(tableName: tableName),
+                        errorMessage: "BNPLIsNotAvailable".localized(tableName: tableName),
+                        actionText: "OK".localized(tableName: tableName)
+                    )
+                }
+            }
         }
     }
 }

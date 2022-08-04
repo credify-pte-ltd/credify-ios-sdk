@@ -237,7 +237,15 @@ public struct AvailableTermsDuration : Codable {
 }
 
 public struct AvailableTermsFee : Codable {
-    public let type: Int
+    public let type: String
+    public let rate: Float?
+    public let fixedValue: FiatCurrency?
+    
+    private enum CodingKeys: String, CodingKey {
+        case type
+        case rate
+        case fixedValue = "fixed_value"
+    }
 }
 
 public struct InsurancePackageModel: Codable {
