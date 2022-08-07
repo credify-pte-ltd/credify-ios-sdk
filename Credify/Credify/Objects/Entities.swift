@@ -190,6 +190,7 @@ public struct ProductModel: Codable {
     public let detail: ProductDetail?
     public let consumerId: String
     public let customScopes: [Scope]?
+    public let consumer: Organization?
     
     //NOTE: for use select package product in UI
     public var selectedProductCode: String?
@@ -203,6 +204,7 @@ public struct ProductModel: Codable {
         case selectedProductCode
         case consumerId = "consumer_id"
         case customScopes = "custom_scopes"
+        case consumer = "consumer"
     }
     
     public struct ProductDetail: Codable {
@@ -434,7 +436,7 @@ public enum ProductType : String {
 public struct BNPLOfferInfo : Codable {
     public let offers: [OfferData]
     
-    public let providers: [Organization]
+    public let providers: [ConnectedProvider]
     
     // NOTE: when getting list offer from consumer, credifyId maybe nil if user haven't account from Credify yet. After creating credify account from provider, we will have credifyId and we will assign it.
     public let credifyId: String?
@@ -450,4 +452,9 @@ public enum Language : String {
     case vietnamese = "vi"
     case japanese = "ja"
     case english = "en"
+}
+
+public struct ConnectedProvider : Codable {
+    public let provider: Organization
+    public let product: ProductModel
 }
