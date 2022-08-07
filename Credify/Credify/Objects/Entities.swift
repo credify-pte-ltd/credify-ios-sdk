@@ -206,8 +206,19 @@ public struct ProductModel: Codable {
     }
     
     public struct ProductDetail: Codable {
-        internal let packages: [InsurancePackageModel]?
-        internal let availableTerms: [AvailableTerms]?
+        public let packages: [InsurancePackageModel]?
+        public let availableTerms: [AvailableTerms]?
+        public let consumerDisbursementRequirements: [String]?
+        public let description: String?
+        public let title: String?
+        public let downPayment: Downpayment?
+        public let duration: Duration?
+        public let maxAprPercent: Int?
+        public let maxLoanAmount: FiatCurrency?
+        public let minAprPercent: Int?
+        public let minLoanAmount: FiatCurrency?
+        public let policyUrl: String?
+        public let providerDisbursementRequirements: [String]?
         
         public var insurancePackages: [InsurancePackageModel] {
             return packages ?? [InsurancePackageModel]()
@@ -220,18 +231,54 @@ public struct ProductModel: Codable {
         private enum CodingKeys: String, CodingKey {
             case packages
             case availableTerms = "available_terms"
+            case consumerDisbursementRequirements = "consumer_disbursement_requirements"
+            case description
+            case title
+            case downPayment = "down_payment"
+            case duration
+            case maxAprPercent = "max_apr_percent"
+            case maxLoanAmount = "max_loan_amount"
+            case minAprPercent = "min_apr_percent"
+            case minLoanAmount = "min_loan_amount"
+            case policyUrl = "policy_url"
+            case providerDisbursementRequirements = "provider_disbursement_requirements"
         }
     }
 }
 
+public struct Downpayment : Codable {
+    public let type: DownPaymentType
+    public let amount: DownPaymentAmount
+    
+    private enum CodingKeys: String, CodingKey {
+        case type
+        case amount
+    }
+}
+
+public enum DownPaymentType: String, Codable {
+    case inAmount = "IN_AMOUNT"
+    case overAmount = "OVER_AMOUNT"
+}
+
+public struct DownPaymentAmount : Codable {
+    public let type: String?
+    public let rate: Float?
+    
+    private enum CodingKeys: String, CodingKey {
+        case type
+        case rate
+    }
+}
+
 public struct AvailableTerms : Codable {
-    public let duration: AvailableTermsDuration?
+    public let duration: Duration?
     public let fee: AvailableTermsFee?
     public let interest: Float?
 }
 
 
-public struct AvailableTermsDuration : Codable {
+public struct Duration : Codable {
     public let value: Int64
     public let unit: String
 }
