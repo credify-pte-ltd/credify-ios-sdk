@@ -14,7 +14,7 @@ enum PassportContext {
     case offer(offer: OfferData, user: CredifyUserModel)
     case promotionOffers(offers: [OfferData], user: CredifyUserModel)
     case serviceInstance(user: CredifyUserModel, marketId: String, productTypes: [ProductType])
-    case bnpl(offers: [OfferData], user: CredifyUserModel, orderInfo: OrderInfo, completedBnplProviders: [Organization])
+    case bnpl(offers: [OfferData], user: CredifyUserModel, orderInfo: OrderInfo, completedBnplProviders: [ConnectedProvider])
     
     var url: URL {
         switch self {

@@ -38,14 +38,14 @@ internal class StartBnplMessage: Codable {
     let offers: [OfferData]
     let profile: CredifyUserModel
     let order: OrderInfo
-    let completeBnplProviders: [Organization]
+    let completeBnplProviders: [ConnectedProvider]
     let theme: serviceXTheme?
     
     init(
         offers: [OfferData],
         profile: CredifyUserModel,
         order: OrderInfo,
-        completeBnplProviders: [Organization],
+        completeBnplProviders: [ConnectedProvider],
         theme: serviceXTheme?
     ) {
         self.offers = offers

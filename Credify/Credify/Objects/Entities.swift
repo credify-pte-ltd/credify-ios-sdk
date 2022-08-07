@@ -190,6 +190,7 @@ public struct ProductModel: Codable {
     public let detail: ProductDetail?
     public let consumerId: String
     public let customScopes: [Scope]?
+    public let consumer: Organization?
     
     //NOTE: for use select package product in UI
     public var selectedProductCode: String?
@@ -203,11 +204,23 @@ public struct ProductModel: Codable {
         case selectedProductCode
         case consumerId = "consumer_id"
         case customScopes = "custom_scopes"
+        case consumer = "consumer"
     }
     
     public struct ProductDetail: Codable {
-        internal let packages: [InsurancePackageModel]?
-        internal let availableTerms: [AvailableTerms]?
+        public let packages: [InsurancePackageModel]?
+        public let availableTerms: [AvailableTerms]?
+        public let consumerDisbursementRequirements: [String]?
+        public let description: String?
+        public let title: String?
+        public let downPayment: Downpayment?
+        public let duration: Duration?
+        public let maxAprPercent: Int?
+        public let maxLoanAmount: FiatCurrency?
+        public let minAprPercent: Int?
+        public let minLoanAmount: FiatCurrency?
+        public let policyUrl: String?
+        public let providerDisbursementRequirements: [String]?
         
         public var insurancePackages: [InsurancePackageModel] {
             return packages ?? [InsurancePackageModel]()
@@ -220,18 +233,54 @@ public struct ProductModel: Codable {
         private enum CodingKeys: String, CodingKey {
             case packages
             case availableTerms = "available_terms"
+            case consumerDisbursementRequirements = "consumer_disbursement_requirements"
+            case description
+            case title
+            case downPayment = "down_payment"
+            case duration
+            case maxAprPercent = "max_apr_percent"
+            case maxLoanAmount = "max_loan_amount"
+            case minAprPercent = "min_apr_percent"
+            case minLoanAmount = "min_loan_amount"
+            case policyUrl = "policy_url"
+            case providerDisbursementRequirements = "provider_disbursement_requirements"
         }
     }
 }
 
+public struct Downpayment : Codable {
+    public let type: DownPaymentType
+    public let amount: DownPaymentAmount
+    
+    private enum CodingKeys: String, CodingKey {
+        case type
+        case amount
+    }
+}
+
+public enum DownPaymentType: String, Codable {
+    case inAmount = "IN_AMOUNT"
+    case overAmount = "OVER_AMOUNT"
+}
+
+public struct DownPaymentAmount : Codable {
+    public let type: String?
+    public let rate: Float?
+    
+    private enum CodingKeys: String, CodingKey {
+        case type
+        case rate
+    }
+}
+
 public struct AvailableTerms : Codable {
-    public let duration: AvailableTermsDuration?
+    public let duration: Duration?
     public let fee: AvailableTermsFee?
     public let interest: Float?
 }
 
 
-public struct AvailableTermsDuration : Codable {
+public struct Duration : Codable {
     public let value: Int64
     public let unit: String
 }
@@ -387,7 +436,7 @@ public enum ProductType : String {
 public struct BNPLOfferInfo : Codable {
     public let offers: [OfferData]
     
-    public let providers: [Organization]
+    public let providers: [ConnectedProvider]
     
     // NOTE: when getting list offer from consumer, credifyId maybe nil if user haven't account from Credify yet. After creating credify account from provider, we will have credifyId and we will assign it.
     public let credifyId: String?
@@ -403,4 +452,9 @@ public enum Language : String {
     case vietnamese = "vi"
     case japanese = "ja"
     case english = "en"
+}
+
+public struct ConnectedProvider : Codable {
+    public let provider: Organization
+    public let product: ProductModel
 }
