@@ -11,6 +11,7 @@ import Foundation
 /// This is serviceX configuration
 public struct serviceXConfig {
     let apiKey: String
+    let marketId: String
     let env: CredifyEnvs
     let appName: String
     let theme: serviceXTheme
@@ -24,12 +25,16 @@ public struct serviceXConfig {
     ///   - appName: Your application name
     ///   - theme: For the UI customization.
     public init(apiKey: String,
+                marketId: String,
                 env: CredifyEnvs = .sandbox,
                 appName: String,
                 theme: serviceXTheme? = nil,
                 userAgent: String? = nil) {
         if apiKey.isEmpty { fatalError("Api key must not be empty") }
+        if marketId.isEmpty { fatalError("marketId key must not be empty") }
+        
         self.apiKey = apiKey
+        self.marketId = marketId
         self.env = env
         self.appName = appName
         self.theme = theme ?? serviceXTheme.default
