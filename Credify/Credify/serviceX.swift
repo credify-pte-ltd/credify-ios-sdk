@@ -93,8 +93,19 @@ public struct serviceX {
         ///   - user: User object
         ///   - productTypes: Products list
         ///   - completion: Completion handler. You can access to offers list in this handler.
-        public func getOffers(user: CredifyUserModel? = nil, productTypes: [String] = [], completion: @escaping ((Result<OfferListInfo, CredifyError>) -> Void)) {
-            return useCase.getOffers(phoneNumber: user?.phoneNumber, countryCode: user?.countryCode, internalId: user?.id ?? "", credifyId: user?.credifyId, productTypes: productTypes, completion: completion)
+        public func getOffers(
+            user: CredifyUserModel? = nil,
+            productTypes: [ProductType] = [],
+            completion: @escaping ((Result<OfferListInfo, CredifyError>) -> Void)
+        ) {
+            return useCase.getOffers(
+                phoneNumber: user?.phoneNumber,
+                countryCode: user?.countryCode,
+                internalId: user?.id ?? "",
+                credifyId: user?.credifyId,
+                productTypes: productTypes.map({ type in type.rawValue }),
+                completion: completion
+            )
         }
         
         
