@@ -266,10 +266,12 @@ public enum DownPaymentType: String, Codable {
 public struct DownPaymentAmount : Codable {
     public let type: String?
     public let rate: Float?
+    public let fixedValue: FiatCurrency?
     
     private enum CodingKeys: String, CodingKey {
         case type
         case rate
+        case fixedValue = "fixed_value"
     }
 }
 
