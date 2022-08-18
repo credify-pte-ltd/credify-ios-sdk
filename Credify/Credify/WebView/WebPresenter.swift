@@ -14,7 +14,7 @@ enum PassportContext {
     case offer(offer: OfferData, user: CredifyUserModel)
     case promotionOffers(offers: [OfferData], user: CredifyUserModel)
     case serviceInstance(user: CredifyUserModel, marketId: String, productTypes: [ProductType])
-    case bnpl(offers: [OfferData], user: CredifyUserModel, orderInfo: OrderInfo, completedBnplProviders: [Organization])
+    case bnpl(offers: [OfferData], user: CredifyUserModel, orderInfo: OrderInfo, completedBnplProviders: [ConnectedProvider])
     
     var url: URL {
         switch self {
@@ -154,12 +154,14 @@ class WebPresenter: WebPresenterProtocol {
                 )
             }
             if case let .bnpl(offers, user, orderInfo, completedBnplProviders) = context {
+                let config = AppState.shared.config
                 let message = StartBnplMessage(
                     offers: offers,
                     profile: user,
                     order: orderInfo,
                     completeBnplProviders: completedBnplProviders,
-                    theme: AppState.shared.config?.theme
+                    marketId: config?.marketId ?? "",
+                    theme: config?.theme
                 )
                 
                 guard let messageJsonData = try? message.jsonData() else {

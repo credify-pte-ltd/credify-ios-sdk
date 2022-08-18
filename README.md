@@ -59,6 +59,8 @@ class SampleViewController: UIViewController {
     }
 
     /// This loads offers list. Please call this whenever you want.
+    /// - user: your user information. This is CredifyUserModel object.
+    /// - productTypes: The list of ProductType enum list that will be used to filter out offers.
     func loadOffers() {
         offer.getOffers(user: user, productTypes: []) { [weak self] result in
             switch result {
@@ -126,6 +128,8 @@ class SampleViewController: UIViewController {
     }
 
     /// This loads offers list. Please call this whenever you want.
+    /// - user: your user information. This is CredifyUserModel object.
+    /// - productTypes: The list of ProductType enum list that will be used to filter out offers.
     func loadOffers() {
         offer.getOffers(user: user, productTypes: []) { [weak self] result in
             switch result {

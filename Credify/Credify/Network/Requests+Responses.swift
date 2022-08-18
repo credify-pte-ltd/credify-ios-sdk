@@ -117,7 +117,7 @@ struct CompletedBnplProviderListRestResponse: ResponseProtocol {
     let data: CompletedBnplProviderListResponse
     
     struct CompletedBnplProviderListResponse: Codable {
-        let providers: [Organization]
+        let providers: [ConnectedProvider]
         
         private enum CodingKeys: String, CodingKey {
             case providers

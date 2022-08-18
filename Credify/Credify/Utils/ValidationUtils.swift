@@ -70,7 +70,7 @@ class ValidationUtils {
     static func showErrorIfBNPLUnavailable(
         from: UIViewController,
         offers: [OfferData],
-        providers: [Organization]
+        providers: [ConnectedProvider]
     ) -> Bool {
         let tableName = "serviceX"
         
