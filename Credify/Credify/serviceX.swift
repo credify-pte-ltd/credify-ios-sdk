@@ -93,6 +93,7 @@ public struct serviceX {
         ///   - user: User object
         ///   - productTypes: Products list
         ///   - completion: Completion handler. You can access to offers list in this handler.
+        @available(*, deprecated, message: "It'll be removed in the future.")
         public func getOffers(
             user: CredifyUserModel? = nil,
             productTypes: [ProductType] = [],
@@ -116,11 +117,35 @@ public struct serviceX {
         ///   - userProfile: User object
         ///   - pushClaimTokensTask: A task that calls your push claim token API. This SDK needs to receive success status of this task.
         ///   - completionHandler: Completion handler. You can get notified about the result of the offer redemption flow.
+        @available(*, deprecated, message: "Using presentByOfferCodeModally method instead")
         public func presentModally(from: UIViewController,
                                    offer: OfferData,
                                    userProfile: CredifyUserModel,
                                    pushClaimTokensTask: @escaping ((String, ((Bool) -> Void)?) -> Void),
                                    completionHandler: @escaping (RedemptionResult) -> Void) {
+            presentOfferByCodeModally(
+                from: from,
+                offerCode: offer.code,
+                userProfile: userProfile,
+                pushClaimTokensTask: pushClaimTokensTask,
+                completionHandler: completionHandler
+            )
+        }
+        
+        /// This kicks off offer redemption flow.
+        /// - Parameters:
+        ///   - from: ViewController that renders a new view from
+        ///   - offerCode: This is the offer code
+        ///   - userProfile: User object
+        ///   - pushClaimTokensTask: A task that calls your push claim token API. This SDK needs to receive success status of this task.
+        ///   - completionHandler: Completion handler. You can get notified about the result of the offer redemption flow.
+        public func presentOfferByCodeModally(
+            from: UIViewController,
+            offerCode: String,
+            userProfile: CredifyUserModel,
+            pushClaimTokensTask: @escaping ((String, ((Bool) -> Void)?) -> Void),
+            completionHandler: @escaping (RedemptionResult) -> Void
+        ) {
             if !ValidationUtils.showErrorIfOfferCannotStart(from: from, user: userProfile) {
                 return
             }
@@ -128,15 +153,39 @@ public struct serviceX {
             AppState.shared.pushClaimTokensTask = pushClaimTokensTask
             AppState.shared.redemptionResult = completionHandler
             
-            let context = PassportContext.offer(offer: offer, user: userProfile)
+            let context = PassportContext.offer(offerCode: offerCode, user: userProfile)
             let vc = WebViewController.instantiate(context: context)
             let navigationController = UIUtils.createUINavigationController(vc: vc)
             from.present(navigationController, animated: true)
         }
         
+        @available(*, deprecated, message: "Using presentPromotionOffersByCodesModally method instead")
         public func presentPromotionOffersModally(
             from: UIViewController,
             offers: [OfferData],
+            userProfile: CredifyUserModel,
+            pushClaimTokensTask: @escaping ((String, ((Bool) -> Void)?) -> Void),
+            completionHandler: @escaping (RedemptionResult) -> Void
+        ) {
+            presentPromotionOffersByCodesModally(
+                from: from,
+                offerCodes: offers.map({ item in item.code }),
+                userProfile: userProfile,
+                pushClaimTokensTask: pushClaimTokensTask,
+                completionHandler: completionHandler
+            )
+        }
+        
+        /// This will show offer list.
+        /// - Parameters:
+        ///   - from: ViewController that renders a new view from
+        ///   - offerCodes: This is  offer code list
+        ///   - userProfile: User object
+        ///   - pushClaimTokensTask: A task that calls your push claim token API. This SDK needs to receive success status of this task.
+        ///   - completionHandler: Completion handler. You can get notified about the result of the offer redemption flow.
+        public func presentPromotionOffersByCodesModally(
+            from: UIViewController,
+            offerCodes: [String],
             userProfile: CredifyUserModel,
             pushClaimTokensTask: @escaping ((String, ((Bool) -> Void)?) -> Void),
             completionHandler: @escaping (RedemptionResult) -> Void
@@ -146,7 +195,7 @@ public struct serviceX {
             }
             
             // If there is no offer then we just return, don't need to show an error to the user
-            if offers.isEmpty {
+            if offerCodes.isEmpty {
                 print("'offers' is empty")
                 return
             }
@@ -154,7 +203,7 @@ public struct serviceX {
             let vc = ModalViewController.instantiate() {
                 self.presentOffers(
                     from: from,
-                    offers: offers,
+                    offerCodes: offerCodes,
                     userProfile: userProfile,
                     pushClaimTokensTask: pushClaimTokensTask,
                     completionHandler: completionHandler
@@ -166,7 +215,7 @@ public struct serviceX {
         
         private func presentOffers(
             from: UIViewController,
-            offers: [OfferData],
+            offerCodes: [String],
             userProfile: CredifyUserModel,
             pushClaimTokensTask: @escaping ((String, ((Bool) -> Void)?) -> Void),
             completionHandler: @escaping (RedemptionResult) -> Void
@@ -174,7 +223,7 @@ public struct serviceX {
             AppState.shared.pushClaimTokensTask = pushClaimTokensTask
             AppState.shared.redemptionResult = completionHandler
             
-            let context = PassportContext.promotionOffers(offers: offers, user: userProfile)
+            let context = PassportContext.promotionOffers(offerCodes: offerCodes, user: userProfile)
             let vc = WebViewController.instantiate(context: context)
             let navigationController = UIUtils.createUINavigationController(vc: vc)
             from.present(navigationController, animated: true)
