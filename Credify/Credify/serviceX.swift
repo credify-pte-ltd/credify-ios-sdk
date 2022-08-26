@@ -310,7 +310,7 @@ public struct serviceX {
         ///   - orderId: Order ID. This is to be created by your backend before starting this process.
         ///   - pushClaimTokensTask: A task that calls your push claim token API. This SDK needs to receive success status of this task.
         ///   - completionHandler: Completion handler. You can get notified about the result of the BNPL flow.
-        @available(*, deprecated, message: "Using presentBNPLByCodesModally method instead")
+        @available(*, deprecated, message: "Using presentOfferModallyByCode method instead")
         public func presentModally(from: UIViewController,
                                    userProfile: CredifyUserModel,
                                    orderInfo: OrderInfo,
@@ -330,7 +330,7 @@ public struct serviceX {
                         return
                     }
                     
-                    self.presentBNPLByCodesModally(
+                    self.presentOfferModallyByCode(
                         from: from,
                         offerCodes: offers.map({ item in item.code }),
                         packageCode: nil,
@@ -351,7 +351,7 @@ public struct serviceX {
             }
         }
         
-        public func presentBNPLByCodesModally(
+        public func presentOfferModallyByCode(
             from: UIViewController,
             offerCodes: [String],
             packageCode: String?,
