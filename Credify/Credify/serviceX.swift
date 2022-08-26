@@ -117,13 +117,13 @@ public struct serviceX {
         ///   - userProfile: User object
         ///   - pushClaimTokensTask: A task that calls your push claim token API. This SDK needs to receive success status of this task.
         ///   - completionHandler: Completion handler. You can get notified about the result of the offer redemption flow.
-        @available(*, deprecated, message: "Using presentByOfferCodeModally method instead")
+        @available(*, deprecated, message: "Using presentOfferModallyByCode method instead")
         public func presentModally(from: UIViewController,
                                    offer: OfferData,
                                    userProfile: CredifyUserModel,
                                    pushClaimTokensTask: @escaping ((String, ((Bool) -> Void)?) -> Void),
                                    completionHandler: @escaping (RedemptionResult) -> Void) {
-            presentOfferByCodeModally(
+            presentOfferModallyByCode(
                 from: from,
                 offerCode: offer.code,
                 userProfile: userProfile,
@@ -139,7 +139,7 @@ public struct serviceX {
         ///   - userProfile: User object
         ///   - pushClaimTokensTask: A task that calls your push claim token API. This SDK needs to receive success status of this task.
         ///   - completionHandler: Completion handler. You can get notified about the result of the offer redemption flow.
-        public func presentOfferByCodeModally(
+        public func presentOfferModallyByCode(
             from: UIViewController,
             offerCode: String,
             userProfile: CredifyUserModel,
