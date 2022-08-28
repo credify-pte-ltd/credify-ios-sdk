@@ -11,8 +11,8 @@ import SwiftUI
 
 enum PassportContext {
     case mypage(user: CredifyUserModel)
-    case offer(offer: OfferData, user: CredifyUserModel)
-    case promotionOffers(offers: [OfferData], user: CredifyUserModel)
+    case offer(offerCode: String, user: CredifyUserModel)
+    case promotionOffers(offerCodes: [String], user: CredifyUserModel)
     case serviceInstance(user: CredifyUserModel, marketId: String, productTypes: [ProductType])
     case bnpl(offers: [OfferData], user: CredifyUserModel, orderInfo: OrderInfo, completedBnplProviders: [ConnectedProvider])
     
@@ -20,9 +20,9 @@ enum PassportContext {
         switch self {
         case .mypage(user: _):
             return URL(string: "\(Constants.WEB_URL)/redeemed-offers")!
-        case .offer(offer: _, user: _):
+        case .offer(offerCode: _, user: _):
             return URL(string: "\(Constants.WEB_URL)/initial")!
-        case .promotionOffers(offers: _, user: _):
+        case .promotionOffers(offerCodes: _, user: _):
             return URL(string: "\(Constants.WEB_URL)/start")!
         case .serviceInstance(user: _, let marketId, let productTypes):
             var params = [(String, String)]()
@@ -120,14 +120,14 @@ class WebPresenter: WebPresenterProtocol {
                     payload: createPostMessagePayloadForLoggingIn(user: user)
                 )
             }
-            if case let .offer(offer, user) = context {
-                guard let offerJsonData = try? offer.jsonData(), let userJsonData = try? user.jsonData() else {
+            if case let .offer(offerCode, user) = context {
+                guard let userJsonData = try? user.jsonData() else {
                     return
                 }
-                guard let offerJson = try? JSONSerialization.jsonObject(with: offerJsonData, options: []), let userJson = try? JSONSerialization.jsonObject(with: userJsonData, options: []) else {
+                guard let userJson = try? JSONSerialization.jsonObject(with: userJsonData, options: []) else {
                     return
                 }
-                guard let offerDict = offerJson as? [String: Any], let userDict = userJson as? [String: Any] else {
+                guard let userDict = userJson as? [String: Any] else {
                     return
                 }
                 
@@ -144,11 +144,11 @@ class WebPresenter: WebPresenterProtocol {
                     type: ACTION_TYPE,
                     action: SendMessageHandler.startRedemption.rawValue,
                     payload: themeDict != nil ? [
-                        "offer": offerDict.keysToCamelCase(),
+                        "offerCode": offerCode,
                         "profile": userDict,
                         "theme": themeDict!
                     ] : [
-                        "offer": offerDict.keysToCamelCase(),
+                        "offerCode": offerCode,
                         "profile": userDict,
                     ]
                 )
@@ -353,9 +353,9 @@ class WebPresenter: WebPresenterProtocol {
     
     /// 25736: Add offer popup to SDK
     func doPostMessageForShowingPromotionOffer(webView: WKWebView) {
-        if case let .promotionOffers(offers, user) = context {
+        if case let .promotionOffers(offerCodes, user) = context {
             let message = ShowPromotionOfferMessage(
-                offers: offers,
+                offerCodes: offerCodes,
                 profile: user,
                 theme: AppState.shared.config?.theme
             )
