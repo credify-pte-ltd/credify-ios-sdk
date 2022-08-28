@@ -286,6 +286,7 @@ public struct serviceX {
         /// - Parameters:
         ///   - user: User object
         ///   - completion: Completion handler. BNPL is available for this user or not
+        @available(*, deprecated, message: "It'll be removed in the future.")
         public func getBNPLAvailability(
             user: CredifyUserModel?,
             completion: @escaping ((Result<(available: Bool, credifyId: String?), CredifyError>) -> Void)
@@ -293,8 +294,6 @@ public struct serviceX {
             self.getOffersAndConnectedProviders(user: user) { bnplResult in
                 switch bnplResult {
                 case .success(let bnplInfo):
-                    AppState.shared.bnplOfferInfo = bnplInfo
-                    
                     let isBNPLAvailable = !bnplInfo.offers.isEmpty || !bnplInfo.providers.isEmpty
                     completion(.success((isBNPLAvailable, bnplInfo.credifyId)))
                 case .failure(let error):
@@ -311,6 +310,7 @@ public struct serviceX {
         ///   - orderId: Order ID. This is to be created by your backend before starting this process.
         ///   - pushClaimTokensTask: A task that calls your push claim token API. This SDK needs to receive success status of this task.
         ///   - completionHandler: Completion handler. You can get notified about the result of the BNPL flow.
+        @available(*, deprecated, message: "Using presentOfferModallyByCode method instead")
         public func presentModally(from: UIViewController,
                                    userProfile: CredifyUserModel,
                                    orderInfo: OrderInfo,
@@ -330,21 +330,15 @@ public struct serviceX {
                         return
                     }
                     
-                    let appState = AppState.shared
-                    
-                    appState.bnplOfferInfo = bnplInfo
-                    appState.pushClaimTokensTask = pushClaimTokensTask
-                    appState.bnplRedemptionResult = completionHandler
-                    
-                    let context = PassportContext.bnpl(
-                        offers: offers,
-                        user: userProfile,
+                    self.presentOfferModallyByCode(
+                        from: from,
+                        offerCodes: offers.map({ item in item.code }),
+                        packageCode: nil,
+                        userProfile: userProfile,
                         orderInfo: orderInfo,
-                        completedBnplProviders: connectedProviders
+                        pushClaimTokensTask: pushClaimTokensTask,
+                        completionHandler: completionHandler
                     )
-                    let vc = WebViewController.instantiate(context: context)
-                    let navigationController = UIUtils.createUINavigationController(vc: vc)
-                    from.present(navigationController, animated: true)
                 case .failure(_):
                     let tableName = "serviceX"
                     UIUtils.alert(
@@ -355,6 +349,35 @@ public struct serviceX {
                     )
                 }
             }
+        }
+        
+        public func presentOfferModallyByCode(
+            from: UIViewController,
+            offerCodes: [String],
+            packageCode: String?,
+            userProfile: CredifyUserModel,
+            orderInfo: OrderInfo,
+            pushClaimTokensTask: @escaping ((String, ((Bool) -> Void)?) -> Void),
+            completionHandler: @escaping (_ status: RedemptionResult,_ orderId: String, _ isPaymentCompleted: Bool) -> Void
+        ) {
+            if !ValidationUtils.showErrorIfOfferCannotStart(from: from, user: userProfile) {
+                return
+            }
+            
+            let appState = AppState.shared
+        
+            appState.pushClaimTokensTask = pushClaimTokensTask
+            appState.bnplRedemptionResult = completionHandler
+            
+            let context = PassportContext.bnpl(
+                offerCodes: offerCodes,
+                packageCode: packageCode,
+                user: userProfile,
+                orderInfo: orderInfo
+            )
+            let vc = WebViewController.instantiate(context: context)
+            let navigationController = UIUtils.createUINavigationController(vc: vc)
+            from.present(navigationController, animated: true)
         }
     }
 }
