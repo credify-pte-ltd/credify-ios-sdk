@@ -7,8 +7,6 @@ Credify serviceX iOS SDK.
 - iOS 10+
 - Swift 5.3+
 - Xcode 12.0+
-- Credify SDK 0.9.0+
-- Credify SDK 0.8.0 or lower. Please follow [this guideline](./ReadMe/README-v0.8.0-and-lower.md)
 
 ## How to install
 
@@ -34,7 +32,7 @@ pod "Credify"
 
 ## How to use
 
-### Offer 
+### Offer
 
 ```swift
 import UIKit
@@ -49,6 +47,7 @@ class SampleViewController: UIViewController {
 
     private let offer = serviceX.Offer()
     private var user: CredifyUserModel!
+    private var offerList: [OfferData] = [OfferData]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,11 +57,23 @@ class SampleViewController: UIViewController {
         
         user = CredifyUserModel(id: "internal ID in your system", firstName: "Vũ", lastName: "Nguyển", email: "vu.nguyen@gmail.com", credifyId: nil, countryCode: "+84", phoneNumber: "0381239876")
     }
+
+    /// This loads offers list. Please call this whenever you want.
+    /// - user: your user information. This is CredifyUserModel object.
+    /// - productTypes: The list of ProductType enum list that will be used to filter out offers.
+    func loadOffers() {
+        offer.getOffers(user: user, productTypes: []) { [weak self] result in
+            switch result {
+            case .success(let offers):
+                self?.offerList = offers
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
     
-    /// To using this method you have to get the offers on your side
-    /// Your backend have to provide an API for this
-    /// When you want to start offer redemption flow you involke this method and pass the "offerCode" as the parameter.
-    func startOffer(_ offerCode: String) {
+    /// This starts Credify SDK
+    func startOffer(_ offerData: OfferData) {
         let task: ((String, ((Bool) -> Void)?) -> Void) = { credifyId, result in
             AF.request(API_PUSH_CLAIMS,
                        method: .post,
@@ -76,8 +87,7 @@ class SampleViewController: UIViewController {
                 }
             }
         }
-        
-        offer.presentOfferModallyByCode(from: self, offerCode: offerCode, userProfile: user, pushClaimTokensTask: task) { [weak self] result in
+        offer.presentModally(from: self, offer: offerData, userProfile: user, pushClaimTokensTask: task) { [weak self] result in
             self?.dismiss(animated: true) {
                 print("Done")
             }
@@ -87,7 +97,7 @@ class SampleViewController: UIViewController {
 }
 ```
 
-> **Important**: For the `pushClaimTokensTask` callback, you need to keep `credifyId` on your side. You have to send the `credifyId` to Credify SDK when you use the methods that require `credifyId`. E.g: call `offer.presentOfferModallyByCode` method or create `CredifyUserModel` model.
+> **Important**: For the `pushClaimTokensTask` callback, you need to keep `credifyId` on your side. You have to send the `credifyId` to Credify SDK when you use the methods that require `credifyId`. E.g: call `offer.presentModally` method or create `CredifyUserModel` model.
 
 ### Promotion offer list(available on v0.6.0)
 
@@ -106,6 +116,7 @@ class SampleViewController: UIViewController {
 
     private let offer = serviceX.Offer()
     private var user: CredifyUserModel!
+    private var offerList: [OfferData] = [OfferData]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -115,11 +126,23 @@ class SampleViewController: UIViewController {
         
         user = CredifyUserModel(id: "internal ID in your system", firstName: "Vũ", lastName: "Nguyển", email: "vu.nguyen@gmail.com", credifyId: nil, countryCode: "+84", phoneNumber: "0381239876")
     }
+
+    /// This loads offers list. Please call this whenever you want.
+    /// - user: your user information. This is CredifyUserModel object.
+    /// - productTypes: The list of ProductType enum list that will be used to filter out offers.
+    func loadOffers() {
+        offer.getOffers(user: user, productTypes: []) { [weak self] result in
+            switch result {
+            case .success(let offers):
+                self?.offerList = offers
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
     
-    /// To using this method you have to get the offers on your side
-    /// Your backend have to provide an API for this
-    /// When you want to show the offers you involke this method and pass the "offerCodes" list as the parameter.
-    func showPromotionOffers(_ offerCodes: [String]) {
+    /// This starts Credify SDK
+    func showPromotionOffers(_ offers: [OfferData]) {
         let task: ((String, ((Bool) -> Void)?) -> Void) = { credifyId, result in
             AF.request(API_PUSH_CLAIMS,
                        method: .post,
@@ -133,7 +156,7 @@ class SampleViewController: UIViewController {
                 }
             }
         }
-        offer.presentPromotionOffersModallyByCodes(from: self, offerCodes: offerCodes, userProfile: user, pushClaimTokensTask: task) { [weak self] result in
+        offer.presentPromotionOffersModally(from: self, offers: offerList, userProfile: user, pushClaimTokensTask: task) { [weak self] result in
             self?.dismiss(animated: true) {
                 print("Done")
             }
@@ -203,12 +226,30 @@ class SampleViewController: UIViewController {
         
         user = CredifyUserModel(id: "internal ID in your system", firstName: "Vũ", lastName: "Nguyển", email: "vu.nguyen@gmail.com", credifyId: nil, countryCode: "+84", phoneNumber: "0381239876")
     }
-
-    /// To using this method you have to get the offers on your side
-    /// Your backend have to provide an API for this
-    /// When you want to start the BNPL flow you involke this method and pass the "offerCode" list and selected "packageCode"(optional, you can pass nil for now) as the parameters.
+    
+    /// This will check whether BNPL is available or not
     /// You need to create "orderInfo" on your side.
-    func startBNPL(_ offerCodes: [String], _ packageCode: String?, _orderInfo: OrderInfo) {
+    func getBNPLAvailability(orderInfo: OrderInfo) {
+        bnpl.getBNPLAvailability(user: self.user) { result in
+            switch result {
+            case .success((let isAvailable, let credifyId)):
+                if isAvailable {
+                    // This will start BNPL flow
+                    self.startBNPL(orderInfo: OrderInfo)
+                    return
+                }
+                
+                // BNPL is not available
+            case .failure(let error):
+                // Error
+                break
+            }
+        }
+    }
+
+    /// This starts Credify SDK
+    /// You need to create "orderInfo" on your side.
+    func startBNPL(orderInfo: OrderInfo) {
         let task: ((String, ((Bool) -> Void)?) -> Void) = { credifyId, result in
             // Using Alamofire
             AF.request(API_PUSH_CLAIMS,
@@ -224,13 +265,11 @@ class SampleViewController: UIViewController {
             }
         }
         
-        bnpl.presentOfferModallyByCode(
-            from: self,
-            offerCodes: offerCodes,
-            packageCode: packageCode,
-            userProfile: self.user,
-            orderInfo: orderInfo,
-            pushClaimTokensTask: task
+        bnpl.presentModally(
+                from: self,
+                userProfile: self.user,
+                orderInfo: orderInfo,
+                pushClaimTokensTask: task
         ) { [weak self] status, orderId, isPaymentCompleted in
             self?.dismiss(animated: false) {
                 print("Status: \(status.rawValue), order id: \(orderId), payment completed: \(isPaymentCompleted)")
@@ -241,7 +280,7 @@ class SampleViewController: UIViewController {
 
 ```
 
-> **Important**: For the `pushClaimTokensTask` callback, you need to keep `credifyId` on your side. You have to send the `credifyId` to Credify SDK when you use the methods that require `credifyId`. E.g: call `bnpl.presentOfferModallyByCode` method or create `CredifyUserModel` model.
+> **Important**: For the `pushClaimTokensTask` callback, you need to keep `credifyId` on your side. You have to send the `credifyId` to Credify SDK when you use the methods that require `credifyId`. E.g: call `bnpl.presentModally` method or create `CredifyUserModel` model.
 
 ### The Service detail
 
