@@ -139,6 +139,8 @@ class WebPresenter: WebPresenterProtocol {
                     themeDict = themeJson as? [String: Any]
                 }
                 
+                let marketId = AppState.shared.config?.marketId ?? ""
+                
                 doPostMessage(
                     webView,
                     type: ACTION_TYPE,
@@ -146,10 +148,12 @@ class WebPresenter: WebPresenterProtocol {
                     payload: themeDict != nil ? [
                         "offerCode": offerCode,
                         "profile": userDict,
+                        "marketId": marketId,
                         "theme": themeDict!
                     ] : [
                         "offerCode": offerCode,
                         "profile": userDict,
+                        "marketId": marketId
                     ]
                 )
             }
@@ -354,10 +358,12 @@ class WebPresenter: WebPresenterProtocol {
     /// 25736: Add offer popup to SDK
     func doPostMessageForShowingPromotionOffer(webView: WKWebView) {
         if case let .promotionOffers(offerCodes, user) = context {
+            let config = AppState.shared.config
             let message = ShowPromotionOfferMessage(
                 offerCodes: offerCodes,
                 profile: user,
-                theme: AppState.shared.config?.theme
+                marketId: config?.marketId ?? "",
+                theme: config?.theme
             )
             
             guard let messageJsonData = try? message.jsonData() else {

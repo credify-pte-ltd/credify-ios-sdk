@@ -62,15 +62,18 @@ internal class StartBnplMessage: Codable {
 internal class ShowPromotionOfferMessage: Codable {
     let offerCodes: [String]
     let profile: CredifyUserModel
+    let marketId: String
     let theme: serviceXTheme?
     
     init(
         offerCodes: [String],
         profile: CredifyUserModel,
+        marketId: String,
         theme: serviceXTheme?
     ) {
         self.offerCodes = offerCodes
         self.profile = profile
+        self.marketId = marketId
         self.theme = theme
     }
 }
