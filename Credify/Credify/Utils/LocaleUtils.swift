@@ -8,6 +8,12 @@
 import Foundation
 
 class LocaleUtils {
+    static let supportedLocales = [
+        Language.vietnamese: "vi-VN",
+        Language.japanese: "ja-JP",
+        Language.english: "en-US"
+    ]
+    
     static let languageSupportLastFirstNameOrder = ["vi", "ja"]
     
     static var languageCode: String? {
@@ -33,5 +39,9 @@ class LocaleUtils {
             }
             return false
         }
+    }
+    
+    static func getLocaleStringByLanguage(language: Language) -> String? {
+        return supportedLocales[language]
     }
 }

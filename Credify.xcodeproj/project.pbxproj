@@ -59,6 +59,10 @@
 		F87CBCD3284488740032B196 /* credify-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = F87CBCD1284488740032B196 /* credify-loading.json */; };
 		F87CBCD4284488740032B196 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87CBCD2284488740032B196 /* LoadingView.swift */; };
 		F8AED25127E984780095DB6C /* PostMessageUtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8AED25027E984780095DB6C /* PostMessageUtilsTest.swift */; };
+		F8B1871D295C84C90028503E /* StringUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B1871C295C84C90028503E /* StringUtil.swift */; };
+		F8B1871E295C84C90028503E /* StringUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B1871C295C84C90028503E /* StringUtil.swift */; };
+		F8B18720295C88E90028503E /* StringUtilTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B1871F295C88E90028503E /* StringUtilTest.swift */; };
+		F8B18721295C88E90028503E /* StringUtilTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B1871F295C88E90028503E /* StringUtilTest.swift */; };
 		F8C445E42840EDE700310CDF /* WebViewUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C445E22840EDE700310CDF /* WebViewUtils.swift */; };
 		F8C445E52840EDE700310CDF /* ValidationUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C445E32840EDE700310CDF /* ValidationUtils.swift */; };
 		F8E9FFA628068C2400F25B59 /* CommonModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E9FFA528068C2400F25B59 /* CommonModel.swift */; };
@@ -135,6 +139,8 @@
 		F87CBCD1284488740032B196 /* credify-loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "credify-loading.json"; sourceTree = "<group>"; };
 		F87CBCD2284488740032B196 /* LoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		F8AED25027E984780095DB6C /* PostMessageUtilsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostMessageUtilsTest.swift; sourceTree = "<group>"; };
+		F8B1871C295C84C90028503E /* StringUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringUtil.swift; sourceTree = "<group>"; };
+		F8B1871F295C88E90028503E /* StringUtilTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringUtilTest.swift; sourceTree = "<group>"; };
 		F8C445E22840EDE700310CDF /* WebViewUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewUtils.swift; sourceTree = "<group>"; };
 		F8C445E32840EDE700310CDF /* ValidationUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValidationUtils.swift; sourceTree = "<group>"; };
 		F8E9FFA528068C2400F25B59 /* CommonModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CommonModel.swift; path = Credify/Credify/Objects/CommonModel.swift; sourceTree = SOURCE_ROOT; };
@@ -358,6 +364,7 @@
 				F8C445E22840EDE700310CDF /* WebViewUtils.swift */,
 				F83B400327E89DF200A01A2E /* PostMessageUtils.swift */,
 				F84828B727EAE8BC00ED1E12 /* UIUtils.swift */,
+				F8B1871C295C84C90028503E /* StringUtil.swift */,
 			);
 			name = Utils;
 			path = Credify/Utils;
@@ -402,6 +409,7 @@
 			isa = PBXGroup;
 			children = (
 				F8AED25027E984780095DB6C /* PostMessageUtilsTest.swift */,
+				F8B1871F295C88E90028503E /* StringUtilTest.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -615,8 +623,10 @@
 				2517EC3A27E5A4360025E396 /* UINavigationBar+Extension.swift in Sources */,
 				2517EC5A27E5A4520025E396 /* CredifyEnvs.swift in Sources */,
 				2517EC0027E57CED0025E396 /* Credify.docc in Sources */,
+				F8B18720295C88E90028503E /* StringUtilTest.swift in Sources */,
 				F83B400427E89DF200A01A2E /* PostMessageUtils.swift in Sources */,
 				2517EC6C27E5A4520025E396 /* Requests+Responses.swift in Sources */,
+				F8B1871D295C84C90028503E /* StringUtil.swift in Sources */,
 				2517EC3B27E5A4360025E396 /* Dictionary+Extension.swift in Sources */,
 				F87CBCD4284488740032B196 /* LoadingView.swift in Sources */,
 				2517EC5E27E5A4520025E396 /* serviceXConfig.swift in Sources */,
@@ -639,9 +649,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F8B1871E295C84C90028503E /* StringUtil.swift in Sources */,
 				2517EC0B27E57CEE0025E396 /* CredifyTests.swift in Sources */,
 				F862448327FE6C59002C85F8 /* EntitiesTest.swift in Sources */,
 				F8AED25127E984780095DB6C /* PostMessageUtilsTest.swift in Sources */,
+				F8B18721295C88E90028503E /* StringUtilTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

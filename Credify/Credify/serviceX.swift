@@ -351,6 +351,7 @@ public struct serviceX {
             }
         }
         
+        @available(*, deprecated, message: "Using presentModallyByAppUrl method instead")
         public func presentOfferModallyByCode(
             from: UIViewController,
             offerCodes: [String],
@@ -375,6 +376,27 @@ public struct serviceX {
                 user: userProfile,
                 orderInfo: orderInfo
             )
+            let vc = WebViewController.instantiate(context: context)
+            let navigationController = UIUtils.createUINavigationController(vc: vc)
+            from.present(navigationController, animated: true)
+        }
+        
+        /// This kicks off BNPL flow
+        /// - Parameters:
+        ///   - from: ViewController that renders a new view from
+        ///   - appUrl: The app url that obtains when creating a new intent
+        ///   - completionHandler: Completion handler. You can get notified when the page is closed
+        public func presentModallyFlow(
+            from: UIViewController,
+            appUrl: String,
+            completionHandler: @escaping () -> Void
+        ) {
+            
+            let appState = AppState.shared
+        
+            appState.dismissCompletion = completionHandler
+            
+            let context = PassportContext.url(appUrl: StringUtil.addLocaleToUrl(url: appUrl, language: appState.language))
             let vc = WebViewController.instantiate(context: context)
             let navigationController = UIUtils.createUINavigationController(vc: vc)
             from.present(navigationController, animated: true)

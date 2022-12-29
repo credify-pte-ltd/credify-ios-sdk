@@ -15,6 +15,7 @@ enum PassportContext {
     case promotionOffers(offerCodes: [String], user: CredifyUserModel)
     case serviceInstance(user: CredifyUserModel, marketId: String, productTypes: [ProductType])
     case bnpl(offerCodes: [String], packageCode: String?, user: CredifyUserModel, orderInfo: OrderInfo)
+    case url(appUrl: String)
     
     var url: URL {
         switch self {
@@ -35,6 +36,8 @@ enum PassportContext {
             return URL(string: "\(Constants.WEB_URL)/service-instance?\(urlParams)")!
         case .bnpl(offerCodes: _, packageCode: _, user: _, orderInfo: _):
             return URL(string: "\(Constants.WEB_URL)/bnpl")!
+        case .url(let appUrl):
+            return URL(string: appUrl)!
         }
     }
 }
@@ -263,6 +266,10 @@ class WebPresenter: WebPresenterProtocol {
             appState.dismissCompletion?()
             appState.dismissCompletion = nil
             break
+        case .url:
+            appState.dismissCompletion?()
+            appState.dismissCompletion = nil
+            break
         }
     }
     
@@ -346,6 +353,8 @@ class WebPresenter: WebPresenterProtocol {
             return appState.serviceInstanceShowingCloseButtonUrls.first { item in
                 url.starts(with: item)
             } != nil
+        default:
+            return true
         }
     }
     
