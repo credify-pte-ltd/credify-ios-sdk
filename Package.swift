@@ -31,10 +31,11 @@ let package = Package(
                 .copy("Credify/Views/LoadingView/credify-loading.json")
             ]
         ),
-//        .testTarget(
-//            name: "CredifyTests",
-////            dependencies: ["Credify"],
-//            path: "Credify"),
+        .testTarget(
+            name: "CredifyTests",
+            dependencies: ["Credify", "Alamofire", "Lottie", "SDWebImage"],
+            path: "CredifyTests"
+        ),
     ],
     swiftLanguageVersions: [.v5]
 )
