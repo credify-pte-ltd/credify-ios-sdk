@@ -209,6 +209,8 @@ class SampleViewController: UIViewController {
 
 ### BNPL
 
+This is an example code to start the BNPL flow. We strongly recommend you visit  [the document](https://developers.credify.one/details/market-integration.html) before doing the implementation.
+
 ```swift
 import UIKit
 import Credify
@@ -225,62 +227,28 @@ class SampleViewController: UIViewController {
         serviceX.configure(config)
         
         user = CredifyUserModel(id: "internal ID in your system", firstName: "Vũ", lastName: "Nguyển", email: "vu.nguyen@gmail.com", credifyId: nil, countryCode: "+84", phoneNumber: "0381239876")
-    }
-    
-    /// This will check whether BNPL is available or not
-    /// You need to create "orderInfo" on your side.
-    func getBNPLAvailability(orderInfo: OrderInfo) {
-        bnpl.getBNPLAvailability(user: self.user) { result in
-            switch result {
-            case .success((let isAvailable, let credifyId)):
-                if isAvailable {
-                    // This will start BNPL flow
-                    self.startBNPL(orderInfo: OrderInfo)
-                    return
-                }
-                
-                // BNPL is not available
-            case .failure(let error):
-                // Error
-                break
-            }
-        }
+        
+        // You need to create a new intent
+        // You should visit here for more detail: https://developers.credify.one/details/market-integration.html#_1-backend-check-if-your-desired-service-is-available
+        // Start BNPL flow
+        startBNPL(appUrl: [app_url])
     }
 
     /// This starts Credify SDK
-    /// You need to create "orderInfo" on your side.
-    func startBNPL(orderInfo: OrderInfo) {
-        let task: ((String, ((Bool) -> Void)?) -> Void) = { credifyId, result in
-            // Using Alamofire
-            AF.request(API_PUSH_CLAIMS,
-                       method: .post,
-                       parameters: ["id": self.user.id, "credify_id": credifyId],
-                       encoding: JSONEncoding.default).responseJSON { data in
-                switch data.result {
-                case .success:
-                    result?(true)
-                case .failure:
-                    result?(false)
-                }
-            }
-        }
-        
-        bnpl.presentModally(
-                from: self,
-                userProfile: self.user,
-                orderInfo: orderInfo,
-                pushClaimTokensTask: task
-        ) { [weak self] status, orderId, isPaymentCompleted in
+    /// You need to create a new intent on your side. The result will return the `appUrl`
+    func startBNPL(appUrl: String) {
+        bnpl.presentModallyFlow(
+            from: self,
+            appUrl: appUrl
+        ) { [weak self] in
             self?.dismiss(animated: false) {
-                print("Status: \(status.rawValue), order id: \(orderId), payment completed: \(isPaymentCompleted)")
+                print("Page is closed")
             }
         }
     }
 }
 
 ```
-
-> **Important**: For the `pushClaimTokensTask` callback, you need to keep `credifyId` on your side. You have to send the `credifyId` to Credify SDK when you use the methods that require `credifyId`. E.g: call `bnpl.presentModally` method or create `CredifyUserModel` model.
 
 ### The Service detail
 

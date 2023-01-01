@@ -11,18 +11,19 @@ import SwiftUI
 
 enum PassportContext {
     case mypage(user: CredifyUserModel)
-    case offer(offer: OfferData, user: CredifyUserModel)
-    case promotionOffers(offers: [OfferData], user: CredifyUserModel)
+    case offer(offerCode: String, user: CredifyUserModel)
+    case promotionOffers(offerCodes: [String], user: CredifyUserModel)
     case serviceInstance(user: CredifyUserModel, marketId: String, productTypes: [ProductType])
-    case bnpl(offers: [OfferData], user: CredifyUserModel, orderInfo: OrderInfo, completedBnplProviders: [ConnectedProvider])
+    case bnpl(offerCodes: [String], packageCode: String?, user: CredifyUserModel, orderInfo: OrderInfo)
+    case url(appUrl: String)
     
     var url: URL {
         switch self {
         case .mypage(user: _):
             return URL(string: "\(Constants.WEB_URL)/redeemed-offers")!
-        case .offer(offer: _, user: _):
+        case .offer(offerCode: _, user: _):
             return URL(string: "\(Constants.WEB_URL)/initial")!
-        case .promotionOffers(offers: _, user: _):
+        case .promotionOffers(offerCodes: _, user: _):
             return URL(string: "\(Constants.WEB_URL)/start")!
         case .serviceInstance(user: _, let marketId, let productTypes):
             var params = [(String, String)]()
@@ -33,8 +34,10 @@ enum PassportContext {
             let urlParams = params.map { "\($0)=\($1)" }.joined(separator: "&")
             
             return URL(string: "\(Constants.WEB_URL)/service-instance?\(urlParams)")!
-        case .bnpl(offers: _, user: _, orderInfo: _, completedBnplProviders: _):
+        case .bnpl(offerCodes: _, packageCode: _, user: _, orderInfo: _):
             return URL(string: "\(Constants.WEB_URL)/bnpl")!
+        case .url(let appUrl):
+            return URL(string: appUrl)!
         }
     }
 }
@@ -120,14 +123,14 @@ class WebPresenter: WebPresenterProtocol {
                     payload: createPostMessagePayloadForLoggingIn(user: user)
                 )
             }
-            if case let .offer(offer, user) = context {
-                guard let offerJsonData = try? offer.jsonData(), let userJsonData = try? user.jsonData() else {
+            if case let .offer(offerCode, user) = context {
+                guard let userJsonData = try? user.jsonData() else {
                     return
                 }
-                guard let offerJson = try? JSONSerialization.jsonObject(with: offerJsonData, options: []), let userJson = try? JSONSerialization.jsonObject(with: userJsonData, options: []) else {
+                guard let userJson = try? JSONSerialization.jsonObject(with: userJsonData, options: []) else {
                     return
                 }
-                guard let offerDict = offerJson as? [String: Any], let userDict = userJson as? [String: Any] else {
+                guard let userDict = userJson as? [String: Any] else {
                     return
                 }
                 
@@ -139,27 +142,31 @@ class WebPresenter: WebPresenterProtocol {
                     themeDict = themeJson as? [String: Any]
                 }
                 
+                let marketId = AppState.shared.config?.marketId ?? ""
+                
                 doPostMessage(
                     webView,
                     type: ACTION_TYPE,
                     action: SendMessageHandler.startRedemption.rawValue,
                     payload: themeDict != nil ? [
-                        "offer": offerDict.keysToCamelCase(),
+                        "offerCode": offerCode,
                         "profile": userDict,
+                        "marketId": marketId,
                         "theme": themeDict!
                     ] : [
-                        "offer": offerDict.keysToCamelCase(),
+                        "offerCode": offerCode,
                         "profile": userDict,
+                        "marketId": marketId
                     ]
                 )
             }
-            if case let .bnpl(offers, user, orderInfo, completedBnplProviders) = context {
+            if case let .bnpl(offerCodes, packageCode, user, orderInfo) = context {
                 let config = AppState.shared.config
                 let message = StartBnplMessage(
-                    offers: offers,
+                    offerCodes: offerCodes,
+                    packageCode: packageCode,
                     profile: user,
                     order: orderInfo,
-                    completeBnplProviders: completedBnplProviders,
                     marketId: config?.marketId ?? "",
                     theme: config?.theme
                 )
@@ -219,7 +226,7 @@ class WebPresenter: WebPresenterProtocol {
         case .bnplPaymentComplete:
             // TODO we maybe need to update this when the BNPL proxy integrate with real flow
             switch context {
-            case .bnpl(offers: _, user: _, let orderInfo, completedBnplProviders: _):
+            case .bnpl(offerCodes: _, packageCode: _, user: _, let orderInfo):
                 hanldeBnplCompletionHandler(status: offerTransactionStatus, orderId: orderInfo.orderId, isPaymentCompleted: true)
             default:
                 break
@@ -252,10 +259,14 @@ class WebPresenter: WebPresenterProtocol {
             appState.redemptionResult?(offerTransactionStatus)
             appState.redemptionResult = nil
             appState.pushClaimTokensTask = nil
-        case .bnpl(offers: _, user: _, let orderInfo, completedBnplProviders: _):
+        case .bnpl(offerCodes: _, packageCode: _, user: _, let orderInfo):
             // TODO we maybe need to update this when the BNPL proxy integrate with real flow
             hanldeBnplCompletionHandler(status: offerTransactionStatus, orderId: orderInfo.orderId, isPaymentCompleted: false)
         case .serviceInstance:
+            appState.dismissCompletion?()
+            appState.dismissCompletion = nil
+            break
+        case .url:
             appState.dismissCompletion?()
             appState.dismissCompletion = nil
             break
@@ -342,6 +353,8 @@ class WebPresenter: WebPresenterProtocol {
             return appState.serviceInstanceShowingCloseButtonUrls.first { item in
                 url.starts(with: item)
             } != nil
+        default:
+            return true
         }
     }
     
@@ -353,11 +366,13 @@ class WebPresenter: WebPresenterProtocol {
     
     /// 25736: Add offer popup to SDK
     func doPostMessageForShowingPromotionOffer(webView: WKWebView) {
-        if case let .promotionOffers(offers, user) = context {
+        if case let .promotionOffers(offerCodes, user) = context {
+            let config = AppState.shared.config
             let message = ShowPromotionOfferMessage(
-                offers: offers,
+                offerCodes: offerCodes,
                 profile: user,
-                theme: AppState.shared.config?.theme
+                marketId: config?.marketId ?? "",
+                theme: config?.theme
             )
             
             guard let messageJsonData = try? message.jsonData() else {
@@ -475,7 +490,6 @@ class WebPresenter: WebPresenterProtocol {
         // TODO we maybe need to update this when the BNPL proxy integrate with real flow
         appState.bnplRedemptionResult?(status, orderId, isPaymentCompleted)
         
-        appState.bnplOfferInfo = nil
         appState.bnplRedemptionResult = nil
         appState.pushClaimTokensTask = nil
     }

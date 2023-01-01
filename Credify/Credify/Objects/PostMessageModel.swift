@@ -35,42 +35,45 @@ internal enum ReceiveMessageHandler: String {
 }
 
 internal class StartBnplMessage: Codable {
-    let offers: [OfferData]
+    let offerCodes: [String]
+    let packageCode: String?
     let profile: CredifyUserModel
     let order: OrderInfo
-    let completeBnplProviders: [ConnectedProvider]
     let marketId: String
     let theme: serviceXTheme?
     
     init(
-        offers: [OfferData],
+        offerCodes: [String],
+        packageCode: String?,
         profile: CredifyUserModel,
         order: OrderInfo,
-        completeBnplProviders: [ConnectedProvider],
         marketId: String,
         theme: serviceXTheme?
     ) {
-        self.offers = offers
+        self.offerCodes = offerCodes
+        self.packageCode = packageCode
         self.profile = profile
         self.order = order
-        self.completeBnplProviders = completeBnplProviders
         self.marketId = marketId
         self.theme = theme
     }
 }
 
 internal class ShowPromotionOfferMessage: Codable {
-    let offers: [OfferData]
+    let offerCodes: [String]
     let profile: CredifyUserModel
+    let marketId: String
     let theme: serviceXTheme?
     
     init(
-        offers: [OfferData],
+        offerCodes: [String],
         profile: CredifyUserModel,
+        marketId: String,
         theme: serviceXTheme?
     ) {
-        self.offers = offers
+        self.offerCodes = offerCodes
         self.profile = profile
+        self.marketId = marketId
         self.theme = theme
     }
 }
