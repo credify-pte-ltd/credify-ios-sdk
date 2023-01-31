@@ -215,9 +215,9 @@ public struct ProductModel: Codable {
         public let title: String?
         public let downPayment: Downpayment?
         public let duration: Duration?
-        public let maxAprPercent: Int?
+        public let maxAprPercent: String?
         public let maxLoanAmount: FiatCurrency?
-        public let minAprPercent: Int?
+        public let minAprPercent: String?
         public let minLoanAmount: FiatCurrency?
         public let policyUrl: String?
         public let providerDisbursementRequirements: [String]?
