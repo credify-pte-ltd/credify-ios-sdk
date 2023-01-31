@@ -1,7 +1,8 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "Credify"
-  spec.version      = "0.9.0"
+  # ―――  Need update 'Constants.swift' file  ――――――――――――――――――――――――――――――――――――― #
+  spec.version      = "0.10.0"
   spec.summary      = "serviceX SDK is for marketplaces to integrate Credify serviceX."
   spec.description  = "This is an SDK for Credify serviceX distributed for iOS platform."
   spec.homepage     = "https://github.com/credify-pte-ltd/credify-ios-sdk"

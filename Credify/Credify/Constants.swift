@@ -8,7 +8,7 @@
 import Foundation
 
 struct Constants {
-    static let SDK_VERSION = "0.7.0"
+    static let SDK_VERSION = "0.10.0"
     
     static var API_URL: String {
         switch AppState.shared.config?.env ?? .sandbox {
@@ -28,15 +28,15 @@ struct Constants {
     static var WEB_URL: String {
         switch AppState.shared.config?.env ?? .sandbox {
         case .dev:
-            return "https://dev-passport.credify.ninja"
+            return "https://dev-app.credify.ninja"
         case .sit:
-            return "https://sit-passport.credify.ninja"
+            return "https://sit-app.credify.ninja"
         case .uat:
-            return "https://uat-passport.credify.dev"
+            return "https://uat-app.credify.dev"
         case .sandbox:
-            return "https://sandbox-passport.credify.dev"
+            return "https://sandbox-app.credify.dev"
         case .production:
-            return "https://passport.credify.one"
+            return "https://app.credify.one"
         }
     }
     
